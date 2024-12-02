@@ -5,6 +5,7 @@ plugins {
     id ("kotlin-kapt")
     id ("kotlin-parcelize")
     id ("androidx.navigation.safeargs.kotlin")
+    id ("com.google.gms.google-services")
 }
 
 android {
@@ -19,6 +20,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL", project.properties["BASE_URL"].toString())
+        buildConfigField("String", "TTB_KEY", project.properties["TTB_KEY"].toString())
+        buildConfigField("String", "GOOGLE_CLIENT_ID", project.properties["GOOGLE_CLIENT_ID"].toString())
+        buildConfigField("String", "NAVER_CLIENT_ID", project.properties["NAVER_CLIENT_ID"].toString())
+        buildConfigField("String", "NAVER_CLIENT_SECRET", project.properties["NAVER_CLIENT_SECRET"].toString())
+        buildConfigField("String", "KAKAO_NATIVE_KEY", project.properties["KAKAO_NATIVE_KEY"].toString())
     }
 
     buildTypes {
@@ -40,6 +48,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -112,4 +121,27 @@ dependencies {
     //Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
+
+    //GoogleMap
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation("com.google.maps.android:android-maps-utils:3.8.2")
+    implementation("com.google.maps:google-maps-services:2.2.0")
+
+    //권한
+    implementation("io.github.ParkSangGwon:tedpermission-normal:3.4.2")
+
+    //Firebase + 구글로그인
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("org.java-websocket:Java-WebSocket:1.5.7")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
+
+    //카카오 로그인
+    implementation("com.kakao.sdk:v2-all:2.17.0")
+
+    //네이버 로그인
+    implementation("com.navercorp.nid:oauth:5.10.0")
 }
