@@ -3,10 +3,8 @@ package com.example.newbookshelf.data.model.login
 import com.google.gson.annotations.SerializedName
 
 data class LoginModel (
-    val data: LoginResultData,
-    val message: String,
     val result: Boolean,
-    val statusCode: Int
+    val data: LoginResultData
 )
 
 data class LoginResultData(
@@ -14,5 +12,8 @@ data class LoginResultData(
     val accessToken: String,
 
     @SerializedName("user_idx")
-    val userIdx: Int
+    val userIdx: Int,
+
+    @SerializedName("login_type")
+    val loginType: String
 )

@@ -1,8 +1,8 @@
 package com.example.newbookshelf.presentation.di
 
 import android.app.Application
-import com.example.newbookshelf.domain.usecase.IdLoginUseCase
-import com.example.newbookshelf.domain.usecase.SnsLoginUseCase
+import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
+import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
 import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModelFactory
 import dagger.Module
 import dagger.Provides

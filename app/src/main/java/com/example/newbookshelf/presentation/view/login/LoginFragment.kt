@@ -12,14 +12,19 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.BuildConfig
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.SnsLoginData
+import com.example.newbookshelf.data.model.signup.SnsSignupData
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentLoginBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
+import com.example.newbookshelf.presentation.view.signup.SignUpActivity
 import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModel
+import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -36,6 +41,7 @@ import com.navercorp.nid.profile.data.NidProfileResponse
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private lateinit var loginViewModel: LoginViewModel
+    private lateinit var signupViewModel: SignupViewModel
 
     companion object {
         const val TAG = "LoginFragment"
@@ -73,6 +79,7 @@ class LoginFragment : Fragment() {
 
     private fun init() = with(binding){
         loginViewModel = (activity as LoginActivity).loginViewModel
+        signupViewModel = (activity as LoginActivity).signupViewModel
 
         cl.setOnClickListener {
             val inputManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -85,6 +92,7 @@ class LoginFragment : Fragment() {
             auth = (activity as LoginActivity).firebaseAuth
 
             val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+            Log.d(TAG, "googleLogin: account $account")
             if(account == null){
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
@@ -162,7 +170,6 @@ class LoginFragment : Fragment() {
                         } else if (user != null) {
                             val nickname = user.kakaoAccount?.profile?.nickname
                             val email = user.kakaoAccount?.email
-                            Log.d(TAG, "kakaoLogin: $authorizationCode")
 //                            MyApplication.prefs.setNickname("nickname", nickname ?: "Nickname")
 //                            if(MyApplication.prefs.getKakaoToken("kakaoToken", "") == ""){
 //                                Log.d(TAG, "bindViews: 카카오 회원가입 후 로그인")
@@ -205,6 +212,25 @@ class LoginFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) = Unit
         })
 
+        txtFindId.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("title", "아이디")
+            }
+            findNavController().navigate(R.id.action_loginFragment_to_findFragment, bundle)
+        }
+
+        txtFindPw.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("title", "비밀번호")
+            }
+            findNavController().navigate(R.id.action_loginFragment_to_findFragment, bundle)
+        }
+
+        txtSignup.setOnClickListener {
+            val intent = Intent(requireContext(), SignUpActivity::class.java)
+            startActivity(intent)
+        }
+
         btnLogin.setOnClickListener {
             val loginData = LoginData(fcmToken, "general", id, password)
             loginViewModel.login(loginData)
@@ -217,6 +243,25 @@ class LoginFragment : Fragment() {
         }
         
         loginViewModel.loginResult.observe(viewLifecycleOwner) { response ->
+            when(response){
+                is Resource.Success -> {
+                    hideProgressBar()
+                    if(response.data!!.result){
+                        val intent = Intent(requireContext(), HomeActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+                is Resource.Error -> {
+                    hideProgressBar()
+                    Toast.makeText(requireContext(), "입력하신 정보와 일치하는 회원이 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+                is Resource.Loading -> {
+                    showProgressBar()
+                }
+            }
+        }
+
+        signupViewModel.signupResult.observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
                     hideProgressBar()
@@ -262,21 +307,15 @@ class LoginFragment : Fragment() {
                 val account = task.getResult(ApiException::class.java)!!
                 val nickname = account.displayName
                 val email = account.email
-                Log.d(TAG, "onActivityResult: account ${account.idToken}, nickname $nickname, email $email")
 
-                //처음 로그인하면 account.idToken값 null 된다.
-//                MyApplication.prefs.setNickname("nickname", nickname ?: "Nickname")
-//                if(MyApplication.prefs.getGoogleToken("googleToken","")  == ""){
-//                    Log.d(TAG, "bindViews: 구글 회원가입 후 로그인")
-//                    MyApplication.prefs.setGoogleToken("googleToken", account.idToken!!)
-//                    val snsSignUpModel = SnsSignUpModel(MyApplication.prefs.getFcmToken("fcmToken", ""), "google", email, MyApplication.prefs.getGoogleToken("googleToken", ""), nickname)
-//                    loginViewModel.snsSignUp(snsSignUpModel)
+                Log.d(TAG, "onActivityResult: account.idToken ${account.idToken}")
+//                if(account.idToken == null){
+//                    val snsSignUpData = SnsSignupData(fcmToken, "google", email, account.idToken!!, nickname)
+//                    signupViewModel.snsSignup(snsSignUpData)
 //                }else {
-//                    Log.d(TAG, "bindViews: 구글 로그인")
-    //                    val snsSignInModel = SnsSignInModel(MyApplication.prefs.getFcmToken("fcmToken", ""), "google", MyApplication.prefs.getGoogleToken("googleToken", ""))
-    //                    loginViewModel.snsSignIn(snsSignInModel)
+//                    val snsLoginData = SnsLoginData(fcmToken, "google", account.idToken!!)
+//                    loginViewModel.snsLogin(snsLoginData)
 //                }
-//                MyApplication.prefs.setLoginType("loginType", "google")
             } catch (e: ApiException) {
                 Log.d(TAG, "Google sign in failed", e)
             }

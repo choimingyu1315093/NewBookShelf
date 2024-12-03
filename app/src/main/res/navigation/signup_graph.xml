@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signup_graph"
+    app:startDestination="@id/agreeFragment">
+
+    <fragment
+        android:id="@+id/agreeFragment"
+        android:name="com.example.newbookshelf.presentation.view.signup.AgreeFragment"
+        android:label="fragment_agree"
+        tools:layout="@layout/fragment_agree" >
+        <action
+            android:id="@+id/action_agreeFragment_to_inputFragment"
+            app:destination="@id/inputFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/inputFragment"
+        android:name="com.example.newbookshelf.presentation.view.signup.InputFragment"
+        android:label="fragment_input"
+        tools:layout="@layout/fragment_input" >
+        <action
+            android:id="@+id/action_inputFragment_to_successFragment"
+            app:destination="@id/successFragment" />
+        <action
+            android:id="@+id/action_inputFragment_to_agreeFragment"
+            app:destination="@id/agreeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/successFragment"
+        android:name="com.example.newbookshelf.presentation.view.signup.SuccessFragment"
+        android:label="fragment_success"
+        tools:layout="@layout/fragment_success" />
+</navigation>

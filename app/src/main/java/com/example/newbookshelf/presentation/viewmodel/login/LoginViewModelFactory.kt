@@ -3,8 +3,8 @@ package com.example.newbookshelf.presentation.viewmodel.login
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.newbookshelf.domain.usecase.IdLoginUseCase
-import com.example.newbookshelf.domain.usecase.SnsLoginUseCase
+import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
+import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
 
 class LoginViewModelFactory(
     private val app: Application,

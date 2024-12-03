@@ -144,4 +144,15 @@ dependencies {
 
     //네이버 로그인
     implementation("com.navercorp.nid:oauth:5.10.0")
+
+    //Lottie
+    implementation("com.airbnb.android:lottie:6.5.2")
+
+    //Socket
+    implementation("io.socket:socket.io-client:2.1.0") {
+        exclude(group = "org.json", module = "json")
+    }
+
+
+
 }

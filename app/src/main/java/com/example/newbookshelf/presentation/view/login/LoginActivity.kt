@@ -18,10 +18,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.ActivityLoginBinding
+import com.example.newbookshelf.presentation.viewmodel.find.FindViewModel
+import com.example.newbookshelf.presentation.viewmodel.find.FindViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModel
 import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModelFactory
+import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel
+import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
@@ -42,8 +47,14 @@ class LoginActivity : AppCompatActivity() {
     lateinit var loginViewModelFactory: LoginViewModelFactory
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+    @Inject
+    lateinit var findViewModelFactory: FindViewModelFactory
+    @Inject
+    lateinit var signupViewModelFactory: SignupViewModelFactory
 
     lateinit var loginViewModel: LoginViewModel
+    lateinit var findViewModel: FindViewModel
+    lateinit var signupViewModel: SignupViewModel
 
     companion object {
         const val TAG = "LoginActivity"
@@ -58,6 +69,8 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel = ViewModelProvider(this, loginViewModelFactory).get(LoginViewModel::class.java)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        findViewModel = ViewModelProvider(this, findViewModelFactory).get(FindViewModel::class.java)
+        signupViewModel = ViewModelProvider(this, signupViewModelFactory).get(SignupViewModel::class.java)
 
         getFcmToken()
         requestPermission()
@@ -70,6 +83,7 @@ class LoginActivity : AppCompatActivity() {
                     val token = task.result
                     Log.d(LoginFragment.TAG, "login getFcmToken: $token")
                     loginViewModel.fcmToken.postValue(token)
+                    BookShelfApp.prefs.setFcmToken("fcmToken", token)
                 } else {
                     Log.e("FCM Token", "Failed to get token: ${task.exception}")
                 }

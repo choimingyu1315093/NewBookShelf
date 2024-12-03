@@ -9,5 +9,36 @@
         android:id="@+id/loginFragment"
         android:name="com.example.newbookshelf.presentation.view.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_findFragment"
+            app:destination="@id/findFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/findSuccessFragment"
+        android:name="com.example.newbookshelf.presentation.view.login.FindSuccessFragment"
+        android:label="fragment_find_success"
+        tools:layout="@layout/fragment_find_success" >
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_findSuccessFragment_to_findFragment"
+            app:destination="@id/findFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/findFragment"
+        android:name="com.example.newbookshelf.presentation.view.login.FindFragment"
+        android:label="fragment_find"
+        tools:layout="@layout/fragment_find" >
+        <action
+            android:id="@+id/action_findFragment_to_findSuccessFragment"
+            app:destination="@id/findSuccessFragment" />
+        <action
+            android:id="@+id/action_findFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>

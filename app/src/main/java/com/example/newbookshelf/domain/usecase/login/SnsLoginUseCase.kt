@@ -1,4 +1,4 @@
-package com.example.newbookshelf.domain.usecase
+package com.example.newbookshelf.domain.usecase.login
 
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData

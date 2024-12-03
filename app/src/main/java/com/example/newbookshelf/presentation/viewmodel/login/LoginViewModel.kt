@@ -5,19 +5,15 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
 import com.example.newbookshelf.data.util.Resource
-import com.example.newbookshelf.domain.usecase.IdLoginUseCase
-import com.example.newbookshelf.domain.usecase.SnsLoginUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
+import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
