@@ -3,6 +3,7 @@ package com.example.newbookshelf.data.api
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
+import com.example.newbookshelf.data.model.home.BestsellerModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
@@ -15,11 +16,13 @@ import com.example.newbookshelf.data.model.signup.SignupModel
 import com.example.newbookshelf.data.model.signup.SnsSignupData
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.HEAD
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 

@@ -22,6 +22,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "BASE_URL", project.properties["BASE_URL"].toString())
+        buildConfigField("String", "ALADIN_BASE_URL", project.properties["ALADIN_BASE_URL"].toString())
         buildConfigField("String", "TTB_KEY", project.properties["TTB_KEY"].toString())
         buildConfigField("String", "GOOGLE_CLIENT_ID", project.properties["GOOGLE_CLIENT_ID"].toString())
         buildConfigField("String", "NAVER_CLIENT_ID", project.properties["NAVER_CLIENT_ID"].toString())

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_background"
+    tools:context=".presentation.view.home.HomeFragment">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/progressbar_color"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="50dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl2"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ivLogo"
+                        android:layout_width="70dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/home_logo"
+                        android:layout_marginStart="20dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                    <ImageView
+                        android:id="@+id/ivSearch"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icon_search"
+                        android:layout_marginEnd="12dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/ivChat"
+                        app:tint="@color/black" />
+                    <ImageView
+                        android:id="@+id/ivChat"
+                        android:layout_width="26dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/icon_chat2"
+                        android:layout_marginEnd="12dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/ivBell" />
+                    <TextView
+                        android:id="@+id/tvChatCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/txt_main_40"
+                        android:paddingHorizontal="6dp"
+                        android:paddingVertical="1dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/lato_regular"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:layout_marginEnd="54dp"
+                        android:layout_marginTop="18dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="2" />
+
+                    <ImageView
+                        android:id="@+id/ivBell"
+                        android:layout_width="29dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/bell2"
+                        android:layout_marginEnd="20dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                    <TextView
+                        android:id="@+id/tvNotifyCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/txt_main_40"
+                        android:paddingHorizontal="6dp"
+                        android:paddingVertical="1dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/lato_regular"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:layout_marginEnd="18dp"
+                        android:layout_marginTop="18dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="2" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/cl2"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <TextView
+                        android:id="@+id/txtWeekBest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="이번 주 베스트셀러"
+                        android:fontFamily="@font/lato_regular"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="20dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+                    <TextView
+                        android:id="@+id/txtWeekBestDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="이번 주, 뜨거운 인기를 끌고 있는 책들"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="#797979"
+                        app:layout_constraintStart_toStartOf="@id/txtWeekBest"
+                        app:layout_constraintTop_toBottomOf="@id/txtWeekBest"/>
+                    <ImageView
+                        android:id="@+id/ivWeekFront"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/icon_front"
+                        android:layout_marginEnd="20dp"
+                        app:layout_constraintTop_toTopOf="@id/txtWeekBest"
+                        app:layout_constraintBottom_toBottomOf="@id/txtWeekBest"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvWeekBestseller"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintTop_toBottomOf="@id/txtWeekBestDescription"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <TextView
+                        android:id="@+id/txtNewBest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="신간 도서 목록"
+                        android:fontFamily="@font/lato_regular"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="34dp"
+                        android:layout_marginStart="20dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvWeekBestseller" />
+                    <TextView
+                        android:id="@+id/txtNewBestDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="최근에 출간된 책들을 만나보세요"
+                        android:textColor="#797979"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@id/txtNewBest"
+                        app:layout_constraintTop_toBottomOf="@id/txtNewBest"/>
+                    <ImageView
+                        android:id="@+id/ivNewFront"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/icon_front"
+                        android:layout_marginEnd="20dp"
+                        app:layout_constraintTop_toTopOf="@id/txtNewBest"
+                        app:layout_constraintBottom_toBottomOf="@id/txtNewBest"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvNewBestseller"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintTop_toBottomOf="@id/txtNewBestDescription"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <TextView
+                        android:id="@+id/txtAttentionBest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="주목할 만한 신간 목록"
+                        android:fontFamily="@font/lato_regular"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="34dp"
+                        android:layout_marginStart="20dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvNewBestseller" />
+                    <TextView
+                        android:id="@+id/txtAttentionBestDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="놓치지 말아야 할 화제의 신간"
+                        android:textColor="#797979"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@id/txtAttentionBest"
+                        app:layout_constraintTop_toBottomOf="@id/txtAttentionBest"/>
+                    <ImageView
+                        android:id="@+id/ivAttentionFront"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/icon_front"
+                        android:layout_marginEnd="20dp"
+                        app:layout_constraintTop_toTopOf="@id/txtAttentionBest"
+                        app:layout_constraintBottom_toBottomOf="@id/txtAttentionBest"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAttentionBestseller"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintTop_toBottomOf="@id/txtAttentionBestDescription"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/cl2"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <TextView
+                        android:id="@+id/txtDetailWeekBest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="이번 주 베스트셀러"
+                        android:fontFamily="@font/lato_regular"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="20dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDetailWeekBestseller"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintTop_toBottomOf="@id/txtDetailWeekBest"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDetailNewBestseller"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintTop_toBottomOf="@id/txtDetailWeekBest"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDetailAttentionBestseller"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintTop_toBottomOf="@id/txtDetailWeekBest"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

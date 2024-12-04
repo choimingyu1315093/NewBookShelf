@@ -3,6 +3,7 @@ package com.example.newbookshelf.data.repository.datasource
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
+import com.example.newbookshelf.data.model.home.BestsellerModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData

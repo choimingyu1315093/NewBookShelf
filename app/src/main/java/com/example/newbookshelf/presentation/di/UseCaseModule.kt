@@ -1,8 +1,12 @@
 package com.example.newbookshelf.presentation.di
 
+import com.example.newbookshelf.domain.repository.AladinBookRepository
 import com.example.newbookshelf.domain.repository.BookRepository
 import com.example.newbookshelf.domain.usecase.find.FindIdUseCase
 import com.example.newbookshelf.domain.usecase.find.FindPwUseCase
+import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
+import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
+import com.example.newbookshelf.domain.usecase.home.WeekBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
 import com.example.newbookshelf.domain.usecase.setting.BuyTicketUseCase
@@ -79,5 +83,23 @@ object UseCaseModule {
     @Provides
     fun provideBuyTicketUseCase(bookRepository: BookRepository): BuyTicketUseCase {
         return BuyTicketUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideWeekBestsellerUseCase(aladinBookRepository: AladinBookRepository): WeekBestsellerUseCase {
+        return WeekBestsellerUseCase(aladinBookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNewBestsellerUseCase(aladinBookRepository: AladinBookRepository): NewBestsellerUseCase {
+        return NewBestsellerUseCase(aladinBookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAttentionBestsellerUseCase(aladinBookRepository: AladinBookRepository): AttentionBestsellerUseCase {
+        return AttentionBestsellerUseCase(aladinBookRepository)
     }
 }

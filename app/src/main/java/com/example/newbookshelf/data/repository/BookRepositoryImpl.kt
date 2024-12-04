@@ -3,6 +3,8 @@ package com.example.newbookshelf.data.repository
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
+import com.example.newbookshelf.data.model.home.BestsellerModel
+import com.example.newbookshelf.data.model.home.Item
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
@@ -16,6 +18,7 @@ import com.example.newbookshelf.data.model.signup.SnsSignupData
 import com.example.newbookshelf.data.repository.datasource.BookRemoteDataSource
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.repository.BookRepository
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource): BookRepository {

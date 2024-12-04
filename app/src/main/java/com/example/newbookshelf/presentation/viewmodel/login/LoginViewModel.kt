@@ -23,7 +23,6 @@ class LoginViewModel(
     private val snsLoginUseCase: SnsLoginUseCase
 ): AndroidViewModel(app) {
 
-    val fcmToken = MutableLiveData<String>()
     val latitude = MutableLiveData<Double>()
     val longitude = MutableLiveData<Double>()
 
@@ -80,6 +79,5 @@ class LoginViewModel(
             }
         }
         return false
-
     }
 }

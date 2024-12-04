@@ -22,11 +22,35 @@ class PreferenceUtil(context: Context) {
         prefs.edit().putString(key, defValue).apply()
     }
 
-    //NaverToken
-    fun getNaverToken(key: String, defValue: String): String {
+    //AutoLogin
+    fun getAutoLogin(key: String, defValue: Boolean): Boolean {
+        return prefs.getBoolean(key, defValue)
+    }
+    fun setAutoLogin(key: String, defValue: Boolean){
+        prefs.edit().putBoolean(key, defValue).apply()
+    }
+
+    //loginType
+    fun getLoginType(key: String, defValue: String): String {
         return prefs.getString(key, defValue).toString()
     }
-    fun setNaverToken(key: String, defValue: String){
+    fun setLoginType(key: String, defValue: String){
+        prefs.edit().putString(key, defValue).apply()
+    }
+
+    //loginId
+    fun getLoginId(key: String, defValue: String): String {
+        return prefs.getString(key, defValue).toString()
+    }
+    fun setLoginId(key: String, defValue: String){
+        prefs.edit().putString(key, defValue).apply()
+    }
+
+    //loginPassword
+    fun getLoginPw(key: String, defValue: String): String {
+        return prefs.getString(key, defValue).toString()
+    }
+    fun setLoginPw(key: String, defValue: String){
         prefs.edit().putString(key, defValue).apply()
     }
 
@@ -35,6 +59,30 @@ class PreferenceUtil(context: Context) {
         return prefs.getString(key, defValue).toString()
     }
     fun setKakaoToken(key: String, defValue: String){
+        prefs.edit().putString(key, defValue).apply()
+    }
+
+    //GoogleToken
+    fun getGoogleToken(key: String, defValue: String): String {
+        return prefs.getString(key, defValue).toString()
+    }
+    fun setGoogleToken(key: String, defValue: String){
+        prefs.edit().putString(key, defValue).apply()
+    }
+
+    //NaverToken
+    fun getNaverToken(key: String, defValue: String): String {
+        return prefs.getString(key, defValue).toString()
+    }
+    fun setNaverToken(key: String, defValue: String){
+        prefs.edit().putString(key, defValue).apply()
+    }
+
+    //Nickname
+    fun getNickname(key: String, defValue: String): String {
+        return prefs.getString(key, defValue).toString()
+    }
+    fun setNickname(key: String, defValue: String){
         prefs.edit().putString(key, defValue).apply()
     }
 }

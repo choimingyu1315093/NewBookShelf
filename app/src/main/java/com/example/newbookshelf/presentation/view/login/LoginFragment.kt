@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.BuildConfig
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.login.LoginData
@@ -37,6 +38,7 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
+import kotlin.math.sign
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -48,7 +50,7 @@ class LoginFragment : Fragment() {
         const val GOOGLE_LOGIN = 100
     }
 
-    private lateinit var fcmToken: String
+    private var fcmToken = ""
     private var id = ""
     private var password = ""
     private var isIDCheck = false
@@ -85,27 +87,39 @@ class LoginFragment : Fragment() {
             val inputManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(etId.windowToken, 0)
         }
+
+        fcmToken = BookShelfApp.prefs.getFcmToken("fcmToken", "")
+
+        if(BookShelfApp.prefs.getAutoLogin("autoLogin", false)){
+            if(BookShelfApp.prefs.getLoginType("loginType", "general") == "general"){
+                val loginData = LoginData(fcmToken, "general", BookShelfApp.prefs.getLoginId("id", ""), BookShelfApp.prefs.getLoginId("password", ""))
+                loginViewModel.login(loginData)
+            }else if(BookShelfApp.prefs.getLoginType("loginType", "general") == "kakao"){
+                val snsLoginData = SnsLoginData(fcmToken, "kakao", BookShelfApp.prefs.getKakaoToken("kakaoToken", ""))
+                loginViewModel.snsLogin(snsLoginData)
+            }else if(BookShelfApp.prefs.getLoginType("loginType", "general") == "naver"){
+                val snsLoginData = SnsLoginData(fcmToken, "naver", BookShelfApp.prefs.getNaverToken("naverToken", ""))
+                loginViewModel.snsLogin(snsLoginData)
+            }else {
+                val snsLoginData = SnsLoginData(fcmToken, "google", BookShelfApp.prefs.getGoogleToken("googleToken",""))
+                Log.d(TAG, "init: snsLoginData $snsLoginData")
+                loginViewModel.snsLogin(snsLoginData)
+            }
+        }
     }
 
     private fun googleLogin() = with(binding){
         ivGoogle.setOnClickListener {
             auth = (activity as LoginActivity).firebaseAuth
 
-            val account = GoogleSignIn.getLastSignedInAccount(requireContext())
-            Log.d(TAG, "googleLogin: account $account")
-            if(account == null){
-                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
-                    .requestEmail()
-                    .build()
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+                .requestEmail()
+                .build()
 
-                val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
-                val signInIntent = googleSignInClient.signInIntent
-                startActivityForResult(signInIntent, GOOGLE_LOGIN)
-            }else {
-                val snsLoginData = SnsLoginData(fcmToken, "google", account.idToken!!)
-                loginViewModel.snsLogin(snsLoginData)
-            }
+            val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, GOOGLE_LOGIN)
         }
     }
 
@@ -117,20 +131,18 @@ class LoginFragment : Fragment() {
                         override fun onSuccess(result: NidProfileResponse) {
                             val nickname = result.profile?.nickname
                             val email = result.profile?.email
-//                            MyApplication.prefs.setNickname("nickname", nickname ?: "Nickname")
-//                            if(MyApplication.prefs.getNaverToken("naverToken","")  == ""){
-//                                Log.d(TAG, "bindViews: 네이버 회원가입 후 로그인")
-//                                MyApplication.prefs.setNaverToken("naverToken", NaverIdLoginSDK.getAccessToken()!!)
-//                                val snsSignUpModel = SnsSignUpModel(MyApplication.prefs.getFcmToken("fcmToken", ""), "naver", email, MyApplication.prefs.getNaverToken("naverToken", ""), nickname)
-//                                Log.d(TAG, "onSuccess: snsSignUpModel $snsSignUpModel")
-//                                loginViewModel.snsSignUp(snsSignUpModel)
-//                            }else {
-//                                Log.d(TAG, "bindViews: 네이버 로그인")
-//                                val snsSignInModel = SnsSignInModel(MyApplication.prefs.getFcmToken("fcmToken", ""), "naver", MyApplication.prefs.getNaverToken("naverToken", ""))
-//                                Log.d(TAG, "onSuccess: snsSignInModel $snsSignInModel")
-//                                loginViewModel.snsSignIn(snsSignInModel)
-//                            }
-//                            MyApplication.prefs.setLoginType("loginType", "naver")
+                            BookShelfApp.prefs.setNickname("nickname", nickname ?: "Nickname")
+                            if(BookShelfApp.prefs.getNaverToken("naverToken","")  == ""){
+                                Log.d(TAG, "bindViews: 네이버 회원가입 후 로그인")
+                                BookShelfApp.prefs.setKakaoToken("naverToken", NaverIdLoginSDK.getAccessToken()!!)
+                                val snsSignupData = SnsSignupData(fcmToken, "naver", email, NaverIdLoginSDK.getAccessToken()!!, nickname)
+                                signupViewModel.snsSignup(snsSignupData)
+                            }else {
+                                Log.d(TAG, "bindViews: 네이버 로그인")
+                                val snsLoginData = SnsLoginData(fcmToken, "naver", BookShelfApp.prefs.getNaverToken("naverToken", ""))
+                                loginViewModel.snsLogin(snsLoginData)
+                            }
+                            BookShelfApp.prefs.setLoginType("loginType", "naver")
                         }
 
                         override fun onError(errorCode: Int, message: String) {
@@ -170,20 +182,18 @@ class LoginFragment : Fragment() {
                         } else if (user != null) {
                             val nickname = user.kakaoAccount?.profile?.nickname
                             val email = user.kakaoAccount?.email
-//                            MyApplication.prefs.setNickname("nickname", nickname ?: "Nickname")
-//                            if(MyApplication.prefs.getKakaoToken("kakaoToken", "") == ""){
-//                                Log.d(TAG, "bindViews: 카카오 회원가입 후 로그인")
-//                                MyApplication.prefs.setKakaoToken("kakaoToken", authorizationCode)
-//                                val snsSignUpModel = SnsSignUpModel(MyApplication.prefs.getFcmToken("fcmToken", ""), "kakao", email, MyApplication.prefs.getKakaoToken("kakaoToken", ""), nickname)
-//                                Log.d(TAG, "bindViews: snsSignUpModel $snsSignUpModel")
-//                                loginViewModel.snsSignUp(snsSignUpModel)
-//                            }else {
-//                                Log.d(TAG, "bindViews: 카카오 로그인")
-//                                val snsSignInModel = SnsSignInModel(MyApplication.prefs.getFcmToken("fcmToken", ""), "kakao", MyApplication.prefs.getKakaoToken("kakaoToken", ""))
-//                                Log.d(TAG, "bindViews: snsSignInModel $snsSignInModel")
-//                                loginViewModel.snsSignIn(snsSignInModel)
-//                            }
-//                            MyApplication.prefs.setLoginType("loginType", "kakao")
+                            BookShelfApp.prefs.setNickname("nickname", nickname ?: "Nickname")
+                            if(BookShelfApp.prefs.getKakaoToken("kakaoToken", "") == ""){
+                                Log.d(TAG, "bindViews: 카카오 회원가입 후 로그인")
+                                BookShelfApp.prefs.setKakaoToken("kakaoToken", authorizationCode)
+                                val snsSignupData = SnsSignupData(fcmToken, "google", email, authorizationCode, nickname)
+                                signupViewModel.snsSignup(snsSignupData)
+                            }else {
+                                Log.d(TAG, "bindViews: 카카오 로그인")
+                                val snsLoginData = SnsLoginData(fcmToken, "kakao", BookShelfApp.prefs.getKakaoToken("kakaoToken", ""))
+                                loginViewModel.snsLogin(snsLoginData)
+                            }
+                            BookShelfApp.prefs.setLoginType("loginType", "kakao")
                         }
                     }
                 }
@@ -238,15 +248,14 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeViewModels() = with(binding){
-        loginViewModel.fcmToken.observe(viewLifecycleOwner){ token ->
-            fcmToken = token
-        }
-        
         loginViewModel.loginResult.observe(viewLifecycleOwner) { response ->
             when(response){
                 is Resource.Success -> {
                     hideProgressBar()
                     if(response.data!!.result){
+                        BookShelfApp.prefs.setAutoLogin("autoLogin", true)
+                        BookShelfApp.prefs.setLoginId("id", id)
+                        BookShelfApp.prefs.setLoginPw("password", password)
                         val intent = Intent(requireContext(), HomeActivity::class.java)
                         startActivity(intent)
                     }
@@ -266,6 +275,7 @@ class LoginFragment : Fragment() {
                 is Resource.Success -> {
                     hideProgressBar()
                     if(response.data!!.result){
+                        BookShelfApp.prefs.setAutoLogin("autoLogin", true)
                         val intent = Intent(requireContext(), HomeActivity::class.java)
                         startActivity(intent)
                     }
@@ -308,14 +318,18 @@ class LoginFragment : Fragment() {
                 val nickname = account.displayName
                 val email = account.email
 
-                Log.d(TAG, "onActivityResult: account.idToken ${account.idToken}")
-//                if(account.idToken == null){
-//                    val snsSignUpData = SnsSignupData(fcmToken, "google", email, account.idToken!!, nickname)
-//                    signupViewModel.snsSignup(snsSignUpData)
-//                }else {
-//                    val snsLoginData = SnsLoginData(fcmToken, "google", account.idToken!!)
-//                    loginViewModel.snsLogin(snsLoginData)
-//                }
+                BookShelfApp.prefs.setNickname("nickname", nickname ?: "Nickname")
+                if(BookShelfApp.prefs.getGoogleToken("googleToken","")  == ""){
+                    Log.d(TAG, "bindViews: 구글 회원가입 후 로그인")
+                    BookShelfApp.prefs.setGoogleToken("googleToken", account.idToken!!)
+                    val snsSignupData = SnsSignupData(fcmToken, "google", email, account.idToken!!, nickname)
+                    signupViewModel.snsSignup(snsSignupData)
+                }else {
+                    Log.d(TAG, "bindViews: 구글 로그인")
+                    val snsLoginData = SnsLoginData(fcmToken, "google", BookShelfApp.prefs.getGoogleToken("googleToken",""))
+                    loginViewModel.snsLogin(snsLoginData)
+                }
+                BookShelfApp.prefs.setLoginType("loginType", "google")
             } catch (e: ApiException) {
                 Log.d(TAG, "Google sign in failed", e)
             }

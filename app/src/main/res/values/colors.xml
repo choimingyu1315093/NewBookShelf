@@ -5,7 +5,7 @@
     <color name="md_theme_onPrimaryContainer">#BEF0B2</color>
     <color name="md_theme_secondary">#BACCB2</color>
     <color name="md_theme_onSecondary">#263422</color>
-    <color name="md_theme_secondaryContainer">#3C4B38</color>
+    <color name="md_theme_secondaryContainer">#FFFFFF</color>
     <color name="md_theme_onSecondaryContainer">#D6E8CE</color>
     <color name="md_theme_tertiary">#A0CFD3</color>
     <color name="md_theme_onTertiary">#00363A</color>
@@ -143,4 +143,5 @@
     <color name="white">#FFFFFF</color>
     <color name="color767676">#767676</color>
     <color name="red">#f44336</color>
+    <color name="yellow">#FFC700</color>
 </resources>

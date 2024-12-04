@@ -1,5 +1,6 @@
 package com.example.newbookshelf.presentation.di
 
+import com.example.newbookshelf.data.api.AladinApiService
 import com.example.newbookshelf.data.api.ApiService
 import com.example.newbookshelf.data.repository.datasource.BookRemoteDataSource
 import com.example.newbookshelf.data.repository.datasourceimpl.BookRemoteDataSourceImpl
@@ -15,7 +16,7 @@ object RemoteDataModule {
 
     @Singleton
     @Provides
-    fun provideBookRemoteDataSource(apiService: ApiService): BookRemoteDataSource {
+    fun provideBookRemoteDataSource(@DefaultRetrofit apiService: ApiService): BookRemoteDataSource {
         return BookRemoteDataSourceImpl(apiService)
     }
 }

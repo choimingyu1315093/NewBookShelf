@@ -82,7 +82,6 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val token = task.result
                     Log.d(LoginFragment.TAG, "login getFcmToken: $token")
-                    loginViewModel.fcmToken.postValue(token)
                     BookShelfApp.prefs.setFcmToken("fcmToken", token)
                 } else {
                     Log.e("FCM Token", "Failed to get token: ${task.exception}")

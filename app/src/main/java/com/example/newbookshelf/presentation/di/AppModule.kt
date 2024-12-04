@@ -14,6 +14,7 @@ import javax.inject.Singleton
 @Module
 object AppModule {
 
+    @DefaultRetrofit
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit {
@@ -23,9 +24,10 @@ object AppModule {
             .build()
     }
 
+    @DefaultRetrofit
     @Singleton
     @Provides
-    fun provideApiService(retrofit: Retrofit): ApiService {
+    fun provideApiService(@DefaultRetrofit retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
 }
