@@ -8,6 +8,7 @@ import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
@@ -35,6 +36,7 @@ class LoginViewModel(
                 loginResult.postValue(Resource.Loading())
                 val result = loginUseCase.execute(loginData)
                 loginResult.postValue(result)
+                BookShelfApp.prefs.setLoginType("loginType", "general")
             }
         }catch (e: Exception){
             loginResult.postValue(Resource.Error(e.message.toString()))

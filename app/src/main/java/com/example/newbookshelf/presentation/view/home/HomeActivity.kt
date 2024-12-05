@@ -14,6 +14,9 @@ import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.ActivityHomeBinding
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.SearchMoreBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModelFactory
@@ -32,6 +35,12 @@ class HomeActivity : AppCompatActivity() {
     lateinit var newBestsellerAdapter: NewBestsellerAdapter
     @Inject
     lateinit var attentionBestseller: AttentionBestsellerAdapter
+    @Inject
+    lateinit var searchBookTitleAdapter: SearchBookTitleAdapter
+    @Inject
+    lateinit var searchBookAdapter: SearchBookAdapter
+    @Inject
+    lateinit var searchMoreBookAdapter: SearchMoreBookAdapter
 
     companion object {
         const val TAG = "HomeActivity"

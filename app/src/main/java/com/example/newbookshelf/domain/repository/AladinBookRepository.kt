@@ -1,7 +1,6 @@
 package com.example.newbookshelf.domain.repository
 
-import com.example.newbookshelf.data.model.home.BestsellerModel
-import com.example.newbookshelf.data.model.home.Item
+import com.example.newbookshelf.data.model.home.bestseller.BestsellerModel
 import com.example.newbookshelf.data.util.Resource
 import kotlinx.coroutines.flow.Flow
 

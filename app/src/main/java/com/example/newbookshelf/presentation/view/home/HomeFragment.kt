@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentHomeBinding
@@ -29,6 +31,7 @@ class HomeFragment : Fragment() {
         const val TAG = "HomeFragment"
     }
 
+    private lateinit var accessToken: String
     private var searchTarget = "Book"
     private var categoryId = 0
 
@@ -46,6 +49,7 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.bind(view)
 
         init()
+        bindViews()
         observeViewModel()
     }
 
@@ -54,6 +58,7 @@ class HomeFragment : Fragment() {
         weekBestsellerAdapter = (activity as HomeActivity).weekBestsellerAdapter
         newBestsellerAdapter = (activity as HomeActivity).newBestsellerAdapter
         attentionBestsellerAdapter = (activity as HomeActivity).attentionBestseller
+        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
 
         rvWeekBestseller.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
@@ -68,6 +73,12 @@ class HomeFragment : Fragment() {
         rvAttentionBestseller.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
             adapter = attentionBestsellerAdapter
+        }
+    }
+
+    private fun bindViews() = with(binding){
+        ivSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_searchBookFragment)
         }
     }
 
@@ -123,6 +134,23 @@ class HomeFragment : Fragment() {
                 is Resource.Loading -> {
                     showProgress()
                 }
+            }
+        }
+
+        homeViewModel.alarmCount(accessToken).observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    response.data?.let {
+                        if(it.data == 0){
+                            tvNotifyCount.visibility = View.GONE
+                        }else {
+                            tvNotifyCount.visibility = View.VISIBLE
+                            tvNotifyCount.text = "${it.data}"
+                        }
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
             }
         }
     }

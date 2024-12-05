@@ -1,8 +1,6 @@
 package com.example.newbookshelf.data.api
 
-import com.example.newbookshelf.data.model.home.BestsellerModel
-import com.example.newbookshelf.data.model.home.Item
-import kotlinx.coroutines.flow.Flow
+import com.example.newbookshelf.data.model.home.bestseller.BestsellerModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -1,4 +1,4 @@
-package com.example.newbookshelf.data.model.home
+package com.example.newbookshelf.data.model.home.bestseller
 
 data class SeriesInfo(
     val seriesId: Int?,

@@ -2,6 +2,9 @@ package com.example.newbookshelf.presentation.di
 
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.SearchMoreBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
 import dagger.Module
 import dagger.Provides
@@ -29,5 +32,23 @@ object AdapterModule {
     @Provides
     fun provideAttentionBestsellerAdapter(): AttentionBestsellerAdapter {
         return AttentionBestsellerAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchBookTitleAdapter(): SearchBookTitleAdapter {
+        return SearchBookTitleAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchBookAdapter(): SearchBookAdapter {
+        return SearchBookAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchMoreBookAdapter(): SearchMoreBookAdapter {
+        return SearchMoreBookAdapter()
     }
 }

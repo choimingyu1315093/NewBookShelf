@@ -4,8 +4,14 @@ import com.example.newbookshelf.domain.repository.AladinBookRepository
 import com.example.newbookshelf.domain.repository.BookRepository
 import com.example.newbookshelf.domain.usecase.find.FindIdUseCase
 import com.example.newbookshelf.domain.usecase.find.FindPwUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmCountUseCase
 import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
+import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
+import com.example.newbookshelf.domain.usecase.home.SearchedBookAllDeleteUseCase
+import com.example.newbookshelf.domain.usecase.home.SearchedBookDeleteUseCase
+import com.example.newbookshelf.domain.usecase.home.SearchedBookInsertUseCase
+import com.example.newbookshelf.domain.usecase.home.SearchedBookUseCase
 import com.example.newbookshelf.domain.usecase.home.WeekBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
@@ -101,5 +107,41 @@ object UseCaseModule {
     @Provides
     fun provideAttentionBestsellerUseCase(aladinBookRepository: AladinBookRepository): AttentionBestsellerUseCase {
         return AttentionBestsellerUseCase(aladinBookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlarmCountUseCase(bookRepository: BookRepository): AlarmCountUseCase {
+        return AlarmCountUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchBookUseCase(bookRepository: BookRepository): SearchBookUseCase {
+        return SearchBookUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchedBookUseCase(bookRepository: BookRepository): SearchedBookUseCase {
+        return SearchedBookUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchedBookInsertUseCase(bookRepository: BookRepository): SearchedBookInsertUseCase {
+        return SearchedBookInsertUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchedBookDeleteUseCase(bookRepository: BookRepository): SearchedBookDeleteUseCase {
+        return SearchedBookDeleteUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchedBookAllDeleteUseCase(bookRepository: BookRepository): SearchedBookAllDeleteUseCase {
+        return SearchedBookAllDeleteUseCase(bookRepository)
     }
 }

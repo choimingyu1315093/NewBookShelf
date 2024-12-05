@@ -68,6 +68,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
+    androidTestImplementation(libs.androidx.core.testing)
 
     //Room
     val room_version = "2.6.1" // 최신 버전 사용
@@ -103,6 +104,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    testImplementation("org.robolectric:robolectric:4.4")
 
     //optional - Test helpers for LiveData
     testImplementation("androidx.arch.core:core-testing:2.2.0")
@@ -118,6 +121,13 @@ dependencies {
     //optional - MockWebServer
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    //AndroidTest
+    androidTestImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    androidTestImplementation("com.google.truth:truth:1.1.4")
+    androidTestImplementation("com.google.truth.extensions:truth-java8-extension:1.1.3")
 
     //Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")

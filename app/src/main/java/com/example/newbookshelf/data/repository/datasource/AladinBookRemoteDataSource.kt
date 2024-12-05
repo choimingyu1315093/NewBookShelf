@@ -1,7 +1,6 @@
 package com.example.newbookshelf.data.repository.datasource
 
-import com.example.newbookshelf.data.model.home.BestsellerModel
-import com.example.newbookshelf.data.model.home.Item
+import com.example.newbookshelf.data.model.home.bestseller.BestsellerModel
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 

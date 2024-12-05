@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.newbookshelf.R
-import com.example.newbookshelf.data.model.home.Item
+import com.example.newbookshelf.data.model.home.bestseller.Item
 
 class NewBestsellerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

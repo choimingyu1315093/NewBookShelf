@@ -3,8 +3,9 @@ package com.example.newbookshelf.domain.repository
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
-import com.example.newbookshelf.data.model.home.BestsellerModel
-import com.example.newbookshelf.data.model.home.Item
+import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
@@ -30,4 +31,10 @@ interface BookRepository {
     suspend fun emailCheck(emailCheckData: EmailCheckData): Resource<CheckModel>
     suspend fun nicknameCheck(nickname: String): Resource<CheckModel>
     suspend fun buyTicket(accessToken: String, ticketData: TicketData): Resource<TicketModel>
+    fun alarmCount(accessToken: String): Flow<Resource<AlarmCountModel>>
+    fun searchedBook(): Flow<List<SearchedBook>>
+    suspend fun insert(searchedBook: SearchedBook)
+    suspend fun delete(searchedBook: SearchedBook)
+    suspend fun allDelete()
+    fun searchBook(accessToken: String, bookName: String): Flow<Resource<SearchBookModel>>
 }

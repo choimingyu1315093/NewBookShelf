@@ -1,8 +1,7 @@
 package com.example.newbookshelf.data.repository.datasourceimpl
 
 import com.example.newbookshelf.data.api.AladinApiService
-import com.example.newbookshelf.data.model.home.BestsellerModel
-import com.example.newbookshelf.data.model.home.Item
+import com.example.newbookshelf.data.model.home.bestseller.BestsellerModel
 import com.example.newbookshelf.data.repository.datasource.AladinBookRemoteDataSource
 import com.example.newbookshelf.presentation.di.AladinRetrofit
 import kotlinx.coroutines.flow.Flow

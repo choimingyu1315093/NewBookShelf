@@ -3,7 +3,8 @@ package com.example.newbookshelf.data.api
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
-import com.example.newbookshelf.data.model.home.BestsellerModel
+import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
@@ -17,7 +18,6 @@ import com.example.newbookshelf.data.model.signup.SnsSignupData
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.HEAD
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -86,4 +86,17 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
         @Body ticketData: TicketData
     ): Response<TicketModel>
+
+    //알람 갯수
+    @GET("alarms/count")
+    suspend fun alarmCount(
+        @Header("Authorization") accessToken: String,
+    ): Response<AlarmCountModel>
+
+    //책 검색
+    @GET("books/list")
+    suspend fun searchBook(
+        @Header("Authorization") accessToken: String,
+        @Query("book_name") bookName: String
+    ): Response<SearchBookModel>
 }

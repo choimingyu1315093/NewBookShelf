@@ -1,11 +1,11 @@
 package com.example.newbookshelf.data.repository.datasourceimpl
 
-import com.example.newbookshelf.data.api.AladinApiService
 import com.example.newbookshelf.data.api.ApiService
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
-import com.example.newbookshelf.data.model.home.BestsellerModel
+import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
@@ -18,6 +18,8 @@ import com.example.newbookshelf.data.model.signup.SignupModel
 import com.example.newbookshelf.data.model.signup.SnsSignupData
 import com.example.newbookshelf.data.repository.datasource.BookRemoteDataSource
 import com.example.newbookshelf.presentation.di.DefaultRetrofit
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 
 class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiService): BookRemoteDataSource {
@@ -61,4 +63,18 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
     override suspend fun buyTicket(accessToken: String, ticketData: TicketData): Response<TicketModel> {
         return apiService.buyTickets(accessToken, ticketData)
     }
+
+    override fun alarmCount(accessToken: String): Flow<Response<AlarmCountModel>> {
+        return flow {
+            emit(apiService.alarmCount(accessToken))
+        }
+    }
+
+    override fun searchBook(accessToken: String, bookName: String): Flow<Response<SearchBookModel>> {
+        return flow {
+            emit(apiService.searchBook(accessToken, bookName))
+        }
+    }
+
+
 }

@@ -92,7 +92,7 @@ class LoginFragment : Fragment() {
 
         if(BookShelfApp.prefs.getAutoLogin("autoLogin", false)){
             if(BookShelfApp.prefs.getLoginType("loginType", "general") == "general"){
-                val loginData = LoginData(fcmToken, "general", BookShelfApp.prefs.getLoginId("id", ""), BookShelfApp.prefs.getLoginId("password", ""))
+                val loginData = LoginData(fcmToken, "general", BookShelfApp.prefs.getLoginId("id", ""), BookShelfApp.prefs.getLoginPw("password", ""))
                 loginViewModel.login(loginData)
             }else if(BookShelfApp.prefs.getLoginType("loginType", "general") == "kakao"){
                 val snsLoginData = SnsLoginData(fcmToken, "kakao", BookShelfApp.prefs.getKakaoToken("kakaoToken", ""))
@@ -102,7 +102,6 @@ class LoginFragment : Fragment() {
                 loginViewModel.snsLogin(snsLoginData)
             }else {
                 val snsLoginData = SnsLoginData(fcmToken, "google", BookShelfApp.prefs.getGoogleToken("googleToken",""))
-                Log.d(TAG, "init: snsLoginData $snsLoginData")
                 loginViewModel.snsLogin(snsLoginData)
             }
         }
@@ -256,6 +255,7 @@ class LoginFragment : Fragment() {
                         BookShelfApp.prefs.setAutoLogin("autoLogin", true)
                         BookShelfApp.prefs.setLoginId("id", id)
                         BookShelfApp.prefs.setLoginPw("password", password)
+                        BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.accessToken)
                         val intent = Intent(requireContext(), HomeActivity::class.java)
                         startActivity(intent)
                     }
@@ -276,6 +276,7 @@ class LoginFragment : Fragment() {
                     hideProgressBar()
                     if(response.data!!.result){
                         BookShelfApp.prefs.setAutoLogin("autoLogin", true)
+                        BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.access_token)
                         val intent = Intent(requireContext(), HomeActivity::class.java)
                         startActivity(intent)
                     }
