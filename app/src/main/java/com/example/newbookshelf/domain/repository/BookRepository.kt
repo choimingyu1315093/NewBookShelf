@@ -1,9 +1,14 @@
 package com.example.newbookshelf.domain.repository
 
+import com.example.newbookshelf.data.model.common.OnlyResultModel
+import com.example.newbookshelf.data.model.detail.AddMyBookData
+import com.example.newbookshelf.data.model.detail.AddMyBookModel
+import com.example.newbookshelf.data.model.detail.DetailBookModel
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
 import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
+import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.model.login.LoginData
@@ -32,9 +37,14 @@ interface BookRepository {
     suspend fun nicknameCheck(nickname: String): Resource<CheckModel>
     suspend fun buyTicket(accessToken: String, ticketData: TicketData): Resource<TicketModel>
     fun alarmCount(accessToken: String): Flow<Resource<AlarmCountModel>>
+    fun alarmList(accessToken: String): Flow<Resource<AlarmListModel>>
+    suspend fun alarmAllDelete(accessToken: String): Resource<OnlyResultModel>
+    suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Resource<OnlyResultModel>
+    suspend fun searchBook(accessToken: String, bookName: String): Resource<SearchBookModel>
     fun searchedBook(): Flow<List<SearchedBook>>
     suspend fun insert(searchedBook: SearchedBook)
     suspend fun delete(searchedBook: SearchedBook)
     suspend fun allDelete()
-    fun searchBook(accessToken: String, bookName: String): Flow<Resource<SearchBookModel>>
+    suspend fun detailBook(accessToken: String, bookIsbn: String): Resource<DetailBookModel>
+    suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Resource<AddMyBookModel>
 }

@@ -38,6 +38,7 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
+import kotlin.math.log
 import kotlin.math.sign
 
 class LoginFragment : Fragment() {
@@ -91,8 +92,10 @@ class LoginFragment : Fragment() {
         fcmToken = BookShelfApp.prefs.getFcmToken("fcmToken", "")
 
         if(BookShelfApp.prefs.getAutoLogin("autoLogin", false)){
+            Log.d(TAG, "init: loginFragment ${BookShelfApp.prefs.getLoginType("loginType", "general")}")
             if(BookShelfApp.prefs.getLoginType("loginType", "general") == "general"){
                 val loginData = LoginData(fcmToken, "general", BookShelfApp.prefs.getLoginId("id", ""), BookShelfApp.prefs.getLoginPw("password", ""))
+                Log.d(TAG, "init: loginFragment $loginData")
                 loginViewModel.login(loginData)
             }else if(BookShelfApp.prefs.getLoginType("loginType", "general") == "kakao"){
                 val snsLoginData = SnsLoginData(fcmToken, "kakao", BookShelfApp.prefs.getKakaoToken("kakaoToken", ""))
@@ -253,8 +256,6 @@ class LoginFragment : Fragment() {
                     hideProgressBar()
                     if(response.data!!.result){
                         BookShelfApp.prefs.setAutoLogin("autoLogin", true)
-                        BookShelfApp.prefs.setLoginId("id", id)
-                        BookShelfApp.prefs.setLoginPw("password", password)
                         BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.accessToken)
                         val intent = Intent(requireContext(), HomeActivity::class.java)
                         startActivity(intent)

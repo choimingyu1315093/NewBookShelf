@@ -2,6 +2,7 @@ package com.example.newbookshelf.presentation.di
 
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.NotificationAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchMoreBookAdapter
@@ -32,6 +33,12 @@ object AdapterModule {
     @Provides
     fun provideAttentionBestsellerAdapter(): AttentionBestsellerAdapter {
         return AttentionBestsellerAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNotificationAdapter(): NotificationAdapter {
+        return NotificationAdapter()
     }
 
     @Singleton

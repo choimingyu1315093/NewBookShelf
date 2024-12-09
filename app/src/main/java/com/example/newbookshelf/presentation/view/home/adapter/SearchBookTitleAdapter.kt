@@ -22,6 +22,11 @@ class SearchBookTitleAdapter: RecyclerView.Adapter<SearchBookTitleAdapter.ViewHo
 
     val differ = AsyncListDiffer(this, callback)
 
+    private var onClickListener: ((SearchedBook) -> Unit)? = null
+    fun setOnClickListener(listener: (SearchedBook) -> Unit){
+        onClickListener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(ItemSearchBookTitleBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
@@ -37,6 +42,12 @@ class SearchBookTitleAdapter: RecyclerView.Adapter<SearchBookTitleAdapter.ViewHo
     inner class ViewHolder(private val binding: ItemSearchBookTitleBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(searchedBook: SearchedBook) = with(binding){
             tvTitle.text = searchedBook.title
+
+            root.setOnClickListener {
+                onClickListener?.let {
+                    it(searchedBook)
+                }
+            }
         }
     }
 }

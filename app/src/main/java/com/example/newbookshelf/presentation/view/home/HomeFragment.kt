@@ -17,6 +17,7 @@ import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentHomeBinding
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.NotificationAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
 
@@ -54,11 +55,31 @@ class HomeFragment : Fragment() {
     }
 
     private fun init() = with(binding){
+        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         homeViewModel = (activity as HomeActivity).homeViewModel
         weekBestsellerAdapter = (activity as HomeActivity).weekBestsellerAdapter
+        weekBestsellerAdapter.setOnClickListener {
+            val bundle = Bundle().apply {
+                putParcelable("book", it)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
+
         newBestsellerAdapter = (activity as HomeActivity).newBestsellerAdapter
+        newBestsellerAdapter.setOnClickListener {
+            val bundle = Bundle().apply {
+                putParcelable("book", it)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
+
         attentionBestsellerAdapter = (activity as HomeActivity).attentionBestseller
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
+        attentionBestsellerAdapter.setOnClickListener {
+            val bundle = Bundle().apply {
+                putParcelable("book", it)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
 
         rvWeekBestseller.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
@@ -79,6 +100,10 @@ class HomeFragment : Fragment() {
     private fun bindViews() = with(binding){
         ivSearch.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_searchBookFragment)
+        }
+
+        ivBell.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_notificationFragment)
         }
     }
 

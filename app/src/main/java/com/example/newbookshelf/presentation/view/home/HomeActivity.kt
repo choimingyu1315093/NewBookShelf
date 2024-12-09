@@ -2,6 +2,7 @@ package com.example.newbookshelf.presentation.view.home
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -14,10 +15,13 @@ import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.ActivityHomeBinding
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.NotificationAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchMoreBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
+import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModel
+import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +29,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityHomeBinding
+    lateinit var binding: ActivityHomeBinding
     @Inject
     lateinit var homeViewModelFactory: HomeViewModelFactory
     lateinit var homeViewModel: HomeViewModel
@@ -36,11 +40,17 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var attentionBestseller: AttentionBestsellerAdapter
     @Inject
+    lateinit var notificationAdapter: NotificationAdapter
+    @Inject
     lateinit var searchBookTitleAdapter: SearchBookTitleAdapter
     @Inject
     lateinit var searchBookAdapter: SearchBookAdapter
     @Inject
     lateinit var searchMoreBookAdapter: SearchMoreBookAdapter
+
+    @Inject
+    lateinit var detailViewModelFactory: DetailViewModelFactory
+    lateinit var detailViewModel: DetailViewModel
 
     companion object {
         const val TAG = "HomeActivity"
@@ -56,22 +66,18 @@ class HomeActivity : AppCompatActivity() {
 
         init()
         homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
+        detailViewModel = ViewModelProvider(this, detailViewModelFactory).get(DetailViewModel::class.java)
     }
 
     private fun init() = with(binding){
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController
         bottomNavigationView.setupWithNavController(navController)
-    }
 
-    override fun onBackPressed() {
-        if(backKeyPressedTime + 3000 > System.currentTimeMillis()){
-            super.onBackPressed()
-            finish()
-        }else {
-            Toast.makeText(this, "한번 더 뒤로가기 버튼을 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        onBackPressedDispatcher.addCallback(this@HomeActivity) {
+            if (!navController.popBackStack()) {
+                finish()
+            }
         }
-
-        backKeyPressedTime = System.currentTimeMillis()
     }
 }

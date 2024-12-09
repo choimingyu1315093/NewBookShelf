@@ -37,6 +37,8 @@ class LoginViewModel(
                 val result = loginUseCase.execute(loginData)
                 loginResult.postValue(result)
                 BookShelfApp.prefs.setLoginType("loginType", "general")
+                BookShelfApp.prefs.setLoginId("id", loginData.userId)
+                BookShelfApp.prefs.setLoginPw("password", loginData.userPassword)
             }
         }catch (e: Exception){
             loginResult.postValue(Resource.Error(e.message.toString()))

@@ -52,6 +52,18 @@ class SearchedBookDAOTest {
         Truth.assertThat(result).isEqualTo(Unit)
     }
 
+    @Test
+    fun allDeleteSearchedBookTest() = runBlocking {
+        val searchedBook = SearchedBook(1,"title1")
+        val searchedBook2 = SearchedBook(2,"title2")
+        searchedBookDAO.insert(searchedBook)
+        searchedBookDAO.insert(searchedBook2)
+        searchedBookDAO.allDelete()
+
+        val result = searchedBookDAO.allDelete()
+        Truth.assertThat(result).isEqualTo(Unit)
+    }
+
     @After
     fun tearDown(){
         searchedBOokDatabase.close()

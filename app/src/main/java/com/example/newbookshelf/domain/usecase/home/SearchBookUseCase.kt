@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class SearchBookUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(accessToken: String, bookName: String): Flow<Resource<SearchBookModel>> {
+    suspend fun execute(accessToken: String, bookName: String): Resource<SearchBookModel> {
         return bookRepository.searchBook(accessToken, bookName)
     }
 }

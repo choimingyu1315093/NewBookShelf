@@ -1,5 +1,6 @@
 package com.example.newbookshelf.presentation.view.home.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,6 @@ class SearchMoreBookAdapter: RecyclerView.Adapter<SearchMoreBookAdapter.ViewHold
         override fun areContentsTheSame(oldItem: SearchBookResult, newItem: SearchBookResult): Boolean {
             return oldItem == newItem
         }
-
     }
 
     val differ = AsyncListDiffer(this, callback)

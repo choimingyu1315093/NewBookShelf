@@ -3,7 +3,10 @@ package com.example.newbookshelf.presentation.viewmodel.home
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.newbookshelf.domain.usecase.home.AlarmAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmCountUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmListUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmOneDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
@@ -20,6 +23,9 @@ class HomeViewModelFactory(
     private val newBestsellerUseCase: NewBestsellerUseCase,
     private val attentionBestsellerUseCase: AttentionBestsellerUseCase,
     private val alarmCountUseCase: AlarmCountUseCase,
+    private val alarmListUseCase: AlarmListUseCase,
+    private val alarmAllDeleteUseCase: AlarmAllDeleteUseCase,
+    private val alarmOneDeleteUseCase: AlarmOneDeleteUseCase,
     private val searchBookUseCase: SearchBookUseCase,
     private val searchedBookUseCase: SearchedBookUseCase,
     private val searchedBookInsertUseCase: SearchedBookInsertUseCase,
@@ -29,7 +35,7 @@ class HomeViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(HomeViewModel::class.java)){
-            return HomeViewModel(app, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, alarmCountUseCase, searchBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase) as T
+            return HomeViewModel(app, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, alarmCountUseCase, alarmListUseCase, alarmAllDeleteUseCase, alarmOneDeleteUseCase, searchBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase) as T
         }
         throw IllegalArgumentException("Unknown View Model Class")
     }

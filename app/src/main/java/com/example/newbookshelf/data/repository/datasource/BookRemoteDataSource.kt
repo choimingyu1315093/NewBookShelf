@@ -1,9 +1,14 @@
 package com.example.newbookshelf.data.repository.datasource
 
+import com.example.newbookshelf.data.model.common.OnlyResultModel
+import com.example.newbookshelf.data.model.detail.AddMyBookData
+import com.example.newbookshelf.data.model.detail.AddMyBookModel
+import com.example.newbookshelf.data.model.detail.DetailBookModel
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
 import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
+import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
@@ -31,5 +36,10 @@ interface BookRemoteDataSource {
     suspend fun nicknameCheck(nickname: String): Response<CheckModel>
     suspend fun buyTicket(accessToken: String, ticketData: TicketData): Response<TicketModel>
     fun alarmCount(accessToken: String): Flow<Response<AlarmCountModel>>
-    fun searchBook(accessToken: String, bookName: String): Flow<Response<SearchBookModel>>
+    fun alarmList(accessToken: String): Flow<Response<AlarmListModel>>
+    suspend fun alarmAllDelete(accessToken: String): Response<OnlyResultModel>
+    suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Response<OnlyResultModel>
+    suspend fun searchBook(accessToken: String, bookName: String): Response<SearchBookModel>
+    suspend fun detailBook(accessToken: String, bookIsbn: String): Response<DetailBookModel>
+    suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Response<AddMyBookModel>
 }

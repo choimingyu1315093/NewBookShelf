@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,11 @@ class AttentionBestsellerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>(
 
     val differ = AsyncListDiffer(this, callback)
     var isDetail = false
+
+    private var onClickListener: ((Item) -> Unit)? = null
+    fun setOnClickListener(listener: (Item) -> Unit){
+        onClickListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view: View?
@@ -62,6 +68,11 @@ class AttentionBestsellerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>(
             val options = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
             Glide.with((holder as NoDetailViewHolder).ivBook).load(differ.currentList[position].cover).apply(options).into((holder as NoDetailViewHolder).ivBook)
+            (holder as NoDetailViewHolder).cd.setOnClickListener {
+                onClickListener?.let {
+                    it(differ.currentList[position])
+                }
+            }
         }
     }
 
@@ -79,6 +90,7 @@ class AttentionBestsellerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>(
 
     inner class NoDetailViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val ivBook: ImageView = itemView.findViewById(R.id.ivBook)
+        val cd: CardView = itemView.findViewById(R.id.cd)
     }
 
     inner class DetailViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){

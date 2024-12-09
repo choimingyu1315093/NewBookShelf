@@ -1,5 +1,6 @@
 package com.example.newbookshelf.data.api
 
+import com.example.newbookshelf.data.model.detail.AddMyBookData
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.google.common.truth.Truth
 import kotlinx.coroutines.runBlocking
@@ -144,6 +145,59 @@ class ApiServiceTest {
         Truth.assertThat(request.getHeader("Authorization")).isEqualTo(accessToken)
         Truth.assertThat(request.path).isEqualTo("/books/list?book_name=%EB%8F%88%EC%9D%98%20%EC%86%8D%EC%84%B1")
         Truth.assertThat(responseBody.body()).isNotNull()
+    }
+
+    //책 상세 검색
+    @Test
+    fun detailBookTest() = runBlocking {
+        val mockResponseBody = """
+            {
+              "result": true,
+              "data": {
+                "book_isbn": "1188331795",
+                "book_name": "돈의 속성(300쇄 리커버에디션)",
+                "book_content": "2020ㆍ2021ㆍ2022ㆍ2023 4년 연속 최장기 베스트셀러 80만 깨어있는 독자들이 선택한 경제경영 필독서 『돈의 속성』  ▶ 『돈의 속성』 300쇄 기념 개정증보판 발행! ▶ 『돈의 속성』 300쇄 기념, 김승호 회장의 추가 메시지를 담다! ▶ 중국, 일본, 대만, 태국 4개국 출간! 이 책은 초판 발행 후, 경제경영 필도서로 자리매김한 『돈의 속성』 300쇄 기념 개정증보판이다. 300쇄에 맞춰 코로나19로 바뀐 경제상황과 돈에 관한 김승호",
+                "book_author": "김승호",
+                "book_translator": "",
+                "book_publisher": "스노우폭스북스",
+                "book_image": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5385029%3Ftimestamp%3D20241129143044",
+                "book_full_page": 0,
+                "is_have_book": false,
+                "read_type": "none",
+                "read_start_date": "none",
+                "read_end_date": "none",
+                "read_page": 0,
+                "edit_full_page": true
+              }
+            }
+        """.trimIndent()
+        enqueueMockResponse(mockResponseBody)
+
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzcyNjQ0OSwiZXhwIjoxNzMzODEyODQ5fQ.3XTdQtRL14fjfihSw83dWpZcmSvbOM9iqaRKqsGnC5w"
+        val response = service.detailBook(accessToken, "1188331795")
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/books/1188331795")
+
+        Truth.assertThat(response.body()).isNotNull()
+        Truth.assertThat(response.body()?.result).isTrue()
+        Truth.assertThat(response.body()?.data?.book_author).isEqualTo("김승호")
+    }
+
+    //내 책 등록
+    @Test
+    fun addMyBookTest() = runBlocking {
+        enqueueMockResponseJson("addmybook.json")
+
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzcyNjQ0OSwiZXhwIjoxNzMzODEyODQ5fQ.3XTdQtRL14fjfihSw83dWpZcmSvbOM9iqaRKqsGnC5w"
+        val addMyBookData = AddMyBookData(216, "K662930932", "n", null, 0, null, "none")
+        val response = service.addMyBook(accessToken, addMyBookData)
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/my-books")
+        Truth.assertThat(response.body()).isNotNull()
+        Truth.assertThat(response.body()?.result).isTrue()
+        Truth.assertThat(response.body()?.data!!.books.book_name).isEqualTo("알라딘 상품정보 - 소년이 온다")
     }
 
     @After

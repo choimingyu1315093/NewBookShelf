@@ -1,5 +1,9 @@
 package com.example.newbookshelf.data.model.home.bestseller
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class BestsellerModel(
     val item: List<Item>?,
     val itemsPerPage: Int?,
@@ -13,4 +17,4 @@ data class BestsellerModel(
     val title: String?,
     val totalResults: Int?,
     val version: String?
-)
+): Parcelable

@@ -1,9 +1,14 @@
 package com.example.newbookshelf.data.repository
 
+import com.example.newbookshelf.data.model.common.OnlyResultModel
+import com.example.newbookshelf.data.model.detail.AddMyBookData
+import com.example.newbookshelf.data.model.detail.AddMyBookModel
+import com.example.newbookshelf.data.model.detail.DetailBookModel
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
 import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
+import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.model.login.LoginData
@@ -76,6 +81,28 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
+    override fun alarmList(accessToken: String): Flow<Resource<AlarmListModel>> {
+        return bookRemoteDataSource.alarmList(accessToken).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
+    }
+
+    override suspend fun alarmAllDelete(accessToken: String): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.alarmAllDelete(accessToken))
+    }
+
+    override suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.alarmOneDelete(accessToken, alarmIdx))
+    }
+
+    override suspend fun searchBook(accessToken: String, bookName: String): Resource<SearchBookModel> {
+        return responseToResource(bookRemoteDataSource.searchBook(accessToken, bookName))
+    }
+
     override fun searchedBook(): Flow<List<SearchedBook>> {
         return bookLocalDataSource.getSearchedBook()
     }
@@ -92,14 +119,12 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         bookLocalDataSource.allDelete()
     }
 
-    override fun searchBook(accessToken: String, bookName: String): Flow<Resource<SearchBookModel>> {
-        return bookRemoteDataSource.searchBook(accessToken, bookName).map { response ->
-            if(response.isSuccessful){
-                Resource.Success(response.body()!!)
-            }else {
-                Resource.Error(response.message())
-            }
-        }
+    override suspend fun detailBook(accessToken: String, bookIsbn: String): Resource<DetailBookModel> {
+        return responseToResource(bookRemoteDataSource.detailBook(accessToken, bookIsbn))
+    }
+
+    override suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Resource<AddMyBookModel> {
+        return responseToResource(bookRemoteDataSource.addMyBook(accessToken, addMyBookData))
     }
 
 //    private fun responseToResource(response: Response<LoginModel>): Resource<LoginModel>{

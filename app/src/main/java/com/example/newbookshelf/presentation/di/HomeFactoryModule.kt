@@ -3,7 +3,10 @@ package com.example.newbookshelf.presentation.di
 import android.app.Application
 import com.example.newbookshelf.domain.usecase.find.FindIdUseCase
 import com.example.newbookshelf.domain.usecase.find.FindPwUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmCountUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmListUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmOneDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
@@ -32,12 +35,15 @@ object HomeFactoryModule {
         newBestsellerUseCase: NewBestsellerUseCase,
         attentionBestsellerUseCase: AttentionBestsellerUseCase,
         alarmCountUseCase: AlarmCountUseCase,
+        alarmListUseCase: AlarmListUseCase,
+        alarmAllDeleteUseCase: AlarmAllDeleteUseCase,
+        alarmOneDeleteUseCase: AlarmOneDeleteUseCase,
         searchBookUseCase: SearchBookUseCase,
         searchedBookUseCase: SearchedBookUseCase,
         searchedBookInsertUseCase: SearchedBookInsertUseCase,
         searchedBookDeleteUseCase: SearchedBookDeleteUseCase,
         searchedBookAllDeleteUseCase: SearchedBookAllDeleteUseCase
     ): HomeViewModelFactory{
-        return HomeViewModelFactory(application, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, alarmCountUseCase, searchBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase)
+        return HomeViewModelFactory(application, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, alarmCountUseCase, alarmListUseCase, alarmAllDeleteUseCase, alarmOneDeleteUseCase, searchBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase)
     }
 }

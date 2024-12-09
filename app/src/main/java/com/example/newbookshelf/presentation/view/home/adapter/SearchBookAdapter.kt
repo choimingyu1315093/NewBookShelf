@@ -22,7 +22,6 @@ class SearchBookAdapter: RecyclerView.Adapter<SearchBookAdapter.ViewHolder>() {
         override fun areContentsTheSame(oldItem: SearchBookResult, newItem: SearchBookResult): Boolean {
             return oldItem == newItem
         }
-
     }
 
     val differ = AsyncListDiffer(this, callback)

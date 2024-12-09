@@ -2,9 +2,14 @@ package com.example.newbookshelf.presentation.di
 
 import com.example.newbookshelf.domain.repository.AladinBookRepository
 import com.example.newbookshelf.domain.repository.BookRepository
+import com.example.newbookshelf.domain.usecase.detail.AddMyBookUseCase
+import com.example.newbookshelf.domain.usecase.detail.DetailBookUseCase
 import com.example.newbookshelf.domain.usecase.find.FindIdUseCase
 import com.example.newbookshelf.domain.usecase.find.FindPwUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmCountUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmListUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmOneDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
@@ -117,6 +122,24 @@ object UseCaseModule {
 
     @Singleton
     @Provides
+    fun provideAlarmListUseCase(bookRepository: BookRepository): AlarmListUseCase {
+        return AlarmListUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlarmAllDeleteUseCase(bookRepository: BookRepository): AlarmAllDeleteUseCase {
+        return AlarmAllDeleteUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlarmOneDeleteUseCase(bookRepository: BookRepository): AlarmOneDeleteUseCase {
+        return AlarmOneDeleteUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
     fun provideSearchBookUseCase(bookRepository: BookRepository): SearchBookUseCase {
         return SearchBookUseCase(bookRepository)
     }
@@ -143,5 +166,17 @@ object UseCaseModule {
     @Provides
     fun provideSearchedBookAllDeleteUseCase(bookRepository: BookRepository): SearchedBookAllDeleteUseCase {
         return SearchedBookAllDeleteUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDetailBookUseCase(bookRepository: BookRepository): DetailBookUseCase {
+        return DetailBookUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddMyBookUseCase(bookRepository: BookRepository): AddMyBookUseCase {
+        return AddMyBookUseCase(bookRepository)
     }
 }

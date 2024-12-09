@@ -1,9 +1,14 @@
 package com.example.newbookshelf.data.api
 
+import com.example.newbookshelf.data.model.common.OnlyResultModel
+import com.example.newbookshelf.data.model.detail.AddMyBookData
+import com.example.newbookshelf.data.model.detail.AddMyBookModel
+import com.example.newbookshelf.data.model.detail.DetailBookModel
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
 import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
+import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
@@ -17,6 +22,7 @@ import com.example.newbookshelf.data.model.signup.SignupModel
 import com.example.newbookshelf.data.model.signup.SnsSignupData
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
@@ -93,10 +99,43 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
     ): Response<AlarmCountModel>
 
+    //알람 리스트
+    @GET("alarms/list")
+    suspend fun alarmList(
+        @Header("Authorization") accessToken: String,
+    ): Response<AlarmListModel>
+
+    //알람 전체 삭제
+    @DELETE("alarms/all")
+    suspend fun alarmAllDelete(
+        @Header("Authorization") accessToken: String,
+    ): Response<OnlyResultModel>
+
+    //알람 개별 삭제
+    @DELETE("alarms/{alarm_idx}")
+    suspend fun alarmOneDelete(
+        @Header("Authorization") accessToken: String,
+        @Path("alarm_idx") alarmIdx: Int
+    ): Response<OnlyResultModel>
+
     //책 검색
     @GET("books/list")
     suspend fun searchBook(
         @Header("Authorization") accessToken: String,
         @Query("book_name") bookName: String
     ): Response<SearchBookModel>
+
+    //책 상세 검색
+    @GET("books/{book_isbn}")
+    suspend fun detailBook(
+        @Header("Authorization") accessToken: String,
+        @Path("book_isbn") bookIsbn: String
+    ): Response<DetailBookModel>
+
+    //내 책 등록
+    @POST("my-books")
+    suspend fun addMyBook(
+        @Header("Authorization") accessToken: String,
+        @Body addMyBookData: AddMyBookData
+    ): Response<AddMyBookModel>
 }
