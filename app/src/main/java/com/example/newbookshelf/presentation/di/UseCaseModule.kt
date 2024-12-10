@@ -2,8 +2,12 @@ package com.example.newbookshelf.presentation.di
 
 import com.example.newbookshelf.domain.repository.AladinBookRepository
 import com.example.newbookshelf.domain.repository.BookRepository
+import com.example.newbookshelf.domain.usecase.detail.AddBookReviewUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddMyBookUseCase
+import com.example.newbookshelf.domain.usecase.detail.BookMemoUseCase
+import com.example.newbookshelf.domain.usecase.detail.DeleteBookReviewUseCase
 import com.example.newbookshelf.domain.usecase.detail.DetailBookUseCase
+import com.example.newbookshelf.domain.usecase.detail.UpdateBookReviewUseCase
 import com.example.newbookshelf.domain.usecase.find.FindIdUseCase
 import com.example.newbookshelf.domain.usecase.find.FindPwUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmAllDeleteUseCase
@@ -178,5 +182,29 @@ object UseCaseModule {
     @Provides
     fun provideAddMyBookUseCase(bookRepository: BookRepository): AddMyBookUseCase {
         return AddMyBookUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBookMemoUseCase(bookRepository: BookRepository): BookMemoUseCase {
+        return BookMemoUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddBookReviewUseCase(bookRepository: BookRepository): AddBookReviewUseCase {
+        return AddBookReviewUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUpdateBookReviewUseCase(bookRepository: BookRepository): UpdateBookReviewUseCase {
+        return UpdateBookReviewUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeleteBookReviewUseCase(bookRepository: BookRepository): DeleteBookReviewUseCase {
+        return DeleteBookReviewUseCase(bookRepository)
     }
 }

@@ -2,9 +2,15 @@ package com.example.newbookshelf.data.repository.datasourceimpl
 
 import com.example.newbookshelf.data.api.ApiService
 import com.example.newbookshelf.data.model.common.OnlyResultModel
-import com.example.newbookshelf.data.model.detail.AddMyBookData
-import com.example.newbookshelf.data.model.detail.AddMyBookModel
-import com.example.newbookshelf.data.model.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
+import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookModel
+import com.example.newbookshelf.data.model.detail.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.memo.GetBookMemoModel
+import com.example.newbookshelf.data.model.detail.review.AddBookReviewData
+import com.example.newbookshelf.data.model.detail.review.AddBookReviewModel
+import com.example.newbookshelf.data.model.detail.review.DeleteBookReviewModel
+import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewData
+import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewModel
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
@@ -99,5 +105,21 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
 
     override suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Response<AddMyBookModel> {
         return apiService.addMyBook(accessToken, addMyBookData)
+    }
+
+    override suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Response<GetBookMemoModel> {
+        return apiService.bookMemo(accessToken, bookIsbn, getType)
+    }
+
+    override suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Response<AddBookReviewModel> {
+        return apiService.addReview(accessToken, addBookReviewData)
+    }
+
+    override suspend fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Response<UpdateBookReviewModel> {
+        return apiService.updateReview(accessToken, bookCommentIdx, updateBookReviewData)
+    }
+
+    override suspend fun deleteBookReview(accessToken: String, bookCommentIdx: Int): Response<DeleteBookReviewModel> {
+        return apiService.deleteReview(accessToken, bookCommentIdx)
     }
 }

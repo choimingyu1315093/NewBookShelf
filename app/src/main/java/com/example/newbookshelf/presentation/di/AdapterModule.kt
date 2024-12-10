@@ -1,5 +1,7 @@
 package com.example.newbookshelf.presentation.di
 
+import com.example.newbookshelf.presentation.view.detail.adapter.MemoAdapter
+import com.example.newbookshelf.presentation.view.detail.adapter.ReviewAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NotificationAdapter
@@ -57,5 +59,17 @@ object AdapterModule {
     @Provides
     fun provideSearchMoreBookAdapter(): SearchMoreBookAdapter {
         return SearchMoreBookAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideReviewAdapter(): ReviewAdapter {
+        return ReviewAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMemoAdapter(): MemoAdapter {
+        return MemoAdapter()
     }
 }

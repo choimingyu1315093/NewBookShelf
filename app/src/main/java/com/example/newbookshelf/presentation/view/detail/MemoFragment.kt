@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.FragmentMemoBinding
 
-class MemoFragment : Fragment() {
+class MemoFragment(private val isbn: String) : Fragment() {
     private lateinit var binding: FragmentMemoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

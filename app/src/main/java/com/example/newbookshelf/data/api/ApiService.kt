@@ -1,9 +1,15 @@
 package com.example.newbookshelf.data.api
 
 import com.example.newbookshelf.data.model.common.OnlyResultModel
-import com.example.newbookshelf.data.model.detail.AddMyBookData
-import com.example.newbookshelf.data.model.detail.AddMyBookModel
-import com.example.newbookshelf.data.model.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
+import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookModel
+import com.example.newbookshelf.data.model.detail.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.memo.GetBookMemoModel
+import com.example.newbookshelf.data.model.detail.review.AddBookReviewData
+import com.example.newbookshelf.data.model.detail.review.AddBookReviewModel
+import com.example.newbookshelf.data.model.detail.review.DeleteBookReviewModel
+import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewData
+import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewModel
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
@@ -27,6 +33,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -138,4 +145,34 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
         @Body addMyBookData: AddMyBookData
     ): Response<AddMyBookModel>
+
+    //해당 책의 메모 조회
+    @GET("memos/{book_isbn}")
+    suspend fun bookMemo(
+        @Header("Authorization") accessToken: String,
+        @Query("book_isbn") bookIsbn: String,
+        @Query("get_type") getType: String
+    ): Response<GetBookMemoModel>
+
+    //책 평가 등록
+    @POST("book-comments")
+    suspend fun addReview(
+        @Header("Authorization") accessToken: String,
+        @Body addBookReviewData: AddBookReviewData
+    ): Response<AddBookReviewModel>
+
+    //책 평가 수정
+    @PUT("book-comments/{book_comment_idx}")
+    suspend fun updateReview(
+        @Header("Authorization") accessToken: String,
+        @Path("book_comment_idx") bookCommentIdx: Int,
+        @Body updateBookReviewData: UpdateBookReviewData
+    ): Response<UpdateBookReviewModel>
+
+    //책 평가 삭제
+    @DELETE("book-comments/{book_comment_idx}")
+    suspend fun deleteReview(
+        @Header("Authorization") accessToken: String,
+        @Path("book_comment_idx") bookCommentIdx: Int,
+    ): Response<DeleteBookReviewModel>
 }

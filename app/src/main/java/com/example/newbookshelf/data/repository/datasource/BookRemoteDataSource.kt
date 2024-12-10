@@ -1,9 +1,15 @@
 package com.example.newbookshelf.data.repository.datasource
 
 import com.example.newbookshelf.data.model.common.OnlyResultModel
-import com.example.newbookshelf.data.model.detail.AddMyBookData
-import com.example.newbookshelf.data.model.detail.AddMyBookModel
-import com.example.newbookshelf.data.model.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
+import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookModel
+import com.example.newbookshelf.data.model.detail.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.memo.GetBookMemoModel
+import com.example.newbookshelf.data.model.detail.review.AddBookReviewData
+import com.example.newbookshelf.data.model.detail.review.AddBookReviewModel
+import com.example.newbookshelf.data.model.detail.review.DeleteBookReviewModel
+import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewData
+import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewModel
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
@@ -42,4 +48,8 @@ interface BookRemoteDataSource {
     suspend fun searchBook(accessToken: String, bookName: String): Response<SearchBookModel>
     suspend fun detailBook(accessToken: String, bookIsbn: String): Response<DetailBookModel>
     suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Response<AddMyBookModel>
+    suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Response<GetBookMemoModel>
+    suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Response<AddBookReviewModel>
+    suspend fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Response<UpdateBookReviewModel>
+    suspend fun deleteBookReview(accessToken: String, bookCommentIdx: Int): Response<DeleteBookReviewModel>
 }

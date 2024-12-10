@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,12 +17,14 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
-import com.example.newbookshelf.data.model.detail.AddMyBookData
+import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.home.bestseller.Item
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentDetailBinding
+import com.example.newbookshelf.presentation.view.detail.adapter.DetailAdapter
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModel
+import com.google.android.material.tabs.TabLayoutMediator
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -53,6 +54,8 @@ class DetailFragment : Fragment() {
     private var percent = 0
 
     private var buttonClicked = false
+
+    private lateinit var detailAdapter: DetailAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +98,19 @@ class DetailFragment : Fragment() {
             return@setOnKeyListener false
         }
 
+        detailAdapter = DetailAdapter(requireParentFragment(), bookIsbn)
+        vpType.adapter = detailAdapter
+        TabLayoutMediator(tlType, vpType){tab, position ->
+            when(position){
+                0 -> {
+                    tab.text = "후기"
+                }
+                1 -> {
+                    tab.text = "메모"
+                }
+            }
+        }.attach()
+
         clMain.setOnClickListener {
             val inputManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(etPage.windowToken, 0)
@@ -134,6 +150,7 @@ class DetailFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(s.toString() != ""){
+//                    readPage = if(s.toString().toInt() > totalPage) totalPage else s.toString().toInt()
                     readPage = s.toString().toInt()
                     tvPage.text = "$readPage/${totalPage}"
                     if(readPage == 0 || readPage.toString() == ""){

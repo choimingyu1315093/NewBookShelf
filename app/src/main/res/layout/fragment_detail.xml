@@ -484,7 +484,7 @@
         </androidx.core.widget.NestedScrollView>
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tlType"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@color/md_theme_background"
             android:layout_marginTop="30dp"

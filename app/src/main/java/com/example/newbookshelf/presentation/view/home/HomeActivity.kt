@@ -13,6 +13,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.ActivityHomeBinding
+import com.example.newbookshelf.presentation.view.detail.adapter.MemoAdapter
+import com.example.newbookshelf.presentation.view.detail.adapter.ReviewAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NotificationAdapter
@@ -51,6 +53,10 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var detailViewModelFactory: DetailViewModelFactory
     lateinit var detailViewModel: DetailViewModel
+    @Inject
+    lateinit var reviewAdapter: ReviewAdapter
+    @Inject
+    lateinit var memoAdapter: MemoAdapter
 
     companion object {
         const val TAG = "HomeActivity"

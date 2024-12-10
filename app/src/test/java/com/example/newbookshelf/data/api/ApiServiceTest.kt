@@ -1,6 +1,6 @@
 package com.example.newbookshelf.data.api
 
-import com.example.newbookshelf.data.model.detail.AddMyBookData
+import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.google.common.truth.Truth
 import kotlinx.coroutines.runBlocking
@@ -198,6 +198,39 @@ class ApiServiceTest {
         Truth.assertThat(response.body()).isNotNull()
         Truth.assertThat(response.body()?.result).isTrue()
         Truth.assertThat(response.body()?.data!!.books.book_name).isEqualTo("알라딘 상품정보 - 소년이 온다")
+    }
+
+    //책 메모 조회
+    @Test
+    fun bookMemoTest() = runBlocking {
+        val mockResponseBody = """
+            {
+              "result": true,
+              "data": [
+                {
+                  "memo_idx": 1,
+                  "memo_content": "너무 좋은 책이에요",
+                  "is_public": "y",
+                  "create_date": "2024-12-09T23:57:35.736Z",
+                  "users": {
+                    "user_idx": 33,
+                    "user_name": "test001"
+                  }
+                }
+              ]
+            }
+        """.trimIndent()
+        enqueueMockResponse(mockResponseBody)
+
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzc4ODUwOSwiZXhwIjoxNzMzODc0OTA5fQ.xL9ra7qdTQPw7-ckmnflOMY_AZ2bIP8lDT4m5PMDFTU"
+        val response = service.bookMemo(accessToken, "K662930932", "all")
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/memos/%7Bbook_isbn%7D?book_isbn=K662930932&get_type=all")
+
+        Truth.assertThat(response.body()).isNotNull()
+        Truth.assertThat(response.body()?.result).isTrue()
+        Truth.assertThat(response.body()?.data!![0].memo_content).isEqualTo("너무 좋은 책이에요")
     }
 
     @After

@@ -1,6 +1,6 @@
 package com.example.newbookshelf.domain.usecase.detail
 
-import com.example.newbookshelf.data.model.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.detail.DetailBookModel
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.repository.BookRepository
 

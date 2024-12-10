@@ -1,4 +1,4 @@
-package com.example.newbookshelf.data.model.detail
+package com.example.newbookshelf.data.model.detail.addmybook
 
 data class AddMyBookData(
     val book_full_page: Int,

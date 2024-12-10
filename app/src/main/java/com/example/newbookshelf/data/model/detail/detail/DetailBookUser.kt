@@ -1,4 +1,4 @@
-package com.example.newbookshelf.data.model.detail
+package com.example.newbookshelf.data.model.detail.detail
 
 data class DetailBookUser(
     val user_idx: Int,

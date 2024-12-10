@@ -1,4 +1,4 @@
-package com.example.newbookshelf.data.model.detail
+package com.example.newbookshelf.data.model.detail.addmybook
 
 data class AddMyBookUser(
     val create_date: String,
