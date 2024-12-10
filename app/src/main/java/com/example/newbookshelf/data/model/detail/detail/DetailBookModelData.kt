@@ -14,8 +14,8 @@ data class DetailBookModelData(
     val read_end_date: String,
     val read_page: Int,
     val edit_full_page: Boolean,
-    val my_book_idx: Int,
-    val book_translator: String,
-    val book_average_rate: Double,
-    val book_comments: ArrayList<DetailBookComment>
+    val my_book_idx: Int?,
+    val book_translator: String?,
+    val book_average_rate: Double?,
+    val book_comments: ArrayList<DetailBookComment>?
 )

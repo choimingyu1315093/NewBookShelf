@@ -82,4 +82,10 @@ class NotificationFragment : Fragment() {
             }
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
+        (activity as HomeActivity).binding.bottomNavigationView.visibility = View.VISIBLE
+    }
 }

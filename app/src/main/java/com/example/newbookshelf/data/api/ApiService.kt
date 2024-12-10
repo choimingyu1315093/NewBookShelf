@@ -4,7 +4,12 @@ import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookModel
 import com.example.newbookshelf.data.model.detail.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.memo.AddBookMemoData
+import com.example.newbookshelf.data.model.detail.memo.AddBookMemoModel
+import com.example.newbookshelf.data.model.detail.memo.DeleteBookMemoModel
 import com.example.newbookshelf.data.model.detail.memo.GetBookMemoModel
+import com.example.newbookshelf.data.model.detail.memo.UpdateBookMemoData
+import com.example.newbookshelf.data.model.detail.memo.UpdateBookMemoModel
 import com.example.newbookshelf.data.model.detail.review.AddBookReviewData
 import com.example.newbookshelf.data.model.detail.review.AddBookReviewModel
 import com.example.newbookshelf.data.model.detail.review.DeleteBookReviewModel
@@ -146,14 +151,6 @@ interface ApiService {
         @Body addMyBookData: AddMyBookData
     ): Response<AddMyBookModel>
 
-    //해당 책의 메모 조회
-    @GET("memos/{book_isbn}")
-    suspend fun bookMemo(
-        @Header("Authorization") accessToken: String,
-        @Query("book_isbn") bookIsbn: String,
-        @Query("get_type") getType: String
-    ): Response<GetBookMemoModel>
-
     //책 평가 등록
     @POST("book-comments")
     suspend fun addReview(
@@ -175,4 +172,34 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
         @Path("book_comment_idx") bookCommentIdx: Int,
     ): Response<DeleteBookReviewModel>
+
+    //해당 책의 메모 조회
+    @GET("memos/{book_isbn}")
+    suspend fun bookMemo(
+        @Header("Authorization") accessToken: String,
+        @Query("book_isbn") bookIsbn: String,
+        @Query("get_type") getType: String
+    ): Response<GetBookMemoModel>
+
+    //메모 등록
+    @POST("memos")
+    suspend fun addBookMemo(
+        @Header("Authorization") accessToken: String,
+        @Body addBookMemoData: AddBookMemoData
+    ): Response<AddBookMemoModel>
+
+    //메모 수정
+    @PATCH("memos/{memo_idx}")
+    suspend fun updateMemo(
+        @Header("Authorization") accessToken: String,
+        @Path("memo_idx") memoIdx: Int,
+        @Body updateBookMemoData: UpdateBookMemoData
+    ): Response<UpdateBookMemoModel>
+
+    //메모 삭제
+    @DELETE("memos/{memo_idx}")
+    suspend fun deleteMemo(
+        @Header("Authorization") accessToken: String,
+        @Path("memo_idx") memoIdx: Int,
+    ): Response<DeleteBookMemoModel>
 }

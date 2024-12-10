@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -43,7 +44,7 @@ class DetailFragment : Fragment() {
     private lateinit var book: Item
 
     private var bookIsbn = ""
-    private var myBookIdx = 0
+    private var myBookIdx: Int? = 0
     private var readType = "none"
     private var isHaveBook = "n"
     private var readingStartDate = ""
@@ -72,6 +73,7 @@ class DetailFragment : Fragment() {
 
         val args: DetailFragmentArgs by navArgs()
         book = args.book
+        Log.d(TAG, "onViewCreated: book $book")
 
         init()
         bindViews()
@@ -150,8 +152,7 @@ class DetailFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(s.toString() != ""){
-//                    readPage = if(s.toString().toInt() > totalPage) totalPage else s.toString().toInt()
-                    readPage = s.toString().toInt()
+                    readPage = if(s.toString().toInt() > totalPage) totalPage else s.toString().toInt()
                     tvPage.text = "$readPage/${totalPage}"
                     if(readPage == 0 || readPage.toString() == ""){
                         tvPercent.text = "0%"
@@ -406,6 +407,7 @@ class DetailFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
         (activity as HomeActivity).binding.bottomNavigationView.visibility = View.VISIBLE
     }
 }

@@ -217,7 +217,7 @@ class SearchBookFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        Log.d(TAG, "onDestroyView: 호출")
+        (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
         binding.rvSearchBook.visibility = View.GONE
         binding.rvSearchMoreBook.visibility = View.GONE
     }

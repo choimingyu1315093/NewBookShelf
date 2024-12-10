@@ -4,7 +4,12 @@ import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookModel
 import com.example.newbookshelf.data.model.detail.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.memo.AddBookMemoData
+import com.example.newbookshelf.data.model.detail.memo.AddBookMemoModel
+import com.example.newbookshelf.data.model.detail.memo.DeleteBookMemoModel
 import com.example.newbookshelf.data.model.detail.memo.GetBookMemoModel
+import com.example.newbookshelf.data.model.detail.memo.UpdateBookMemoData
+import com.example.newbookshelf.data.model.detail.memo.UpdateBookMemoModel
 import com.example.newbookshelf.data.model.detail.review.AddBookReviewData
 import com.example.newbookshelf.data.model.detail.review.AddBookReviewModel
 import com.example.newbookshelf.data.model.detail.review.DeleteBookReviewModel
@@ -53,8 +58,11 @@ interface BookRepository {
     suspend fun allDelete()
     suspend fun detailBook(accessToken: String, bookIsbn: String): Resource<DetailBookModel>
     suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Resource<AddMyBookModel>
-    suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Resource<GetBookMemoModel>
     suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Resource<AddBookReviewModel>
     suspend fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Resource<UpdateBookReviewModel>
     suspend fun deleteBookReview(accessToken: String, bookCommentIdx: Int): Resource<DeleteBookReviewModel>
+    suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Resource<GetBookMemoModel>
+    suspend fun addBookMemo(accessToken: String, addBookMemoData: AddBookMemoData): Resource<AddBookMemoModel>
+    suspend fun updateBookMemo(accessToken: String, bookMemoIdx: Int, updateBookMemoData: UpdateBookMemoData): Resource<UpdateBookMemoModel>
+    suspend fun deleteBookMemo(accessToken: String, bookMemoIdx: Int): Resource<DeleteBookMemoModel>
 }

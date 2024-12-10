@@ -22,6 +22,14 @@ class PreferenceUtil(context: Context) {
         prefs.edit().putString(key, defValue).apply()
     }
 
+    //UserIdx
+    fun getUserIdx(key: String, defValue: Int): Int {
+        return prefs.getInt(key, defValue)
+    }
+    fun setUserIdx(key: String, defValue: Int){
+        prefs.edit().putInt(key, defValue).apply()
+    }
+
     //AutoLogin
     fun getAutoLogin(key: String, defValue: Boolean): Boolean {
         return prefs.getBoolean(key, defValue)

@@ -4,7 +4,12 @@ import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookModel
 import com.example.newbookshelf.data.model.detail.detail.DetailBookModel
+import com.example.newbookshelf.data.model.detail.memo.AddBookMemoData
+import com.example.newbookshelf.data.model.detail.memo.AddBookMemoModel
+import com.example.newbookshelf.data.model.detail.memo.DeleteBookMemoModel
 import com.example.newbookshelf.data.model.detail.memo.GetBookMemoModel
+import com.example.newbookshelf.data.model.detail.memo.UpdateBookMemoData
+import com.example.newbookshelf.data.model.detail.memo.UpdateBookMemoModel
 import com.example.newbookshelf.data.model.detail.review.AddBookReviewData
 import com.example.newbookshelf.data.model.detail.review.AddBookReviewModel
 import com.example.newbookshelf.data.model.detail.review.DeleteBookReviewModel
@@ -133,10 +138,6 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.addMyBook(accessToken, addMyBookData))
     }
 
-    override suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Resource<GetBookMemoModel> {
-        return responseToResource(bookRemoteDataSource.bookMemo(accessToken, bookIsbn, getType))
-    }
-
     override suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Resource<AddBookReviewModel> {
         return responseToResource(bookRemoteDataSource.addBookReview(accessToken, addBookReviewData))
     }
@@ -147,6 +148,22 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
 
     override suspend fun deleteBookReview(accessToken: String, bookCommentIdx: Int): Resource<DeleteBookReviewModel> {
         return responseToResource(bookRemoteDataSource.deleteBookReview(accessToken, bookCommentIdx))
+    }
+
+    override suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Resource<GetBookMemoModel> {
+        return responseToResource(bookRemoteDataSource.bookMemo(accessToken, bookIsbn, getType))
+    }
+
+    override suspend fun addBookMemo(accessToken: String, addBookMemoData: AddBookMemoData): Resource<AddBookMemoModel> {
+        return responseToResource(bookRemoteDataSource.addBookMemo(accessToken, addBookMemoData))
+    }
+
+    override suspend fun updateBookMemo(accessToken: String, bookMemoIdx: Int, updateBookMemoData: UpdateBookMemoData): Resource<UpdateBookMemoModel> {
+        return responseToResource(bookRemoteDataSource.updateBookMemo(accessToken, bookMemoIdx, updateBookMemoData))
+    }
+
+    override suspend fun deleteBookMemo(accessToken: String, bookMemoIdx: Int): Resource<DeleteBookMemoModel> {
+        return responseToResource(bookRemoteDataSource.deleteBookMemo(accessToken, bookMemoIdx))
     }
 
 //    private fun responseToResource(response: Response<LoginModel>): Resource<LoginModel>{

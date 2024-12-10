@@ -1,6 +1,8 @@
 package com.example.newbookshelf.presentation.view.home
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
@@ -9,9 +11,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
+import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.ActivityHomeBinding
 import com.example.newbookshelf.presentation.view.detail.adapter.MemoAdapter
 import com.example.newbookshelf.presentation.view.detail.adapter.ReviewAdapter
@@ -63,7 +70,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     lateinit var navController: NavController
-    var backKeyPressedTime: Long = 0
+    lateinit var accessToken: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,8 +78,8 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         init()
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
-        detailViewModel = ViewModelProvider(this, detailViewModelFactory).get(DetailViewModel::class.java)
+        bindViews()
+        observeViewModel()
     }
 
     private fun init() = with(binding){
@@ -80,9 +87,46 @@ class HomeActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         bottomNavigationView.setupWithNavController(navController)
 
+        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
+
+        homeViewModel = ViewModelProvider(this@HomeActivity, homeViewModelFactory).get(HomeViewModel::class.java)
+        detailViewModel = ViewModelProvider(this@HomeActivity, detailViewModelFactory).get(DetailViewModel::class.java)
+
         onBackPressedDispatcher.addCallback(this@HomeActivity) {
             if (!navController.popBackStack()) {
                 finish()
+            }
+        }
+    }
+
+    private fun bindViews() = with(binding){
+        ivSearch.setOnClickListener {
+            cl.visibility = View.GONE
+            findNavController(R.id.fragmentContainerView).navigate(R.id.action_homeFragment_to_searchBookFragment)
+        }
+
+        ivBell.setOnClickListener {
+            cl.visibility = View.GONE
+            bottomNavigationView.visibility = View.GONE
+            findNavController(R.id.fragmentContainerView).navigate(R.id.action_homeFragment_to_notificationFragment)
+        }
+    }
+
+    private fun observeViewModel() = with(binding){
+        homeViewModel.alarmCount(accessToken).observe(this@HomeActivity){ response ->
+            when(response){
+                is Resource.Success -> {
+                    response.data?.let {
+                        if(it.data == 0){
+                            tvNotifyCount.visibility = View.GONE
+                        }else {
+                            tvNotifyCount.visibility = View.VISIBLE
+                            tvNotifyCount.text = "${it.data}"
+                        }
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
             }
         }
     }

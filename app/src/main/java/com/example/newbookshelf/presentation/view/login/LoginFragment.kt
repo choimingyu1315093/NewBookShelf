@@ -257,6 +257,7 @@ class LoginFragment : Fragment() {
                     if(response.data!!.result){
                         BookShelfApp.prefs.setAutoLogin("autoLogin", true)
                         BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.accessToken)
+                        BookShelfApp.prefs.setUserIdx("userIdx", response.data.data.userIdx)
                         val intent = Intent(requireContext(), HomeActivity::class.java)
                         startActivity(intent)
                     }

@@ -50,18 +50,19 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.bind(view)
 
         init()
-        bindViews()
         observeViewModel()
     }
 
     private fun init() = with(binding){
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         homeViewModel = (activity as HomeActivity).homeViewModel
+
         weekBestsellerAdapter = (activity as HomeActivity).weekBestsellerAdapter
         weekBestsellerAdapter.setOnClickListener {
             val bundle = Bundle().apply {
                 putParcelable("book", it)
             }
+            (activity as HomeActivity).binding.cl.visibility = View.GONE
             findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
         }
 
@@ -70,6 +71,7 @@ class HomeFragment : Fragment() {
             val bundle = Bundle().apply {
                 putParcelable("book", it)
             }
+            (activity as HomeActivity).binding.cl.visibility = View.GONE
             findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
         }
 
@@ -78,6 +80,7 @@ class HomeFragment : Fragment() {
             val bundle = Bundle().apply {
                 putParcelable("book", it)
             }
+            (activity as HomeActivity).binding.cl.visibility = View.GONE
             findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
         }
 
@@ -94,16 +97,6 @@ class HomeFragment : Fragment() {
         rvAttentionBestseller.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
             adapter = attentionBestsellerAdapter
-        }
-    }
-
-    private fun bindViews() = with(binding){
-        ivSearch.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_searchBookFragment)
-        }
-
-        ivBell.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_notificationFragment)
         }
     }
 
@@ -159,23 +152,6 @@ class HomeFragment : Fragment() {
                 is Resource.Loading -> {
                     showProgress()
                 }
-            }
-        }
-
-        homeViewModel.alarmCount(accessToken).observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    response.data?.let {
-                        if(it.data == 0){
-                            tvNotifyCount.visibility = View.GONE
-                        }else {
-                            tvNotifyCount.visibility = View.VISIBLE
-                            tvNotifyCount.text = "${it.data}"
-                        }
-                    }
-                }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
             }
         }
     }

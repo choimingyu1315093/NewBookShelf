@@ -1,10 +1,18 @@
 package com.example.newbookshelf.presentation.view.detail.adapter
 
+import android.content.Context
+import android.text.SpannableString
+import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newbookshelf.BookShelfApp
+import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.detail.detail.DetailBookComment
 import com.example.newbookshelf.databinding.ItemReviewBinding
 import java.text.SimpleDateFormat
@@ -12,6 +20,7 @@ import java.util.Date
 import java.util.Locale
 
 class ReviewAdapter: RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+    private val userIdx = BookShelfApp.prefs.getUserIdx("userIdx", 0)
 
     private val callback = object : DiffUtil.ItemCallback<DetailBookComment>() {
         override fun areItemsTheSame(oldItem: DetailBookComment, newItem: DetailBookComment): Boolean {
@@ -24,6 +33,16 @@ class ReviewAdapter: RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
     }
 
     val differ = AsyncListDiffer(this, callback)
+
+    private var onDeleteListener: ((DetailBookComment) -> Unit)? = null
+    fun setOnDeleteListener(listener: (DetailBookComment) -> Unit){
+         onDeleteListener = listener
+    }
+
+    private var onUpdateListener: ((DetailBookComment) -> Unit)? = null
+    fun setOnUpdateListener(listener: (DetailBookComment) -> Unit){
+        onUpdateListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -44,6 +63,13 @@ class ReviewAdapter: RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
             tvAverage.text = review.comment_rate.toString()
             tvDescription.text = review.comment_content
             tvWriter.text = review.users.user_name
+
+            if(userIdx == review.users.user_idx){
+                ivMore.visibility = View.VISIBLE
+                ivMore.setOnClickListener {
+                    showPopupMenu(it)
+                }
+            }
 
             val parts = review.update_date.split("T", "Z")
             val date2 = parts[0]
@@ -104,6 +130,31 @@ class ReviewAdapter: RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
                 } else {
                     rcvdDate
                 }
+        }
+
+        private fun showPopupMenu(anchor: View) {
+            val popupMenu = PopupMenu(anchor.context, anchor)
+            popupMenu.menuInflater.inflate(R.menu.review_menu, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.update -> {
+                        onUpdateListener?.let {
+                            it(differ.currentList[adapterPosition])
+                        }
+                        true
+                    }
+                    R.id.delete -> {
+                        onDeleteListener?.let {
+                            it(differ.currentList[adapterPosition])
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
         }
     }
 }

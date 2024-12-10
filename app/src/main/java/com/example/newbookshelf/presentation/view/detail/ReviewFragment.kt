@@ -1,6 +1,7 @@
 package com.example.newbookshelf.presentation.view.detail
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +29,7 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
     }
 
     private lateinit var accessToken: String
+    private var isDelete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,14 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
         detailViewModel = (activity as HomeActivity).detailViewModel
         detailViewModel.detailBook(accessToken, isbn)
         reviewAdapter = (activity as HomeActivity).reviewAdapter
+        reviewAdapter.setOnUpdateListener {
+            val dialog = ReviewDialog(isbn, true, it.book_comment_idx ,it.comment_content, it.comment_rate, this@ReviewFragment)
+            dialog.show(requireActivity().supportFragmentManager, "ReviewDialog")
+        }
+        reviewAdapter.setOnDeleteListener {
+            isDelete = true
+            detailViewModel.deleteBookReview(accessToken, it.book_comment_idx)
+        }
         rvReview.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = reviewAdapter
@@ -61,7 +71,7 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
 
     private fun bindViews() = with(binding){
         btnWrite.setOnClickListener {
-            val dialog = ReviewDialog(isbn, this@ReviewFragment)
+            val dialog = ReviewDialog(isbn, false, 0,"", 0.0, this@ReviewFragment)
             dialog.show(requireActivity().supportFragmentManager, "ReviewDialog")
         }
     }
@@ -71,12 +81,14 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
             when (response) {
                 is Resource.Success -> {
                     val book = response.data?.data
-                    rb.rating = book!!.book_average_rate.toFloat()
-                    val percent = book.book_average_rate
-//                    val roundedPercent = round(percent).toInt()
-//                    tvAverage.text = roundedPercent.toString()
-                    tvAverage.text = book.book_average_rate.toString()
-                    if(book.book_comments.size != 0){
+                    if(book!!.book_average_rate != null){
+                        rb.rating = book.book_average_rate!!.toFloat()
+                        tvAverage.text = book.book_average_rate.toString()
+                    }else {
+                        tvAverage.text = "0.0"
+                    }
+
+                    if(book.book_comments?.size != 0){
                         rvReview.visibility = View.VISIBLE
                         tvEmpty.visibility = View.GONE
 
@@ -90,11 +102,28 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
                 is Resource.Loading -> Unit
             }
         }
+
+        detailViewModel.deleteBookReviewResult.observe(viewLifecycleOwner){ response ->
+            when (response) {
+                is Resource.Success -> {
+                    if(isDelete){
+                        detailViewModel.detailBook(accessToken, isbn)
+                        Toast.makeText(activity, "후기를 삭제했습니다.", Toast.LENGTH_SHORT).show()
+                        isDelete = false
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
     }
 
-    override fun commentReload(b: Boolean) {
+    override fun commentReload(b: Boolean, isUpdate: Boolean) {
         if(b){
             detailViewModel.detailBook(accessToken, isbn)
+            if(isUpdate){
+                Toast.makeText(activity, "후기를 수정했습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

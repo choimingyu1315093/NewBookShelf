@@ -18,11 +18,14 @@ import com.example.newbookshelf.data.model.detail.review.DeleteBookReviewModel
 import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewData
 import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewModel
 import com.example.newbookshelf.data.util.Resource
+import com.example.newbookshelf.domain.usecase.detail.AddBookMemoUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddBookReviewUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddMyBookUseCase
 import com.example.newbookshelf.domain.usecase.detail.BookMemoUseCase
+import com.example.newbookshelf.domain.usecase.detail.DeleteBookMemoUseCase
 import com.example.newbookshelf.domain.usecase.detail.DeleteBookReviewUseCase
 import com.example.newbookshelf.domain.usecase.detail.DetailBookUseCase
+import com.example.newbookshelf.domain.usecase.detail.UpdateBookMemoUseCase
 import com.example.newbookshelf.domain.usecase.detail.UpdateBookReviewUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,10 +34,13 @@ class DetailViewModel(
     private val app: Application,
     private val detailBookUseCase: DetailBookUseCase,
     private val addMyBookUseCase: AddMyBookUseCase,
-    private val bookMemoUseCase: BookMemoUseCase,
     private val addBookReviewUseCase: AddBookReviewUseCase,
     private val updateBookReviewUseCase: UpdateBookReviewUseCase,
-    private val deleteBookReviewUseCase: DeleteBookReviewUseCase
+    private val deleteBookReviewUseCase: DeleteBookReviewUseCase,
+    private val bookMemoUseCase: BookMemoUseCase,
+    private val addBookMemoUseCase: AddBookMemoUseCase,
+    private val updateBookMemoUseCase: UpdateBookMemoUseCase,
+    private val deleteBookMemoUseCase: DeleteBookMemoUseCase,
 ): AndroidViewModel(app) {
 
     val detailBookResult = MutableLiveData<Resource<DetailBookModel>>()
@@ -62,20 +68,6 @@ class DetailViewModel(
             }
         }catch (e: Exception){
             addMyBookResult.postValue(Resource.Error(e.message.toString()))
-        }
-    }
-
-    val getBookMemoResult = MutableLiveData<Resource<GetBookMemoModel>>()
-    fun getBookMemo(accessToken: String, isbn: String, getType: String) = viewModelScope.launch(Dispatchers.IO) {
-        getBookMemoResult.postValue(Resource.Loading())
-        try {
-            if(isNetworkAvailable(app)){
-                getBookMemoResult.postValue(Resource.Loading())
-                val result = bookMemoUseCase.execute("Bearer $accessToken", isbn, getType)
-                getBookMemoResult.postValue(result)
-            }
-        }catch (e: Exception){
-            getBookMemoResult.postValue(Resource.Error(e.message.toString()))
         }
     }
 
@@ -118,6 +110,20 @@ class DetailViewModel(
             }
         }catch (e: Exception){
             deleteBookReviewResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val getBookMemoResult = MutableLiveData<Resource<GetBookMemoModel>>()
+    fun getBookMemo(accessToken: String, isbn: String, getType: String) = viewModelScope.launch(Dispatchers.IO) {
+        getBookMemoResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                getBookMemoResult.postValue(Resource.Loading())
+                val result = bookMemoUseCase.execute("Bearer $accessToken", isbn, getType)
+                getBookMemoResult.postValue(result)
+            }
+        }catch (e: Exception){
+            getBookMemoResult.postValue(Resource.Error(e.message.toString()))
         }
     }
 

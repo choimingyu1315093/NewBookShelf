@@ -2,11 +2,14 @@ package com.example.newbookshelf.presentation.di
 
 import com.example.newbookshelf.domain.repository.AladinBookRepository
 import com.example.newbookshelf.domain.repository.BookRepository
+import com.example.newbookshelf.domain.usecase.detail.AddBookMemoUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddBookReviewUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddMyBookUseCase
 import com.example.newbookshelf.domain.usecase.detail.BookMemoUseCase
+import com.example.newbookshelf.domain.usecase.detail.DeleteBookMemoUseCase
 import com.example.newbookshelf.domain.usecase.detail.DeleteBookReviewUseCase
 import com.example.newbookshelf.domain.usecase.detail.DetailBookUseCase
+import com.example.newbookshelf.domain.usecase.detail.UpdateBookMemoUseCase
 import com.example.newbookshelf.domain.usecase.detail.UpdateBookReviewUseCase
 import com.example.newbookshelf.domain.usecase.find.FindIdUseCase
 import com.example.newbookshelf.domain.usecase.find.FindPwUseCase
@@ -186,12 +189,6 @@ object UseCaseModule {
 
     @Singleton
     @Provides
-    fun provideBookMemoUseCase(bookRepository: BookRepository): BookMemoUseCase {
-        return BookMemoUseCase(bookRepository)
-    }
-
-    @Singleton
-    @Provides
     fun provideAddBookReviewUseCase(bookRepository: BookRepository): AddBookReviewUseCase {
         return AddBookReviewUseCase(bookRepository)
     }
@@ -206,5 +203,29 @@ object UseCaseModule {
     @Provides
     fun provideDeleteBookReviewUseCase(bookRepository: BookRepository): DeleteBookReviewUseCase {
         return DeleteBookReviewUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBookMemoUseCase(bookRepository: BookRepository): BookMemoUseCase {
+        return BookMemoUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddBookMemoUseCase(bookRepository: BookRepository): AddBookMemoUseCase {
+        return AddBookMemoUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUpdateBookMemoUseCase(bookRepository: BookRepository): UpdateBookMemoUseCase {
+        return UpdateBookMemoUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeleteBookMemoUseCase(bookRepository: BookRepository): DeleteBookMemoUseCase {
+        return DeleteBookMemoUseCase(bookRepository)
     }
 }
