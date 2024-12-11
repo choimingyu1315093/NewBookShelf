@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
@@ -28,6 +29,7 @@ class MemoFragment(private val isbn: String) : Fragment(), MemoDialog.OnDialogCl
 
     private lateinit var accessToken: String
     private var type = "all"
+    private var isDelete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,14 @@ class MemoFragment(private val isbn: String) : Fragment(), MemoDialog.OnDialogCl
         detailViewModel = (activity as HomeActivity).detailViewModel
         detailViewModel.getBookMemo(accessToken, isbn, type)
         memoAdapter = (activity as HomeActivity).memoAdapter
+        memoAdapter.setOnUpdateListener {
+            val dialog = MemoDialog(isbn, true, it.memo_idx, it.memo_content, it.is_public, this@MemoFragment)
+            dialog.show(requireActivity().supportFragmentManager, "MemoDialog")
+        }
+        memoAdapter.setOnDeleteListener {
+            isDelete = true
+            detailViewModel.deleteBookMemo(accessToken, it.memo_idx)
+        }
         rvMemo.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = memoAdapter
@@ -60,7 +70,7 @@ class MemoFragment(private val isbn: String) : Fragment(), MemoDialog.OnDialogCl
 
     private fun bindViews() = with(binding){
         btnWrite.setOnClickListener {
-            val dialog = MemoDialog(isbn, this@MemoFragment)
+            val dialog = MemoDialog(isbn, false, 0, "","n", this@MemoFragment)
             dialog.show(requireActivity().supportFragmentManager, "MemoDialog")
         }
 
@@ -96,9 +106,28 @@ class MemoFragment(private val isbn: String) : Fragment(), MemoDialog.OnDialogCl
                 is Resource.Loading -> Unit
             }
         }
+
+        detailViewModel.deleteBookMemoResult.observe(viewLifecycleOwner){ response ->
+            when (response) {
+                is Resource.Success -> {
+                    if(isDelete){
+                        detailViewModel.getBookMemo(accessToken, isbn, type)
+                        Toast.makeText(activity, "메모를 삭제했습니다.", Toast.LENGTH_SHORT).show()
+                        isDelete = false
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
     }
 
-    override fun memoReload(b: Boolean) {
-        TODO("Not yet implemented")
+    override fun memoReload(b: Boolean, isUpdate: Boolean) {
+        if(b){
+            detailViewModel.getBookMemo(accessToken, isbn, type)
+            if(isUpdate){
+                Toast.makeText(activity, "후기를 수정했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

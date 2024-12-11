@@ -200,7 +200,7 @@ class ApiServiceTest {
         Truth.assertThat(response.body()?.data!!.books.book_name).isEqualTo("알라딘 상품정보 - 소년이 온다")
     }
 
-    //책 메모 조회
+    //해당 책의 메모 조회
     @Test
     fun bookMemoTest() = runBlocking {
         val mockResponseBody = """

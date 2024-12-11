@@ -1,4 +1,4 @@
-package com.example.newbookshelf.presentation.view.home.post
+package com.example.newbookshelf.presentation.view.chat
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.newbookshelf.R
-import com.example.newbookshelf.databinding.FragmentGeneralBinding
+import com.example.newbookshelf.databinding.FragmentChatroomBinding
 
-class GeneralFragment : Fragment() {
-    private lateinit var binding: FragmentGeneralBinding
+class ChatroomFragment : Fragment() {
+    private lateinit var binding: FragmentChatroomBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,11 +17,11 @@ class GeneralFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_general, container, false)
+        return inflater.inflate(R.layout.fragment_chatroom, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentGeneralBinding.bind(view)
+        binding = FragmentChatroomBinding.bind(view)
     }
 }

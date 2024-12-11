@@ -69,6 +69,8 @@ class ReviewAdapter: RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
                 ivMore.setOnClickListener {
                     showPopupMenu(it)
                 }
+            }else {
+                ivMore.visibility = View.GONE
             }
 
             val parts = review.update_date.split("T", "Z")

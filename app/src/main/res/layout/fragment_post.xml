@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/md_theme_background"
-    tools:context=".presentation.view.home.post.GeneralFragment">
+    tools:context=".presentation.view.post.PostFragment">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGeneral"
@@ -34,6 +34,7 @@
         android:layout_marginStart="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/btnGeneral"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvGeneral"
         android:layout_width="match_parent"

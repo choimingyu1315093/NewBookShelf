@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,16 +16,29 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
+import com.example.newbookshelf.data.model.detail.memo.AddBookMemoData
+import com.example.newbookshelf.data.model.detail.memo.UpdateBookMemoData
+import com.example.newbookshelf.data.model.detail.review.AddBookReviewData
+import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewData
+import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentMemoDialogBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModel
 
-class MemoDialog(private val bookIsbn: String, private val onDialogCloseListener: OnDialogCloseListener) : DialogFragment() {
+class MemoDialog(
+    private val bookIsbn: String,
+    private var update: Boolean,
+    private val bookMemoIdx: Int,
+    private val description: String,
+    private var isPrivate: String,
+    private val onDialogCloseListener: OnDialogCloseListener
+) : DialogFragment() {
+
     private lateinit var binding: FragmentMemoDialogBinding
     private lateinit var detailViewModel: DetailViewModel
 
     interface OnDialogCloseListener {
-        fun memoReload(b: Boolean)
+        fun memoReload(b: Boolean, isUpdate: Boolean)
     }
 
     companion object {
@@ -32,8 +46,6 @@ class MemoDialog(private val bookIsbn: String, private val onDialogCloseListener
     }
 
     private lateinit var accessToken: String
-    private var memo = ""
-    private var isPublic = "y"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,29 +73,30 @@ class MemoDialog(private val bookIsbn: String, private val onDialogCloseListener
 
         init()
         bindViews()
+        observeViewModel()
     }
 
     private fun init() = with(binding){
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         detailViewModel = (activity as HomeActivity).detailViewModel
+        if(description != ""){
+            etMemo.setText(description)
+            if(isPrivate == "n"){
+                rb1.isChecked = true
+            }else {
+                rb2.isChecked = true
+            }
+        }
     }
 
     private fun bindViews() = with(binding){
-        etMemo.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                memo = s.toString().trim()
-            }
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
-
         rg.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.rb1 -> {
-                    isPublic = "y"
+                    isPrivate = "n"
                 }
                 R.id.rb2 -> {
-                    isPublic = "n"
+                    isPrivate = "y"
                 }
             }
         }
@@ -91,11 +104,50 @@ class MemoDialog(private val bookIsbn: String, private val onDialogCloseListener
         btnCancel.setOnClickListener { dismiss() }
 
         btnOk.setOnClickListener {
-            if(memo == ""){
+            if(etMemo.text.toString() == ""){
                 Toast.makeText(requireContext(), "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+            }else if(update){
+                val updateBookMemoData = UpdateBookMemoData(isPrivate, etMemo.text.toString())
+                detailViewModel.updateBookMemo(accessToken, bookMemoIdx, updateBookMemoData)
+                update = false
             }else {
-//                val addMemoModel = AddMemoModel(memo, isPublic, bookIsbn)
-//                memoViewModel.addMemo(accessToken, addMemoModel)
+                val addBookMemoData = AddBookMemoData(bookIsbn, isPrivate, etMemo.text.toString())
+                detailViewModel.addBookMemo(accessToken, addBookMemoData)
+            }
+        }
+    }
+
+    private fun observeViewModel() = with(binding){
+        detailViewModel.addBookMemoResult.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Resource.Success -> {
+                    onDialogCloseListener.memoReload(true, false)
+                    Log.d(TAG, "observeViewModel: 호출 ${etMemo.text.toString()}, $update")
+                    if(etMemo.text.toString() != ""){
+                        if(!update){
+                            dismiss()
+                            etMemo.setText("")
+                        }
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
+
+        detailViewModel.updateBookMemoResult.observe(viewLifecycleOwner){ response ->
+            when (response) {
+                is Resource.Success -> {
+                    onDialogCloseListener.memoReload(true, false)
+                    if(etMemo.text.toString() != ""){
+                        if(!update){
+                            dismiss()
+                            etMemo.setText("")
+                        }
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
             }
         }
     }
