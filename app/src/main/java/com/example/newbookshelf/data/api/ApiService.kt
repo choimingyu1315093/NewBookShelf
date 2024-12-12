@@ -24,6 +24,11 @@ import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
+import com.example.newbookshelf.data.model.login.UpdateLocationData
+import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.profile.ActivityModel
+import com.example.newbookshelf.data.model.profile.MemoModel
+import com.example.newbookshelf.data.model.profile.MyProfileModel
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketModel
 import com.example.newbookshelf.data.model.signup.CheckModel
@@ -49,6 +54,13 @@ interface ApiService {
     suspend fun login(
         @Body loginData: LoginData
     ): Response<LoginModel>
+
+    //현재 위치 업데이트
+    @PATCH("users/location")
+    suspend fun updateLocation(
+        @Header("Authorization") accessToken: String,
+        @Body updateLocationData: UpdateLocationData
+    ): Response<OnlyResultModel>
 
     //sns로그인
     @POST("authentications/sign-in")
@@ -202,4 +214,43 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
         @Path("memo_idx") memoIdx: Int,
     ): Response<DeleteBookMemoModel>
+
+    //내 프로필 조회
+    @GET("users/profile")
+    suspend fun myProfile(
+        @Header("Authorization") accessToken: String
+    ): Response<MyProfileModel>
+
+    //활동 조회
+    @GET("activities/list")
+    suspend fun activitiesList(
+        @Header("Authorization") accessToken: String,
+        @Query("user_idx") userIdx: Int
+    ): Response<ActivityModel>
+
+    //내가 작성한 메모 목록 조회
+    @GET("memos/list")
+    suspend fun memosList(
+        @Header("Authorization") accessToken: String
+    ): Response<MemoModel>
+
+    //닉네임 변경
+    @PATCH("users/name/{user_name}")
+    suspend fun nicknameChange(
+        @Header("Authorization") accessToken: String,
+        @Path("user_name") userName: String
+    ): Response<OnlyResultModel>
+
+    //한 줄 메시지 변경
+    @PATCH("users/description/{user_description}")
+    suspend fun descriptionChange(
+        @Header("Authorization") accessToken: String,
+        @Path("user_description") userDescription: String
+    ): Response<OnlyResultModel>
+
+    //내가 읽고 싶은 책을 보유 중인 유저 목록 조회
+    @GET("users/list/wish-book")
+    suspend fun wishBookHaveUser(
+        @Header("Authorization") accessToken: String
+    ): Response<WishBookHaveUserModel>
 }

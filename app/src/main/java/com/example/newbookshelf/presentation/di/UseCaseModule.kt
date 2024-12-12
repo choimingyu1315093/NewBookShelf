@@ -2,6 +2,7 @@ package com.example.newbookshelf.presentation.di
 
 import com.example.newbookshelf.domain.repository.AladinBookRepository
 import com.example.newbookshelf.domain.repository.BookRepository
+import com.example.newbookshelf.domain.usecase.map.WishBookHaveUserUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddBookMemoUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddBookReviewUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddMyBookUseCase
@@ -27,6 +28,12 @@ import com.example.newbookshelf.domain.usecase.home.SearchedBookUseCase
 import com.example.newbookshelf.domain.usecase.home.WeekBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
+import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
+import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
+import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
+import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
+import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
+import com.example.newbookshelf.domain.usecase.profile.ProfileMemoUseCase
 import com.example.newbookshelf.domain.usecase.setting.BuyTicketUseCase
 import com.example.newbookshelf.domain.usecase.signup.EmailCheckUseCase
 import com.example.newbookshelf.domain.usecase.signup.IdCheckUseCase
@@ -47,6 +54,12 @@ object UseCaseModule {
     @Provides
     fun provideIdLoginUseCase(bookRepository: BookRepository): IdLoginUseCase {
         return IdLoginUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUpdateLocationUseCase(bookRepository: BookRepository): UpdateLocationUseCase {
+        return UpdateLocationUseCase(bookRepository)
     }
 
     @Singleton
@@ -227,5 +240,41 @@ object UseCaseModule {
     @Provides
     fun provideDeleteBookMemoUseCase(bookRepository: BookRepository): DeleteBookMemoUseCase {
         return DeleteBookMemoUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMyProfileUseCase(bookRepository: BookRepository): MyProfileUseCase {
+        return MyProfileUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideProfileActivityUseCase(bookRepository: BookRepository): ProfileActivityUseCase {
+        return ProfileActivityUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideProfileMemoUseCase(bookRepository: BookRepository): ProfileMemoUseCase {
+        return ProfileMemoUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNicknameChangeUseCase(bookRepository: BookRepository): NicknameChangeUseCase {
+        return NicknameChangeUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDescriptionChangeUseCase(bookRepository: BookRepository): DescriptionChangeUseCase {
+        return DescriptionChangeUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideWishBookHaveUserUseCase(bookRepository: BookRepository): WishBookHaveUserUseCase {
+        return WishBookHaveUserUseCase(bookRepository)
     }
 }

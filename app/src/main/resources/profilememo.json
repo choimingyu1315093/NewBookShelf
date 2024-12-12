@@ -1,0 +1,45 @@
+{
+  "result": true,
+  "data": [
+    {
+      "memo_idx": 13,
+      "memo_content": "gooooood",
+      "is_public": "n",
+      "create_date": "2024-12-11T07:05:30.391Z",
+      "books": {
+        "book_isbn": "K662930932",
+        "book_name": "알라딘 상품정보 - 소년이 온다"
+      }
+    },
+    {
+      "memo_idx": 12,
+      "memo_content": "very good!!",
+      "is_public": "n",
+      "create_date": "2024-12-11T07:01:59.771Z",
+      "books": {
+        "book_isbn": "K662930932",
+        "book_name": "알라딘 상품정보 - 소년이 온다"
+      }
+    },
+    {
+      "memo_idx": 11,
+      "memo_content": "Good!!",
+      "is_public": "n",
+      "create_date": "2024-12-11T07:01:41.730Z",
+      "books": {
+        "book_isbn": "K662930932",
+        "book_name": "알라딘 상품정보 - 소년이 온다"
+      }
+    },
+    {
+      "memo_idx": 8,
+      "memo_content": "진짜 좋은 책이다!!!",
+      "is_public": "n",
+      "create_date": "2024-12-11T06:48:31.759Z",
+      "books": {
+        "book_isbn": "K662930932",
+        "book_name": "알라딘 상품정보 - 소년이 온다"
+      }
+    }
+  ]
+}

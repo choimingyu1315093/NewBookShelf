@@ -22,6 +22,22 @@ class PreferenceUtil(context: Context) {
         prefs.edit().putString(key, defValue).apply()
     }
 
+    //latitude
+    fun getLatitude(key: String, defValue: Float): Float {
+        return prefs.getFloat(key, defValue)
+    }
+    fun setLatitude(key: String, defValue: Float){
+        prefs.edit().putFloat(key, defValue).apply()
+    }
+
+    //longitude
+    fun getLongitude(key: String, defValue: Float): Float {
+        return prefs.getFloat(key, defValue)
+    }
+    fun setLongitude(key: String, defValue: Float){
+        prefs.edit().putFloat(key, defValue).apply()
+    }
+
     //UserIdx
     fun getUserIdx(key: String, defValue: Int): Int {
         return prefs.getInt(key, defValue)

@@ -29,10 +29,18 @@ import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchMoreBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
+import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
+import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
+import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
 import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModel
 import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModelFactory
+import com.example.newbookshelf.presentation.viewmodel.map.MapViewModel
+import com.example.newbookshelf.presentation.viewmodel.map.MapViewModelFactory
+import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
+import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModelFactory
+import com.google.android.gms.maps.MapView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -65,6 +73,20 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var memoAdapter: MemoAdapter
 
+    @Inject
+    lateinit var profileViewModelFactory: ProfileViewModelFactory
+    lateinit var profileViewModel: ProfileViewModel
+    @Inject
+    lateinit var profileActiveAdapter: ProfileActiveAdapter
+    @Inject
+    lateinit var profileMemoAdapter: ProfileMemoAdapter
+
+    @Inject
+    lateinit var mapViewModelFactory: MapViewModelFactory
+    lateinit var mapViewModel: MapViewModel
+    @Inject
+    lateinit var nearBookAdapter: NearBookAdapter
+
     companion object {
         const val TAG = "HomeActivity"
     }
@@ -91,6 +113,8 @@ class HomeActivity : AppCompatActivity() {
 
         homeViewModel = ViewModelProvider(this@HomeActivity, homeViewModelFactory).get(HomeViewModel::class.java)
         detailViewModel = ViewModelProvider(this@HomeActivity, detailViewModelFactory).get(DetailViewModel::class.java)
+        profileViewModel = ViewModelProvider(this@HomeActivity, profileViewModelFactory).get(ProfileViewModel::class.java)
+        mapViewModel = ViewModelProvider(this@HomeActivity, mapViewModelFactory).get(MapViewModel::class.java)
 
         onBackPressedDispatcher.addCallback(this@HomeActivity) {
             if (!navController.popBackStack()) {

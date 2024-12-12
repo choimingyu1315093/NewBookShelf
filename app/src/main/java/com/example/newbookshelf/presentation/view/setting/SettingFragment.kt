@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.FragmentSettingBinding
+import com.example.newbookshelf.presentation.view.home.HomeActivity
 
 class SettingFragment : Fragment() {
     private lateinit var binding: FragmentSettingBinding
@@ -23,5 +24,16 @@ class SettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSettingBinding.bind(view)
+
+        init()
+    }
+
+    private fun init() = with(binding){
+        (activity as HomeActivity).binding.cl.visibility = View.GONE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
     }
 }

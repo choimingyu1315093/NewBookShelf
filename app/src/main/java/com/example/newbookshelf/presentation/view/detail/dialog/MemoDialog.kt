@@ -122,7 +122,6 @@ class MemoDialog(
             when (response) {
                 is Resource.Success -> {
                     onDialogCloseListener.memoReload(true, false)
-                    Log.d(TAG, "observeViewModel: 호출 ${etMemo.text.toString()}, $update")
                     if(etMemo.text.toString() != ""){
                         if(!update){
                             dismiss()

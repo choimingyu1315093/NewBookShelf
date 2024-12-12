@@ -9,6 +9,9 @@ import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchMoreBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
+import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
+import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
+import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -71,5 +74,23 @@ object AdapterModule {
     @Provides
     fun provideMemoAdapter(): MemoAdapter {
         return MemoAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideProfileActiveAdapter(): ProfileActiveAdapter {
+        return ProfileActiveAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideProfileMemoAdapter(): ProfileMemoAdapter {
+        return ProfileMemoAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNearBookAdapter(): NearBookAdapter {
+        return NearBookAdapter()
     }
 }

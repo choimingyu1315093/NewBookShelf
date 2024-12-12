@@ -25,6 +25,11 @@ import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
+import com.example.newbookshelf.data.model.login.UpdateLocationData
+import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.profile.ActivityModel
+import com.example.newbookshelf.data.model.profile.MemoModel
+import com.example.newbookshelf.data.model.profile.MyProfileModel
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketModel
 import com.example.newbookshelf.data.model.signup.CheckModel
@@ -38,6 +43,7 @@ import kotlinx.coroutines.flow.Flow
 interface BookRepository {
 
     suspend fun login(loginData: LoginData): Resource<LoginModel>
+    suspend fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData): Resource<OnlyResultModel>
     suspend fun snsLogin(snsLoginData: SnsLoginData): Resource<LoginModel>
     suspend fun findId(findIdData: FindIdData): Resource<FindModel>
     suspend fun findPw(findPwData: FindPwData): Resource<FindModel>
@@ -65,4 +71,10 @@ interface BookRepository {
     suspend fun addBookMemo(accessToken: String, addBookMemoData: AddBookMemoData): Resource<AddBookMemoModel>
     suspend fun updateBookMemo(accessToken: String, bookMemoIdx: Int, updateBookMemoData: UpdateBookMemoData): Resource<UpdateBookMemoModel>
     suspend fun deleteBookMemo(accessToken: String, bookMemoIdx: Int): Resource<DeleteBookMemoModel>
+    fun myProfile(accessToken: String): Flow<Resource<MyProfileModel>>
+    fun profileActivity(accessToken: String, userIdx: Int): Flow<Resource<ActivityModel>>
+    fun profileMemo(accessToken: String): Flow<Resource<MemoModel>>
+    suspend fun nicknameChange(accessToken: String, nickname: String): Resource<OnlyResultModel>
+    suspend fun descriptionChange(accessToken: String, description: String): Resource<OnlyResultModel>
+    fun wishBookHaveUser(accessToken: String): Flow<Resource<WishBookHaveUserModel>>
 }

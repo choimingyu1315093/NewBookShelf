@@ -121,6 +121,8 @@ class LoginActivity : AppCompatActivity() {
                 Log.d(TAG, "현재 위치: ${location.latitude}, ${location.longitude}")
                 loginViewModel.latitude.postValue(location.latitude)
                 loginViewModel.longitude.postValue(location.longitude)
+                BookShelfApp.prefs.setLatitude("latitude", location.latitude.toFloat())
+                BookShelfApp.prefs.setLongitude("longitude", location.longitude.toFloat())
             } else {
                 Toast.makeText(this, "위치를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
             }

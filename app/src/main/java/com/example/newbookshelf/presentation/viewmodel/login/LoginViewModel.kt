@@ -10,19 +10,23 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.newbookshelf.BookShelfApp
+import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
+import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
+import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val app: Application,
     private val loginUseCase: IdLoginUseCase,
-    private val snsLoginUseCase: SnsLoginUseCase
+    private val snsLoginUseCase: SnsLoginUseCase,
+    private val updateLocationUseCase: UpdateLocationUseCase
 ): AndroidViewModel(app) {
 
     val latitude = MutableLiveData<Double>()
@@ -57,6 +61,13 @@ class LoginViewModel(
         }catch (e: Exception){
             loginResult.postValue(Resource.Error(e.message.toString()))
         }
+    }
+
+    val updateLocationResult = MutableLiveData<Resource<OnlyResultModel>>()
+    fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData) = viewModelScope.launch(Dispatchers.IO) {
+        updateLocationResult.postValue(Resource.Loading())
+        val result = updateLocationUseCase.execute("Bearer $accessToken", updateLocationData)
+        updateLocationResult.postValue(result)
     }
 
     private fun isNetworkAvailable(context: Context?):Boolean{

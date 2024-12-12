@@ -117,7 +117,6 @@ class SignupViewModel(
             if(isNetworkAvailable(app)){
                 buyTicketResult.postValue(Resource.Loading())
                 val result = buyTicketUseCase.execute("Bearer $accessToken", ticketData)
-                Log.d("TAG", "buyTicket: result $result")
                 buyTicketResult.postValue(result)
             }
         }catch (e: Exception){

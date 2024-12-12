@@ -233,6 +233,61 @@ class ApiServiceTest {
         Truth.assertThat(response.body()?.data!![0].memo_content).isEqualTo("너무 좋은 책이에요")
     }
 
+    //내 프로필 조회
+    @Test
+    fun myProfileTest() = runBlocking {
+        val mockResponseBody = """
+            {
+              "result": true,
+              "data": {
+                "user_idx": 33,
+                "user_name": "test001",
+                "user_description": "",
+                "user_point": 98,
+                "user_grade": "씨앗 4",
+                "user_max_point": 100,
+                "relation_count": 0,
+                "relation_request_count": 0
+              }
+            }
+        """.trimIndent()
+        enqueueMockResponse(mockResponseBody)
+
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzk3Njk0OSwiZXhwIjoxNzM0MDYzMzQ5fQ.SZn2PF_rNAiB0Kh6WFmClqQJSYwgKmK6t-SCPoDtoH8"
+        val response = service.myProfile(accessToken)
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/users/profile")
+        Truth.assertThat(response.body()).isNotNull()
+        Truth.assertThat(response.body()?.data!!.user_grade).isEqualTo("씨앗 4")
+    }
+
+    //활동 조회
+    @Test
+    fun profileActivityTest() = runBlocking {
+        enqueueMockResponseJson("profileactivity.json")
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzk3OTg1MiwiZXhwIjoxNzM0MDY2MjUyfQ.S-pmNP_eRJYucpw4W72lzFb0COih5a01HenUVHvHkH0"
+        val response = service.activitiesList(accessToken, 33)
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/activities/list?user_idx=33")
+        Truth.assertThat(response.body()).isNotNull()
+        Truth.assertThat(response.body()?.data!![0].activity_point).isEqualTo(2)
+    }
+
+    //내가 작성한 메모 목록 조회
+    @Test
+    fun profileMemoTest() = runBlocking {
+        enqueueMockResponseJson("profilememo.json")
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzk3OTg1MiwiZXhwIjoxNzM0MDY2MjUyfQ.S-pmNP_eRJYucpw4W72lzFb0COih5a01HenUVHvHkH0"
+        val response = service.memosList(accessToken)
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/memos/list")
+        Truth.assertThat(response.body()).isNotNull()
+        Truth.assertThat(response.body()?.data!![0].memo_content).isEqualTo("gooooood")
+    }
+
     @After
     fun tearDown() {
         server.shutdown()

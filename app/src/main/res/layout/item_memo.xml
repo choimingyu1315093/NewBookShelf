@@ -24,6 +24,7 @@
         android:id="@+id/ivMore"
         android:layout_width="20dp"
         android:layout_height="16dp"
+        android:visibility="gone"
         android:src="@drawable/icon_menu"
         app:tint="#797979"
         android:layout_marginTop="10dp"

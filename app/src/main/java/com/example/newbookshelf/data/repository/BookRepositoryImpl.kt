@@ -25,6 +25,11 @@ import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
+import com.example.newbookshelf.data.model.login.UpdateLocationData
+import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.profile.ActivityModel
+import com.example.newbookshelf.data.model.profile.MemoModel
+import com.example.newbookshelf.data.model.profile.MyProfileModel
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketModel
 import com.example.newbookshelf.data.model.signup.CheckModel
@@ -44,6 +49,10 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
 
     override suspend fun login(loginData: LoginData): Resource<LoginModel> {
         return responseToResource(bookRemoteDataSource.login(loginData))
+    }
+
+    override suspend fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.updateLocation(accessToken, updateLocationData))
     }
 
     override suspend fun snsLogin(snsLoginData: SnsLoginData): Resource<LoginModel> {
@@ -164,6 +173,54 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
 
     override suspend fun deleteBookMemo(accessToken: String, bookMemoIdx: Int): Resource<DeleteBookMemoModel> {
         return responseToResource(bookRemoteDataSource.deleteBookMemo(accessToken, bookMemoIdx))
+    }
+
+    override fun myProfile(accessToken: String): Flow<Resource<MyProfileModel>> {
+        return bookRemoteDataSource.myProfile(accessToken).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
+    }
+
+    override fun profileActivity(accessToken: String, userIdx: Int): Flow<Resource<ActivityModel>> {
+        return bookRemoteDataSource.profileActivity(accessToken, userIdx).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
+    }
+
+    override fun profileMemo(accessToken: String): Flow<Resource<MemoModel>> {
+        return bookRemoteDataSource.profileMemo(accessToken).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
+    }
+
+    override suspend fun nicknameChange(accessToken: String, nickname: String): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.nicknameChange(accessToken, nickname))
+    }
+
+    override suspend fun descriptionChange(accessToken: String, description: String): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.descriptionChange(accessToken, description))
+    }
+
+    override fun wishBookHaveUser(accessToken: String): Flow<Resource<WishBookHaveUserModel>> {
+        return bookRemoteDataSource.wishBookHaveUser(accessToken).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
     }
 
 //    private fun responseToResource(response: Response<LoginModel>): Resource<LoginModel>{

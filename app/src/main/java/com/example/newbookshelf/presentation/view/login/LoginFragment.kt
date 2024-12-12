@@ -19,6 +19,7 @@ import com.example.newbookshelf.BuildConfig
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.SnsLoginData
+import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.model.signup.SnsSignupData
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentLoginBinding
@@ -92,10 +93,8 @@ class LoginFragment : Fragment() {
         fcmToken = BookShelfApp.prefs.getFcmToken("fcmToken", "")
 
         if(BookShelfApp.prefs.getAutoLogin("autoLogin", false)){
-            Log.d(TAG, "init: loginFragment ${BookShelfApp.prefs.getLoginType("loginType", "general")}")
             if(BookShelfApp.prefs.getLoginType("loginType", "general") == "general"){
                 val loginData = LoginData(fcmToken, "general", BookShelfApp.prefs.getLoginId("id", ""), BookShelfApp.prefs.getLoginPw("password", ""))
-                Log.d(TAG, "init: loginFragment $loginData")
                 loginViewModel.login(loginData)
             }else if(BookShelfApp.prefs.getLoginType("loginType", "general") == "kakao"){
                 val snsLoginData = SnsLoginData(fcmToken, "kakao", BookShelfApp.prefs.getKakaoToken("kakaoToken", ""))
@@ -258,8 +257,7 @@ class LoginFragment : Fragment() {
                         BookShelfApp.prefs.setAutoLogin("autoLogin", true)
                         BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.accessToken)
                         BookShelfApp.prefs.setUserIdx("userIdx", response.data.data.userIdx)
-                        val intent = Intent(requireContext(), HomeActivity::class.java)
-                        startActivity(intent)
+                        loginViewModel.updateLocation(response.data.data.accessToken, UpdateLocationData(loginViewModel.latitude.value!!, loginViewModel.longitude.value!!))
                     }
                 }
                 is Resource.Error -> {
@@ -290,6 +288,17 @@ class LoginFragment : Fragment() {
                 is Resource.Loading -> {
                     showProgressBar()
                 }
+            }
+        }
+        
+        loginViewModel.updateLocationResult.observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    val intent = Intent(requireContext(), HomeActivity::class.java)
+                    startActivity(intent)
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
             }
         }
     }

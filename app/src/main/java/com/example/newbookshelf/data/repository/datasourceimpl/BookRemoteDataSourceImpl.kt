@@ -25,6 +25,11 @@ import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
+import com.example.newbookshelf.data.model.login.UpdateLocationData
+import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.profile.ActivityModel
+import com.example.newbookshelf.data.model.profile.MemoModel
+import com.example.newbookshelf.data.model.profile.MyProfileModel
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketModel
 import com.example.newbookshelf.data.model.signup.CheckModel
@@ -42,6 +47,10 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
 
     override suspend fun login(loginData: LoginData): Response<LoginModel> {
         return apiService.login(loginData)
+    }
+
+    override suspend fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData): Response<OnlyResultModel> {
+        return apiService.updateLocation(accessToken, updateLocationData)
     }
 
     override suspend fun snsLogin(snsLoginData: SnsLoginData): Response<LoginModel> {
@@ -138,5 +147,37 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
 
     override suspend fun deleteBookMemo(accessToken: String, memoIdx: Int): Response<DeleteBookMemoModel> {
        return apiService.deleteMemo(accessToken, memoIdx)
+    }
+
+    override fun myProfile(accessToken: String): Flow<Response<MyProfileModel>> {
+        return flow {
+            emit(apiService.myProfile(accessToken))
+        }
+    }
+
+    override fun profileActivity(accessToken: String, userIdx: Int): Flow<Response<ActivityModel>> {
+        return flow {
+            emit(apiService.activitiesList(accessToken, userIdx))
+        }
+    }
+
+    override fun profileMemo(accessToken: String): Flow<Response<MemoModel>> {
+        return flow {
+            emit(apiService.memosList(accessToken))
+        }
+    }
+
+    override suspend fun nicknameChange(accessToken: String, nickname: String): Response<OnlyResultModel> {
+        return apiService.nicknameChange(accessToken, nickname)
+    }
+
+    override suspend fun descriptionChange(accessToken: String, description: String): Response<OnlyResultModel> {
+        return apiService.descriptionChange(accessToken, description)
+    }
+
+    override fun wishBookHaveUser(accessToken: String): Flow<Response<WishBookHaveUserModel>> {
+        return flow {
+            emit(apiService.wishBookHaveUser(accessToken))
+        }
     }
 }

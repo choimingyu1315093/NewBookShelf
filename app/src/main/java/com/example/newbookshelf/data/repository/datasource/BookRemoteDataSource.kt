@@ -24,6 +24,11 @@ import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
+import com.example.newbookshelf.data.model.login.UpdateLocationData
+import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.profile.ActivityModel
+import com.example.newbookshelf.data.model.profile.MemoModel
+import com.example.newbookshelf.data.model.profile.MyProfileModel
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketModel
 import com.example.newbookshelf.data.model.signup.CheckModel
@@ -37,6 +42,7 @@ import retrofit2.Response
 interface BookRemoteDataSource {
 
     suspend fun login(loginData: LoginData): Response<LoginModel>
+    suspend fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData): Response<OnlyResultModel>
     suspend fun snsLogin(snsLoginData: SnsLoginData): Response<LoginModel>
     suspend fun findId(findIdData: FindIdData): Response<FindModel>
     suspend fun findPw(findPwData: FindPwData): Response<FindModel>
@@ -60,4 +66,10 @@ interface BookRemoteDataSource {
     suspend fun addBookMemo(accessToken: String, addBookMemoData: AddBookMemoData): Response<AddBookMemoModel>
     suspend fun updateBookMemo(accessToken: String, memoIdx: Int, updateBookMemoData: UpdateBookMemoData): Response<UpdateBookMemoModel>
     suspend fun deleteBookMemo(accessToken: String, memoIdx: Int): Response<DeleteBookMemoModel>
+    fun myProfile(accessToken: String): Flow<Response<MyProfileModel>>
+    fun profileActivity(accessToken: String, userIdx: Int): Flow<Response<ActivityModel>>
+    fun profileMemo(accessToken: String): Flow<Response<MemoModel>>
+    suspend fun nicknameChange(accessToken: String, nickname: String): Response<OnlyResultModel>
+    suspend fun descriptionChange(accessToken: String, description: String): Response<OnlyResultModel>
+    fun wishBookHaveUser(accessToken: String): Flow<Response<WishBookHaveUserModel>>
 }
