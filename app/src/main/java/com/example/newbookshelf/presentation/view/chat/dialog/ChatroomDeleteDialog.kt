@@ -8,12 +8,28 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
+import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentChatroomDeleteDialogBinding
+import com.example.newbookshelf.presentation.view.home.HomeActivity
+import com.example.newbookshelf.presentation.viewmodel.chat.ChatViewModel
 
-class ChatroomDeleteDialog : DialogFragment() {
+class ChatroomDeleteDialog(private val chatroomIdx: Int, private val onChatroomOutListener: OnChatroomOutListener) : DialogFragment() {
     private lateinit var binding: FragmentChatroomDeleteDialogBinding
+    private lateinit var chatViewModel: ChatViewModel
+
+    interface OnChatroomOutListener {
+        fun outChatroom(b: Boolean)
+    }
+
+    companion object {
+        const val TAG ="ChatroomDeleteDialog"
+    }
+
+    private lateinit var accessToken: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,5 +54,35 @@ class ChatroomDeleteDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentChatroomDeleteDialogBinding.bind(view)
+
+        init()
+        bindViews()
+        observeViewModel()
+    }
+
+    private fun init() = with(binding){
+        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
+        chatViewModel = (activity as HomeActivity).chatViewMode
+    }
+
+    private fun bindViews() = with(binding){
+        btnCancel.setOnClickListener { dismiss() }
+        btnOk.setOnClickListener {
+            chatViewModel.deleteChatroom(accessToken, chatroomIdx)
+        }
+    }
+
+    private fun observeViewModel() = with(binding){
+        chatViewModel.deleteChatroomResult.observe(viewLifecycleOwner) { response ->
+            when(response){
+                is Resource.Success -> {
+                    Toast.makeText(requireContext(), "채팅을 종료하였습니다.", Toast.LENGTH_SHORT).show()
+                    dismiss()
+                    onChatroomOutListener.outChatroom(true)
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@ import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.home.bestseller.Item
+import com.example.newbookshelf.data.model.home.searchbook.SearchBookResult
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentDetailBinding
 import com.example.newbookshelf.presentation.view.detail.adapter.DetailAdapter
@@ -41,7 +42,8 @@ class DetailFragment : Fragment() {
     }
 
     private lateinit var accessToken: String
-    private lateinit var book: Item
+    private var book: Item? = null
+    private var searchBook: SearchBookResult? = null
 
     private var bookIsbn = ""
     private var myBookIdx: Int? = 0
@@ -63,6 +65,12 @@ class DetailFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as HomeActivity).binding.cl.visibility = View.GONE
+        (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_detail, container, false)
     }
@@ -73,7 +81,7 @@ class DetailFragment : Fragment() {
 
         val args: DetailFragmentArgs by navArgs()
         book = args.book
-        Log.d(TAG, "onViewCreated: book $book")
+        searchBook = args.searchBook
 
         init()
         bindViews()
@@ -87,8 +95,13 @@ class DetailFragment : Fragment() {
 
         setCurrentDate()
 
-        detailViewModel.detailBook(accessToken, book.isbn!!)
-        bookIsbn = book.isbn!!
+        if(book != null){
+            detailViewModel.detailBook(accessToken, book?.isbn!!)
+            bookIsbn = book?.isbn!!
+        }else {
+            detailViewModel.detailBook(accessToken, searchBook?.book_isbn!!)
+            bookIsbn = searchBook?.book_isbn!!
+        }
 
         view?.isFocusableInTouchMode = true
         view?.requestFocus()

@@ -109,4 +109,12 @@ class PreferenceUtil(context: Context) {
     fun setNickname(key: String, defValue: String){
         prefs.edit().putString(key, defValue).apply()
     }
+
+    //chatUserIdx
+    fun getChatUserIdx(key: String, defValue: Int): Int {
+        return prefs.getInt(key, defValue)
+    }
+    fun setChatUserIdx(key: String, defValue: Int){
+        prefs.edit().putInt(key, defValue).apply()
+    }
 }

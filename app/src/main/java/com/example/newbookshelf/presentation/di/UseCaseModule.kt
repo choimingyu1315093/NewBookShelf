@@ -2,6 +2,8 @@ package com.example.newbookshelf.presentation.di
 
 import com.example.newbookshelf.domain.repository.AladinBookRepository
 import com.example.newbookshelf.domain.repository.BookRepository
+import com.example.newbookshelf.domain.usecase.chat.CreateChatroomUseCase
+import com.example.newbookshelf.domain.usecase.chat.DeleteChatroomUseCase
 import com.example.newbookshelf.domain.usecase.map.WishBookHaveUserUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddBookMemoUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddBookReviewUseCase
@@ -276,5 +278,17 @@ object UseCaseModule {
     @Provides
     fun provideWishBookHaveUserUseCase(bookRepository: BookRepository): WishBookHaveUserUseCase {
         return WishBookHaveUserUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCreateChatroomUseCase(bookRepository: BookRepository): CreateChatroomUseCase {
+        return CreateChatroomUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeleteChatroomUseCase(bookRepository: BookRepository): DeleteChatroomUseCase {
+        return DeleteChatroomUseCase(bookRepository)
     }
 }

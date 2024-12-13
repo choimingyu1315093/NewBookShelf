@@ -1,6 +1,7 @@
 package com.example.newbookshelf.presentation.di
 
 import android.app.Application
+import com.example.newbookshelf.domain.usecase.chat.CreateChatroomUseCase
 import com.example.newbookshelf.domain.usecase.map.WishBookHaveUserUseCase
 import com.example.newbookshelf.presentation.viewmodel.map.MapViewModelFactory
 import dagger.Module
@@ -17,8 +18,9 @@ object MapFactoryModule {
     @Provides
     fun provideMapViewModelFactory(
         app: Application,
-        wishBookHaveUserUseCase: WishBookHaveUserUseCase
+        wishBookHaveUserUseCase: WishBookHaveUserUseCase,
+        createChatroomUseCase: CreateChatroomUseCase
     ): MapViewModelFactory {
-        return MapViewModelFactory(app, wishBookHaveUserUseCase)
+        return MapViewModelFactory(app, wishBookHaveUserUseCase, createChatroomUseCase)
     }
 }

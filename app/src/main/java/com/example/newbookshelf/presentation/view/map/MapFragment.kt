@@ -15,10 +15,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
+import com.example.newbookshelf.data.model.chat.ChatroomInfoModel
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentMapBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
@@ -67,6 +70,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as HomeActivity).binding.cl.visibility = View.GONE
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
@@ -95,11 +103,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
         }
 
         setupGoogleMap()
-    }
-
-    private fun setupGoogleMap() = with(binding){
-        val mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
-        mapFragment.getMapAsync(this@MapFragment)
     }
 
     @SuppressLint("PotentialBehaviorOverride")
@@ -163,13 +166,27 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
         }
     }
 
+    private fun setupGoogleMap() = with(binding){
+        val mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
+        mapFragment.getMapAsync(this@MapFragment)
+    }
+
     override fun isClose(b: Boolean, chatroomIdx: Int, name: String) {
-        TODO("Not yet implemented")
+        val bundle = Bundle().apply {
+            putParcelable("chatroomInfo", ChatroomInfoModel(chatroomIdx, image, name))
+        }
+        findNavController().navigate(R.id.action_mapFragment_to_chatroomFragment, bundle)
+        (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         val cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLocation, 13f)
         map.animateCamera(cameraUpdate)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
     }
 }

@@ -1,5 +1,6 @@
 package com.example.newbookshelf.data.api
 
+import com.example.newbookshelf.data.model.chat.CreateChatroomData
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.google.common.truth.Truth
@@ -266,6 +267,7 @@ class ApiServiceTest {
     @Test
     fun profileActivityTest() = runBlocking {
         enqueueMockResponseJson("profileactivity.json")
+
         val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzk3OTg1MiwiZXhwIjoxNzM0MDY2MjUyfQ.S-pmNP_eRJYucpw4W72lzFb0COih5a01HenUVHvHkH0"
         val response = service.activitiesList(accessToken, 33)
         val request = server.takeRequest()
@@ -279,6 +281,7 @@ class ApiServiceTest {
     @Test
     fun profileMemoTest() = runBlocking {
         enqueueMockResponseJson("profilememo.json")
+
         val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzk3OTg1MiwiZXhwIjoxNzM0MDY2MjUyfQ.S-pmNP_eRJYucpw4W72lzFb0COih5a01HenUVHvHkH0"
         val response = service.memosList(accessToken)
         val request = server.takeRequest()
@@ -286,6 +289,57 @@ class ApiServiceTest {
         Truth.assertThat(request.path).isEqualTo("/memos/list")
         Truth.assertThat(response.body()).isNotNull()
         Truth.assertThat(response.body()?.data!![0].memo_content).isEqualTo("gooooood")
+    }
+
+    //내가 읽고 싶은 책을 보유 중인 유저 목록 조회
+    @Test
+    fun wishBookHaveUserTest() = runBlocking {
+        val mockResponseBody = """
+            {
+              "result": true,
+              "data": [
+                {
+                  "my_book_idx": 11,
+                  "book_name": "알라딘 상품정보 - 소년이 온다",
+                  "book_author": "한강 지음",
+                  "book_translator": "",
+                  "book_publisher": "창비",
+                  "book_image": "https://image.aladin.co.kr/product/4086/97/coversum/8936434128_2.jpg",
+                  "book_isbn": "K662930932",
+                  "user_idx": 35,
+                  "user_name": "test002",
+                  "user_point": 3,
+                  "current_latitude": "37.5121136000000",
+                  "current_longitude": "127.1207262000000",
+                  "distance": 866
+                }
+              ]
+            }
+        """.trimIndent()
+        enqueueMockResponse(mockResponseBody)
+
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczNDA0OTQ5MCwiZXhwIjoxNzM0MTM1ODkwfQ.oSopl4lR3wcycXFVD1M_q-mj6u2HfV5-y6PKKf00wZI"
+        val response = service.wishBookHaveUser(accessToken)
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/users/list/wish-book")
+        Truth.assertThat(response.body()).isNotNull()
+        Truth.assertThat(response.body()!!.data[0].book_image).isEqualTo("https://image.aladin.co.kr/product/4086/97/coversum/8936434128_2.jpg")
+    }
+
+    //채팅방 생성
+    @Test
+    fun createChatroomTest() = runBlocking {
+        enqueueMockResponseJson("createchatroom.json")
+
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczNDA1MDc2NSwiZXhwIjoxNzM0MTM3MTY1fQ.fGCm8H6SvGpRy9_SZU2ivYOR5Hv948ZJ7Npxsb53WjA"
+        val createChatroomData = CreateChatroomData("K662930932", 35)
+        val response = service.createChatroom(accessToken, createChatroomData)
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/chat-rooms")
+        Truth.assertThat(response.body()).isNotNull()
+        Truth.assertThat(response.body()!!.data.chat_room_idx).isEqualTo(1)
     }
 
     @After

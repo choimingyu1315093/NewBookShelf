@@ -20,6 +20,8 @@ import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.ActivityHomeBinding
+import com.example.newbookshelf.presentation.view.chat.adapter.ChatListAdapter
+import com.example.newbookshelf.presentation.view.chat.adapter.ChatMessageAdapter
 import com.example.newbookshelf.presentation.view.detail.adapter.MemoAdapter
 import com.example.newbookshelf.presentation.view.detail.adapter.ReviewAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
@@ -32,6 +34,8 @@ import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAda
 import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
+import com.example.newbookshelf.presentation.viewmodel.chat.ChatViewModel
+import com.example.newbookshelf.presentation.viewmodel.chat.ChatViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModel
 import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
@@ -87,6 +91,14 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var nearBookAdapter: NearBookAdapter
 
+    @Inject
+    lateinit var chatViewModelFactory: ChatViewModelFactory
+    lateinit var chatViewMode: ChatViewModel
+    @Inject
+    lateinit var chatListAdapter: ChatListAdapter
+    @Inject
+    lateinit var chatMessageAdapter: ChatMessageAdapter
+
     companion object {
         const val TAG = "HomeActivity"
     }
@@ -115,6 +127,7 @@ class HomeActivity : AppCompatActivity() {
         detailViewModel = ViewModelProvider(this@HomeActivity, detailViewModelFactory).get(DetailViewModel::class.java)
         profileViewModel = ViewModelProvider(this@HomeActivity, profileViewModelFactory).get(ProfileViewModel::class.java)
         mapViewModel = ViewModelProvider(this@HomeActivity, mapViewModelFactory).get(MapViewModel::class.java)
+        chatViewMode = ViewModelProvider(this@HomeActivity, chatViewModelFactory).get(ChatViewModel::class.java)
 
         onBackPressedDispatcher.addCallback(this@HomeActivity) {
             if (!navController.popBackStack()) {
@@ -127,6 +140,12 @@ class HomeActivity : AppCompatActivity() {
         ivSearch.setOnClickListener {
             cl.visibility = View.GONE
             findNavController(R.id.fragmentContainerView).navigate(R.id.action_homeFragment_to_searchBookFragment)
+        }
+
+        ivChat.setOnClickListener {
+            cl.visibility = View.GONE
+            bottomNavigationView.visibility = View.GONE
+            findNavController(R.id.fragmentContainerView).navigate(R.id.action_homeFragment_to_chatFragment)
         }
 
         ivBell.setOnClickListener {

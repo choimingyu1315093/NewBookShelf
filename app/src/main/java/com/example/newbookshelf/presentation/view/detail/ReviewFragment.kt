@@ -88,7 +88,7 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
                         tvAverage.text = "0.0"
                     }
 
-                    if(book.book_comments?.size != 0){
+                    if(book.book_comments?.size != null && book.book_comments.size > 0){
                         rvReview.visibility = View.VISIBLE
                         tvEmpty.visibility = View.GONE
 

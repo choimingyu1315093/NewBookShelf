@@ -1,5 +1,8 @@
 package com.example.newbookshelf.data.api
 
+import com.example.newbookshelf.data.model.chat.ChatroomModel
+import com.example.newbookshelf.data.model.chat.CreateChatroomData
+import com.example.newbookshelf.data.model.chat.DeleteChatroomModel
 import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookModel
@@ -253,4 +256,18 @@ interface ApiService {
     suspend fun wishBookHaveUser(
         @Header("Authorization") accessToken: String
     ): Response<WishBookHaveUserModel>
+
+    //채팅방 생성
+    @POST("chat-rooms")
+    suspend fun createChatroom(
+        @Header("Authorization") accessToken: String,
+        @Body createChatroomData: CreateChatroomData
+    ): Response<ChatroomModel>
+
+    //채팅방 나가기
+    @DELETE("chat-rooms/{chat_room_idx}")
+    suspend fun deleteChatroom(
+        @Header("Authorization") accessToken: String,
+        @Path("chat_room_idx") chatRoomIdx: Int
+    ): Response<DeleteChatroomModel>
 }

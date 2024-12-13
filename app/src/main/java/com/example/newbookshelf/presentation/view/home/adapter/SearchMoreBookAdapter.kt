@@ -27,6 +27,11 @@ class SearchMoreBookAdapter: RecyclerView.Adapter<SearchMoreBookAdapter.ViewHold
 
     val differ = AsyncListDiffer(this, callback)
 
+    private var onItemClickListener: ((SearchBookResult) -> Unit)? = null
+    fun setOnItemClickListener(listener: (SearchBookResult) -> Unit){
+        onItemClickListener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(ItemSearchBookBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
@@ -80,6 +85,12 @@ class SearchMoreBookAdapter: RecyclerView.Adapter<SearchMoreBookAdapter.ViewHold
                 btnWishBook.visibility = View.GONE
                 btnReadingBook.visibility = View.GONE
                 btnReadBook.visibility = View.GONE
+            }
+
+            cl.setOnClickListener {
+                onItemClickListener?.let {
+                    it(book)
+                }
             }
         }
     }

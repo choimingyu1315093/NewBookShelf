@@ -16,6 +16,7 @@ import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookResult
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
+import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentSearchBookBinding
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAdapter
@@ -56,6 +57,11 @@ class SearchBookFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as HomeActivity).binding.cl.visibility = View.GONE
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search_book, container, false)
     }
@@ -77,7 +83,16 @@ class SearchBookFragment : Fragment() {
         }
 
         searchBookAdapter = (activity as HomeActivity).searchBookAdapter
+        searchBookAdapter.setOnItemClickListener {
+            val action = SearchBookFragmentDirections.actionSearchBookFragmentToDetailFragment(book = null, searchBook = it)
+            findNavController().navigate(action)
+        }
+
         searchMoreBookAdapter = (activity as HomeActivity).searchMoreBookAdapter
+        searchMoreBookAdapter.setOnItemClickListener {
+            val action = SearchBookFragmentDirections.actionSearchBookFragmentToDetailFragment(book = null, searchBook = it)
+            findNavController().navigate(action)
+        }
 
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
 
@@ -140,55 +155,78 @@ class SearchBookFragment : Fragment() {
 
     private fun observeViewModel() = with(binding){
         homeViewModel.searchBook.observe(viewLifecycleOwner){ response ->
-            val popularResult = response.data?.data?.popular_result
-            if(popularResult != null){
-                if(popularResult.isNotEmpty()){
-                    popularIsbnList.clear()
-                    for(i in 0 until popularResult.size){
-                        popularIsbnList.add(popularResult[i].book_isbn!!)
+            when (response) {
+                is Resource.Success -> {
+                    val popularResult = response.data?.data?.popular_result
+                    if(popularResult != null){
+                        if(popularResult.isNotEmpty()){
+                            popularIsbnList.clear()
+                            for(i in 0 until popularResult.size){
+                                popularIsbnList.add(popularResult[i].book_isbn!!)
+                            }
+
+                            txtSearchBook.visibility = View.VISIBLE
+                            rvSearchBook.visibility = View.VISIBLE
+                            rvSearchBookTitle.visibility = View.GONE
+                            txtCurrentBook.visibility = View.GONE
+                            txtDelete.visibility = View.GONE
+
+                            searchBookAdapter.differ.submitList(popularResult)
+                            txtSearchMoreBook.text = "더 많은 검색 결과"
+                        }else {
+                            popularBookZero = true
+                            txtSearchMoreBook.text = "추천 검색 결과"
+                            txtCurrentBook.visibility = View.GONE
+                            txtSearchBook.visibility = View.GONE
+                            rvSearchBook.visibility = View.GONE
+                            rvSearchBookTitle.visibility = View.GONE
+                            txtDelete.visibility = View.GONE
+                        }
                     }
 
-                    txtSearchBook.visibility = View.VISIBLE
-                    txtCurrentBook.visibility = View.VISIBLE
-                    rvSearchBook.visibility = View.VISIBLE
+                    val generalResult = response.data?.data?.general_result
+                    if(generalResult != null){
+                        if(generalResult.isNotEmpty()){
+                            if(isSearch){
+                                generalBookList.clear()
+                                isSearch = false
 
-                    searchBookAdapter.differ.submitList(popularResult)
-                    txtSearchMoreBook.text = "더 많은 검색 결과"
-                }else {
-                    popularBookZero = true
-                    txtSearchMoreBook.text = "추천 검색 결과"
-                    txtCurrentBook.visibility = View.GONE
-                    txtSearchBook.visibility = View.GONE
-                    rvSearchBook.visibility = View.GONE
-                    rvSearchBookTitle.visibility = View.GONE
-                    txtDelete.visibility = View.GONE
-                }
-            }
+                                generalBookList = generalResult.toMutableList()
 
-            val generalResult = response.data?.data?.general_result
-            if(generalResult != null){
-                if(generalResult.isNotEmpty()){
-                    if(isSearch){
-                        generalBookList.clear()
-                        isSearch = false
+                                txtSearchMoreBook.visibility = View.VISIBLE
+                                rvSearchMoreBook.visibility = View.VISIBLE
+                                searchMoreBookAdapter.differ.submitList(generalBookList)
+                            }else {
+                                rvSearchBook.visibility = View.GONE
+                                btnMore.visibility = View.GONE
+                            }
+                        }else {
+                            generalBookZero = true
+                            if(popularBookZero && generalBookZero && isSearch){
+                                Toast.makeText(requireContext(), "검색 결과가 없습니다(일단 Toast)", Toast.LENGTH_SHORT).show()
+                                isSearch = false
+                            }
+                            txtSearchMoreBook.visibility = View.GONE
+                            rvSearchMoreBook.visibility = View.GONE
+                        }
+                    }
 
-                        generalBookList = generalResult.toMutableList()
-
-                        txtSearchMoreBook.visibility = View.VISIBLE
-                        rvSearchMoreBook.visibility = View.VISIBLE
-                        searchMoreBookAdapter.differ.submitList(generalBookList)
-                    }else {
-                        rvSearchBook.visibility = View.GONE
+                    val isEnd = response.data?.data?.is_end
+                    if(isEnd == true){
                         btnMore.visibility = View.GONE
+                    }else {
+                        if(isSearch){
+                            btnMore.visibility = View.VISIBLE
+                        }else {
+                            btnMore.visibility = View.GONE
+                        }
                     }
-                }else {
-                    generalBookZero = true
-                    if(popularBookZero && generalBookZero && isSearch){
-                        Toast.makeText(requireContext(), "검색 결과가 없습니다(일단 Toast)", Toast.LENGTH_SHORT).show()
-                        isSearch = false
-                    }
-                    txtSearchMoreBook.visibility = View.GONE
-                    rvSearchMoreBook.visibility = View.GONE
+
+                    progressBar.visibility = View.GONE
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> {
+                    progressBar.visibility = View.VISIBLE
                 }
             }
         }
@@ -198,11 +236,13 @@ class SearchBookFragment : Fragment() {
                 rvSearchBookTitle.visibility = View.VISIBLE
                 txtCurrentBook.visibility = View.VISIBLE
                 txtDelete.visibility = View.VISIBLE
+                txtSearchBook.visibility = View.GONE
                 searchBookTitleAdapter.differ.submitList(response)
             }else {
                 rvSearchBookTitle.visibility = View.GONE
                 txtCurrentBook.visibility = View.GONE
                 txtDelete.visibility = View.GONE
+                txtSearchBook.visibility = View.GONE
             }
         }
     }
@@ -216,7 +256,6 @@ class SearchBookFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
         (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
         binding.rvSearchBook.visibility = View.GONE
         binding.rvSearchMoreBook.visibility = View.GONE

@@ -1,5 +1,7 @@
 package com.example.newbookshelf.presentation.di
 
+import com.example.newbookshelf.presentation.view.chat.adapter.ChatListAdapter
+import com.example.newbookshelf.presentation.view.chat.adapter.ChatMessageAdapter
 import com.example.newbookshelf.presentation.view.detail.adapter.MemoAdapter
 import com.example.newbookshelf.presentation.view.detail.adapter.ReviewAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
@@ -92,5 +94,17 @@ object AdapterModule {
     @Provides
     fun provideNearBookAdapter(): NearBookAdapter {
         return NearBookAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideChatListAdapter(): ChatListAdapter {
+        return ChatListAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideChatMessageAdapter() : ChatMessageAdapter {
+        return ChatMessageAdapter()
     }
 }

@@ -1,5 +1,9 @@
 package com.example.newbookshelf.data.model.home.searchbook
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class SearchBookResult(
     val book_author: String?,
     val book_average_rate: Double?,
@@ -12,4 +16,4 @@ data class SearchBookResult(
     val book_comments: ArrayList<SearchBookComment>?,
     val is_have_book: Boolean?,
     val read_type: String?
-)
+): Parcelable

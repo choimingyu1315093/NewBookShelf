@@ -1,6 +1,9 @@
 package com.example.newbookshelf.data.repository.datasourceimpl
 
 import com.example.newbookshelf.data.api.ApiService
+import com.example.newbookshelf.data.model.chat.ChatroomModel
+import com.example.newbookshelf.data.model.chat.CreateChatroomData
+import com.example.newbookshelf.data.model.chat.DeleteChatroomModel
 import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookModel
@@ -179,5 +182,13 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return flow {
             emit(apiService.wishBookHaveUser(accessToken))
         }
+    }
+
+    override suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Response<ChatroomModel> {
+        return apiService.createChatroom(accessToken, createChatroomData)
+    }
+
+    override suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Response<DeleteChatroomModel> {
+        return apiService.deleteChatroom(accessToken, chatroomIdx)
     }
 }

@@ -1,0 +1,52 @@
+{
+  "result": true,
+  "data": {
+    "books": {
+      "book_isbn": "K662930932",
+      "book_name": "알라딘 상품정보 - 소년이 온다",
+      "book_content": " 소년이 온다 - 한강 지음 <br/> 섬세한 감수성과 치밀한 문장으로 인간 존재의 본질을 탐구해온 작가 한강의 여섯번째 장편소설. '상처의 구조에 대한 투시와 천착의 서사'를 통해 한강만이 풀어낼 수 있는 방식으로 1980년 5월을 새롭게 조명한다.",
+      "book_author": "한강 지음",
+      "book_translator": "",
+      "book_publisher": "창비",
+      "book_image": "https://image.aladin.co.kr/product/4086/97/coversum/8936434128_2.jpg",
+      "book_average_rate": 4.5,
+      "book_full_page": 216,
+      "book_comments": [
+        {
+          "book_comment_idx": 31,
+          "comment_rate": 5,
+          "comment_content": "하하하하하",
+          "create_date": "2024-12-11T06:30:57.110Z",
+          "update_date": "2024-12-11T06:30:57.110Z",
+          "users": {
+            "user_idx": 33,
+            "user_name": "test001",
+            "user_point": 101
+          }
+        },
+        {
+          "book_comment_idx": 32,
+          "comment_rate": 4,
+          "comment_content": "하하하하",
+          "create_date": "2024-12-11T06:50:22.863Z",
+          "update_date": "2024-12-11T06:50:22.863Z",
+          "users": {
+            "user_idx": 35,
+            "user_name": "test002",
+            "user_point": 3
+          }
+        }
+      ],
+      "is_have_book": false,
+      "read_type": "none",
+      "read_start_date": "none",
+      "read_end_date": "none",
+      "read_page": 0,
+      "edit_full_page": false
+    },
+    "recent_message_date": null,
+    "chat_room_idx": 1,
+    "recent_message": "",
+    "create_date": "2024-12-13T00:46:55.045Z"
+  }
+}

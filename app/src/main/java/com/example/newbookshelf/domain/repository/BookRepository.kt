@@ -1,5 +1,8 @@
 package com.example.newbookshelf.domain.repository
 
+import com.example.newbookshelf.data.model.chat.ChatroomModel
+import com.example.newbookshelf.data.model.chat.CreateChatroomData
+import com.example.newbookshelf.data.model.chat.DeleteChatroomModel
 import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookData
 import com.example.newbookshelf.data.model.detail.addmybook.AddMyBookModel
@@ -77,4 +80,6 @@ interface BookRepository {
     suspend fun nicknameChange(accessToken: String, nickname: String): Resource<OnlyResultModel>
     suspend fun descriptionChange(accessToken: String, description: String): Resource<OnlyResultModel>
     fun wishBookHaveUser(accessToken: String): Flow<Resource<WishBookHaveUserModel>>
+    suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Resource<ChatroomModel>
+    suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Resource<DeleteChatroomModel>
 }

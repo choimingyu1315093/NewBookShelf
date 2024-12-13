@@ -59,29 +59,25 @@ class HomeFragment : Fragment() {
 
         weekBestsellerAdapter = (activity as HomeActivity).weekBestsellerAdapter
         weekBestsellerAdapter.setOnClickListener {
-            val bundle = Bundle().apply {
-                putParcelable("book", it)
-            }
-            (activity as HomeActivity).binding.cl.visibility = View.GONE
-            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+//            val bundle = Bundle().apply {
+//                putParcelable("book", it)
+//            }
+//            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(book = it, searchBook = null)
+            findNavController().navigate(action)
         }
 
         newBestsellerAdapter = (activity as HomeActivity).newBestsellerAdapter
         newBestsellerAdapter.setOnClickListener {
-            val bundle = Bundle().apply {
-                putParcelable("book", it)
-            }
-            (activity as HomeActivity).binding.cl.visibility = View.GONE
-            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(book = it, searchBook = null)
+            findNavController().navigate(action)
         }
 
         attentionBestsellerAdapter = (activity as HomeActivity).attentionBestseller
         attentionBestsellerAdapter.setOnClickListener {
-            val bundle = Bundle().apply {
-                putParcelable("book", it)
-            }
-            (activity as HomeActivity).binding.cl.visibility = View.GONE
-            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(book = it, searchBook = null)
+            findNavController().navigate(action)
         }
 
         rvWeekBestseller.apply {
