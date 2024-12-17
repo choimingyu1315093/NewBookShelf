@@ -28,6 +28,8 @@ android {
         buildConfigField("String", "NAVER_CLIENT_ID", project.properties["NAVER_CLIENT_ID"].toString())
         buildConfigField("String", "NAVER_CLIENT_SECRET", project.properties["NAVER_CLIENT_SECRET"].toString())
         buildConfigField("String", "KAKAO_NATIVE_KEY", project.properties["KAKAO_NATIVE_KEY"].toString())
+        buildConfigField("String", "KAKAO_BASE_URL", project.properties["KAKAO_BASE_URL"].toString())
+        buildConfigField("String", "KAKAO_REST_API_KEY", project.properties["KAKAO_REST_API_KEY"].toString())
     }
 
     buildTypes {
@@ -152,6 +154,7 @@ dependencies {
 
     //카카오 로그인
     implementation("com.kakao.sdk:v2-all:2.17.0")
+    implementation("com.kakao.maps.open:android:2.6.0")
 
     //네이버 로그인
     implementation("com.navercorp.nid:oauth:5.10.0")

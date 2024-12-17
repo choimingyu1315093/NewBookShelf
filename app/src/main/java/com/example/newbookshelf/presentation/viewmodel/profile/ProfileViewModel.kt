@@ -10,9 +10,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.newbookshelf.data.model.common.OnlyResultModel
+import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
+import com.example.newbookshelf.domain.usecase.profile.MyBookListUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
 import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
@@ -26,7 +28,8 @@ class ProfileViewModel(
     private val profileActivityUseCase: ProfileActivityUseCase,
     private val profileMemoUseCase: ProfileMemoUseCase,
     private val nickNameChangeUseCase: NicknameChangeUseCase,
-    private val descriptionChangeUseCase: DescriptionChangeUseCase
+    private val descriptionChangeUseCase: DescriptionChangeUseCase,
+    private val myBookListUseCase: MyBookListUseCase
 ): AndroidViewModel(app) {
 
     var userName = MutableLiveData<String>()
@@ -75,6 +78,12 @@ class ProfileViewModel(
             }
         }catch (e: Exception){
             descriptionChangeResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    fun myBookList(accessToken: String, type: String) = liveData {
+        myBookListUseCase.execute("Bearer $accessToken", type).collect {
+            emit(it)
         }
     }
 

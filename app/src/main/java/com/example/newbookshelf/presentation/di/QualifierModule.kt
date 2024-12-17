@@ -12,3 +12,7 @@ annotation class DefaultRetrofit
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class AladinRetrofit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class KakaoRetrofit

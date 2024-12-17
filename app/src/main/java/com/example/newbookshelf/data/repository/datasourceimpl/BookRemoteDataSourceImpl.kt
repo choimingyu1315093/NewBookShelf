@@ -32,6 +32,7 @@ import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
+import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketModel
@@ -190,5 +191,11 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
 
     override suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Response<DeleteChatroomModel> {
         return apiService.deleteChatroom(accessToken, chatroomIdx)
+    }
+
+    override fun myBookList(accessToken: String, readType: String): Flow<Response<MyBookModel>> {
+        return flow {
+            emit(apiService.myBookList(accessToken, readType))
+        }
     }
 }

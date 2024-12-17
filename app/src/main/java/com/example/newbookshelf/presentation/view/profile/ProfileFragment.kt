@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,8 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentProfileBinding.bind(view)
 
+        (activity as HomeActivity).binding.cl.visibility = View.GONE
+
         init()
         bindViews()
         observeViewModel()
@@ -53,7 +56,6 @@ class ProfileFragment : Fragment() {
     private fun init() = with(binding){
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         profileViewModel = (activity as HomeActivity).profileViewModel
-        profileViewModel.myProfile(accessToken)
 
         profileAdapter = ProfileAdapter(requireParentFragment())
         vpType.adapter = profileAdapter
@@ -65,14 +67,19 @@ class ProfileFragment : Fragment() {
                 1 -> {
                     tab.text = "메모"
                 }
+                2 -> {
+                    tab.text = "모임"
+                }
             }
         }.attach()
     }
 
     private fun bindViews() = with(binding){
+        btnBook.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_profileBookFragment)
+        }
+
         btnProfile.setOnClickListener {
-            (activity as HomeActivity).binding.cl.visibility = View.GONE
-            (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
             findNavController().navigate(R.id.action_profileFragment_to_profileChangeFragment)
         }
     }
@@ -83,6 +90,7 @@ class ProfileFragment : Fragment() {
                 is Resource.Success -> {
                     response.data?.let {
                         tvName.text = it.data.user_name
+                        BookShelfApp.prefs.setNickname("nickname", it.data.user_name)
 
                         if(it.data.user_description == ""){
                             tvOneLine.text = "한 줄 메시지를 입력해주세요."

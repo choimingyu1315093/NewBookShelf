@@ -2,6 +2,7 @@ package com.example.newbookshelf.presentation.di
 
 import com.example.newbookshelf.domain.repository.AladinBookRepository
 import com.example.newbookshelf.domain.repository.BookRepository
+import com.example.newbookshelf.domain.repository.KakaoRepository
 import com.example.newbookshelf.domain.usecase.chat.CreateChatroomUseCase
 import com.example.newbookshelf.domain.usecase.chat.DeleteChatroomUseCase
 import com.example.newbookshelf.domain.usecase.map.WishBookHaveUserUseCase
@@ -31,7 +32,9 @@ import com.example.newbookshelf.domain.usecase.home.WeekBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
+import com.example.newbookshelf.domain.usecase.post.KakaoSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
+import com.example.newbookshelf.domain.usecase.profile.MyBookListUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
 import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
@@ -290,5 +293,17 @@ object UseCaseModule {
     @Provides
     fun provideDeleteChatroomUseCase(bookRepository: BookRepository): DeleteChatroomUseCase {
         return DeleteChatroomUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMyBookListUseCase(bookRepository: BookRepository): MyBookListUseCase {
+        return MyBookListUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideKakaoMapUseCase(kakaoRepository: KakaoRepository): KakaoSearchPlaceUseCase {
+        return KakaoSearchPlaceUseCase(kakaoRepository)
     }
 }

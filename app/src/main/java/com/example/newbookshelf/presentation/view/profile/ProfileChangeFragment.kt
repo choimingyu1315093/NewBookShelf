@@ -35,6 +35,9 @@ class ProfileChangeFragment : Fragment(), NicknameChangeDialog.OnClickListener, 
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentProfileChangeBinding.bind(view)
 
+        (activity as HomeActivity).binding.cl.visibility = View.GONE
+        (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
+
         init()
         bindViews()
     }
@@ -75,7 +78,6 @@ class ProfileChangeFragment : Fragment(), NicknameChangeDialog.OnClickListener, 
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
         (activity as HomeActivity).binding.bottomNavigationView.visibility = View.VISIBLE
     }
 }

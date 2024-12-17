@@ -12,6 +12,8 @@ import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAd
 import com.example.newbookshelf.presentation.view.home.adapter.SearchMoreBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
 import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
+import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
 import dagger.Module
@@ -104,7 +106,19 @@ object AdapterModule {
 
     @Singleton
     @Provides
-    fun provideChatMessageAdapter() : ChatMessageAdapter {
+    fun provideChatMessageAdapter(): ChatMessageAdapter {
         return ChatMessageAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMyBookListAdapter(): MyBookListAdapter {
+        return MyBookListAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideKakaoAdapter(): KakaoAdapter {
+        return KakaoAdapter()
     }
 }

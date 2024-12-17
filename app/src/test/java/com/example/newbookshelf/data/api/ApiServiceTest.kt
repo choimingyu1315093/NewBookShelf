@@ -342,6 +342,20 @@ class ApiServiceTest {
         Truth.assertThat(response.body()!!.data.chat_room_idx).isEqualTo(1)
     }
 
+    //내 책 목록 조회
+    @Test
+    fun myBookListTest() = runBlocking {
+        enqueueMockResponseJson("mybooklist.json")
+
+        val accessToken = "Beare eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczNDM5NDUxNCwiZXhwIjoxNzM0NDgwOTE0fQ.Iwy-L7BxJdr-cA2daIA6aZHeDP-EVU3CXhg6-h3XujU"
+        val response = service.myBookList(accessToken, "read")
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/my-books/list?read_type=read")
+        Truth.assertThat(response.body()).isNotNull()
+        Truth.assertThat(response.body()!!.data[0].my_book_idx).isEqualTo(12)
+    }
+
     @After
     fun tearDown() {
         server.shutdown()

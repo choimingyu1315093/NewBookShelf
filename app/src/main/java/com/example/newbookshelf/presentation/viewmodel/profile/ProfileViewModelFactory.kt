@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
+import com.example.newbookshelf.domain.usecase.profile.MyBookListUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
 import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
@@ -17,12 +18,13 @@ class ProfileViewModelFactory(
     private val profileActivityUseCase: ProfileActivityUseCase,
     private val profileMemoUseCase: ProfileMemoUseCase,
     private val nickNameChangeUseCase: NicknameChangeUseCase,
-    private val descriptionChangeUseCase: DescriptionChangeUseCase
+    private val descriptionChangeUseCase: DescriptionChangeUseCase,
+    private val myBookListUseCase: MyBookListUseCase
 ): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(ProfileViewModel::class.java)){
-            return ProfileViewModel(app, myProfileUseCase, profileActivityUseCase, profileMemoUseCase, nickNameChangeUseCase, descriptionChangeUseCase) as T
+            return ProfileViewModel(app, myProfileUseCase, profileActivityUseCase, profileMemoUseCase, nickNameChangeUseCase, descriptionChangeUseCase, myBookListUseCase) as T
         }
         throw IllegalArgumentException("Unknown View Model Class")
     }

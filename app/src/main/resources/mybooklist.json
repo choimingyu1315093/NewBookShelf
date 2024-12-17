@@ -1,0 +1,38 @@
+{
+  "result": true,
+  "data": [
+    {
+      "my_book_idx": 12,
+      "books": {
+        "book_isbn": "1188331795",
+        "book_name": "돈의 속성(300쇄 리커버에디션)",
+        "book_author": "김승호",
+        "book_translator": "",
+        "book_publisher": "스노우폭스북스",
+        "book_image": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5385029%3Ftimestamp%3D20241129143044"
+      }
+    },
+    {
+      "my_book_idx": 14,
+      "books": {
+        "book_isbn": "8954682154",
+        "book_name": "작별하지 않는다",
+        "book_author": "한강",
+        "book_translator": "",
+        "book_publisher": "문학동네",
+        "book_image": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5824679%3Ftimestamp%3D20241210151048"
+      }
+    },
+    {
+      "my_book_idx": 15,
+      "books": {
+        "book_isbn": "8936434594",
+        "book_name": "채식주의자",
+        "book_author": "한강",
+        "book_translator": "",
+        "book_publisher": "창비",
+        "book_image": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6042324%3Ftimestamp%3D20241211152846"
+      }
+    }
+  ]
+}

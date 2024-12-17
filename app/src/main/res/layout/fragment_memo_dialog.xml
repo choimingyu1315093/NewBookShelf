@@ -51,7 +51,7 @@
         android:paddingHorizontal="12dp"
         android:paddingVertical="12dp"
         android:textSize="14sp"
-        android:textStyle="italic"
+        android:fontFamily="@font/lato_regular"
         app:layout_constraintTop_toBottomOf="@id/txtDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

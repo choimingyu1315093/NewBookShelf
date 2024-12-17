@@ -59,5 +59,7 @@
     <style name="tabLayoutStyle" parent="TextAppearance.Design.Tab">
         <item name="fontFamily">@font/lato_regular</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 </resources>

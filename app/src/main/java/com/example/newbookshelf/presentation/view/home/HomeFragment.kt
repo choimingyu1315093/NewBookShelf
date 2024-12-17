@@ -49,6 +49,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
 
+        (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
+        (activity as HomeActivity).binding.bottomNavigationView.visibility = View.VISIBLE
+
         init()
         observeViewModel()
     }

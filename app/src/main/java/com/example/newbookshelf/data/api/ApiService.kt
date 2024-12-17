@@ -29,8 +29,10 @@ import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
 import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.post.kakao.KakaoMapModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
+import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketModel
@@ -270,4 +272,11 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
         @Path("chat_room_idx") chatRoomIdx: Int
     ): Response<DeleteChatroomModel>
+
+    //내 책 목록 조회
+    @GET("my-books/list")
+    suspend fun myBookList(
+        @Header("Authorization") accessToken: String,
+        @Query("read_type") readType: String
+    ): Response<MyBookModel>
 }

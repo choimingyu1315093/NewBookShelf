@@ -5,9 +5,9 @@
         android:icon="@drawable/bottom_nav_home"
         android:title="홈" />
     <item
-        android:id="@+id/bookFragment"
-        android:icon="@drawable/ic_baseline_menu_book_24"
-        android:title="책"/>
+        android:id="@+id/postFragment"
+        android:icon="@drawable/icon_post"
+        android:title="게시판"/>
     <item
         android:id="@+id/mapFragment"
         android:icon="@drawable/icon_map"

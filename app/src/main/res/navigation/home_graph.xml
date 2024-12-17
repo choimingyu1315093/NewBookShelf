@@ -151,6 +151,9 @@
         <action
             android:id="@+id/action_profileFragment_to_profileChangeFragment"
             app:destination="@id/profileChangeFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileBookFragment"
+            app:destination="@id/profileBookFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileChangeFragment"
@@ -199,5 +202,59 @@
         <argument
             android:name="chatroomInfo"
             app:argType="com.example.newbookshelf.data.model.chat.ChatroomInfoModel" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileBookFragment"
+        android:name="com.example.newbookshelf.presentation.view.profile.ProfileBookFragment"
+        android:label="fragment_profile_book"
+        tools:layout="@layout/fragment_profile_book" >
+        <action
+            android:id="@+id/action_profileBookFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="com.example.newbookshelf.presentation.view.post.PostFragment"
+        android:label="fragment_post"
+        tools:layout="@layout/fragment_post" >
+        <action
+            android:id="@+id/action_postFragment_to_generalDetailFragment"
+            app:destination="@id/generalDetailFragment" />
+        <action
+            android:id="@+id/action_postFragment_to_readingDetailFragment"
+            app:destination="@id/readingDetailFragment" />
+        <action
+            android:id="@+id/action_postFragment_to_addPostFragment"
+            app:destination="@id/addPostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/generalDetailFragment"
+        android:name="com.example.newbookshelf.presentation.view.post.GeneralDetailFragment"
+        android:label="fragment_general_detail"
+        tools:layout="@layout/fragment_general_detail" >
+        <action
+            android:id="@+id/action_generalDetailFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/readingDetailFragment"
+        android:name="com.example.newbookshelf.presentation.view.post.ReadingDetailFragment"
+        android:label="fragment_reading_detail"
+        tools:layout="@layout/fragment_reading_detail" >
+        <action
+            android:id="@+id/action_readingDetailFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addPostFragment"
+        android:name="com.example.newbookshelf.presentation.view.post.AddPostFragment"
+        android:label="fragment_add_post"
+        tools:layout="@layout/fragment_add_post" >
+        <action
+            android:id="@+id/action_addPostFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+        <argument
+            android:name="type"
+            app:argType="string" />
     </fragment>
 </navigation>

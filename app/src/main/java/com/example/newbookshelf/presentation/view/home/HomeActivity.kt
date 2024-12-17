@@ -32,6 +32,8 @@ import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAd
 import com.example.newbookshelf.presentation.view.home.adapter.SearchMoreBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
 import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
+import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
 import com.example.newbookshelf.presentation.viewmodel.chat.ChatViewModel
@@ -42,9 +44,12 @@ import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.map.MapViewModel
 import com.example.newbookshelf.presentation.viewmodel.map.MapViewModelFactory
+import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
+import com.example.newbookshelf.presentation.viewmodel.post.PostViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModelFactory
 import com.google.android.gms.maps.MapView
+import com.kakao.sdk.common.json.IntEnum
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -84,6 +89,8 @@ class HomeActivity : AppCompatActivity() {
     lateinit var profileActiveAdapter: ProfileActiveAdapter
     @Inject
     lateinit var profileMemoAdapter: ProfileMemoAdapter
+    @Inject
+    lateinit var myBookListAdapter: MyBookListAdapter
 
     @Inject
     lateinit var mapViewModelFactory: MapViewModelFactory
@@ -98,6 +105,12 @@ class HomeActivity : AppCompatActivity() {
     lateinit var chatListAdapter: ChatListAdapter
     @Inject
     lateinit var chatMessageAdapter: ChatMessageAdapter
+
+    @Inject
+    lateinit var postViewModelFactory: PostViewModelFactory
+    lateinit var postViewModel: PostViewModel
+    @Inject
+    lateinit var kakaoAdapter: KakaoAdapter
 
     companion object {
         const val TAG = "HomeActivity"
@@ -128,6 +141,7 @@ class HomeActivity : AppCompatActivity() {
         profileViewModel = ViewModelProvider(this@HomeActivity, profileViewModelFactory).get(ProfileViewModel::class.java)
         mapViewModel = ViewModelProvider(this@HomeActivity, mapViewModelFactory).get(MapViewModel::class.java)
         chatViewMode = ViewModelProvider(this@HomeActivity, chatViewModelFactory).get(ChatViewModel::class.java)
+        postViewModel = ViewModelProvider(this@HomeActivity, postViewModelFactory).get(PostViewModel::class.java)
 
         onBackPressedDispatcher.addCallback(this@HomeActivity) {
             if (!navController.popBackStack()) {

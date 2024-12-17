@@ -25,15 +25,12 @@ class SettingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSettingBinding.bind(view)
 
+        (activity as HomeActivity).binding.cl.visibility = View.GONE
+
         init()
     }
 
     private fun init() = with(binding){
-        (activity as HomeActivity).binding.cl.visibility = View.GONE
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
     }
 }

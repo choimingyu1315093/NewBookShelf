@@ -2,6 +2,7 @@ package com.example.newbookshelf.presentation.di
 
 import android.app.Application
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
+import com.example.newbookshelf.domain.usecase.profile.MyBookListUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
 import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
@@ -25,8 +26,9 @@ object ProfileFactoryModule {
         profileActivityUseCase: ProfileActivityUseCase,
         profileMemoUseCase: ProfileMemoUseCase,
         nicknameChangeUseCase: NicknameChangeUseCase,
-        descriptionChangeUseCase: DescriptionChangeUseCase
+        descriptionChangeUseCase: DescriptionChangeUseCase,
+        myBookListUseCase: MyBookListUseCase
     ): ProfileViewModelFactory {
-        return ProfileViewModelFactory(app, myProfileUseCase, profileActivityUseCase, profileMemoUseCase, nicknameChangeUseCase, descriptionChangeUseCase)
+        return ProfileViewModelFactory(app, myProfileUseCase, profileActivityUseCase, profileMemoUseCase, nicknameChangeUseCase, descriptionChangeUseCase, myBookListUseCase)
     }
 }

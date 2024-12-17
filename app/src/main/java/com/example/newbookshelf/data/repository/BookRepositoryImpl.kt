@@ -32,6 +32,7 @@ import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
+import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketModel
@@ -232,6 +233,16 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
 
     override suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Resource<DeleteChatroomModel> {
         return responseToResource(bookRemoteDataSource.deleteChatroom(accessToken, chatroomIdx))
+    }
+
+    override fun myBookList(accessToken: String, readType: String): Flow<Resource<MyBookModel>> {
+        return bookRemoteDataSource.myBookList(accessToken, readType).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
     }
 
 //    private fun responseToResource(response: Response<LoginModel>): Resource<LoginModel>{
