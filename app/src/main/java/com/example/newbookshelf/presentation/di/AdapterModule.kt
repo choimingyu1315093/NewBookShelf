@@ -16,6 +16,7 @@ import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
+import com.example.newbookshelf.presentation.view.setting.adapter.ChargeLogAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -120,5 +121,11 @@ object AdapterModule {
     @Provides
     fun provideKakaoAdapter(): KakaoAdapter {
         return KakaoAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideChargeLogAdapter(): ChargeLogAdapter {
+        return ChargeLogAdapter()
     }
 }

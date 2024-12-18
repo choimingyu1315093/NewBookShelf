@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.FragmentPasswordChangeSuccessBinding
 
@@ -23,5 +24,13 @@ class PasswordChangeSuccessFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentPasswordChangeSuccessBinding.bind(view)
+
+        bindViews()
+    }
+
+    private fun bindViews() = with(binding){
+        btnGo.setOnClickListener {
+            findNavController().navigate(R.id.action_passwordChangeSuccessFragment_to_settingFragment)
+        }
     }
 }

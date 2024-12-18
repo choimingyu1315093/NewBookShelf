@@ -356,6 +356,33 @@ class ApiServiceTest {
         Truth.assertThat(response.body()!!.data[0].my_book_idx).isEqualTo(12)
     }
 
+    //설정 관련 유저 정보 조회
+    @Test
+    fun userSettingTest() = runBlocking {
+        val mockResponseBody = """
+            {
+              "result": true,
+              "data": {
+                "user_idx": 33,
+                "user_name": "test001",
+                "ticket_count": 1,
+                "setting_chat_alarm": 1,
+                "setting_marketing_alarm": 1,
+                "setting_wish_book_alarm": 1,
+                "setting_chat_receive": 1
+              }
+            }
+        """.trimIndent()
+        enqueueMockResponse(mockResponseBody)
+
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczNDQ4NDYwNCwiZXhwIjoxNzM0NTcxMDA0fQ.OByLIjI2FThBvgXunJmxQArZrJabvdtc9FKpZ15U6h4"
+        val response = service.userSetting(accessToken)
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/users/setting")
+        Truth.assertThat(response.body()!!.data.user_idx).isEqualTo(33)
+    }
+
     @After
     fun tearDown() {
         server.shutdown()

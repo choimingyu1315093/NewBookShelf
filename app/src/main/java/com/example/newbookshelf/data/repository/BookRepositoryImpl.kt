@@ -34,8 +34,12 @@ import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
+import com.example.newbookshelf.data.model.setting.TicketLogModel
 import com.example.newbookshelf.data.model.setting.TicketModel
+import com.example.newbookshelf.data.model.setting.UpdateUserSettingData
+import com.example.newbookshelf.data.model.setting.UserSettingModel
 import com.example.newbookshelf.data.model.signup.CheckModel
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.example.newbookshelf.data.model.signup.SignupData
@@ -243,6 +247,38 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
                 Resource.Error(response.message())
             }
         }
+    }
+
+    override fun userSetting(accessToken: String): Flow<Resource<UserSettingModel>> {
+        return bookRemoteDataSource.userSetting(accessToken).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
+    }
+
+    override suspend fun updateUserSetting(accessToken: String, updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.updateUserSetting(accessToken, updateUserSettingData))
+    }
+
+    override fun ticketLog(accessToken: String): Flow<Resource<TicketLogModel>> {
+        return bookRemoteDataSource.ticketLog(accessToken).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
+    }
+
+    override suspend fun passwordChange(accessToken: String, passwordChangeData: PasswordChangeData): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.passwordChange(accessToken, passwordChangeData))
+    }
+
+    override suspend fun userDelete(accessToken: String): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.userDelete(accessToken))
     }
 
 //    private fun responseToResource(response: Response<LoginModel>): Resource<LoginModel>{

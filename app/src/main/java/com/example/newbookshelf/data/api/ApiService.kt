@@ -34,8 +34,12 @@ import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
+import com.example.newbookshelf.data.model.setting.TicketLogModel
 import com.example.newbookshelf.data.model.setting.TicketModel
+import com.example.newbookshelf.data.model.setting.UpdateUserSettingData
+import com.example.newbookshelf.data.model.setting.UserSettingModel
 import com.example.newbookshelf.data.model.signup.CheckModel
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.example.newbookshelf.data.model.signup.SignupData
@@ -279,4 +283,36 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
         @Query("read_type") readType: String
     ): Response<MyBookModel>
+
+    //설정 관련 유저 정보 조회
+    @GET("users/setting")
+    suspend fun userSetting(
+        @Header("Authorization") accessToken: String,
+    ): Response<UserSettingModel>
+
+    //설정 업데이트
+    @PATCH("users/setting")
+    suspend fun updateUserSetting(
+        @Header("Authorization") accessToken: String,
+        @Body updateUserSettingData: UpdateUserSettingData
+    ): Response<OnlyResultModel>
+
+    //구매 내역 조회
+    @GET("ticket-logs")
+    suspend fun ticketLog(
+        @Header("Authorization") accessToken: String
+    ): Response<TicketLogModel>
+
+    //비밀번호 변경
+    @PATCH("authentications/change/password")
+    suspend fun passwordChange(
+        @Header("Authorization") accessToken: String,
+        @Body passwordChangeData: PasswordChangeData
+    ): Response<OnlyResultModel>
+
+    //회원 탈퇴
+    @DELETE("authentications")
+    suspend fun userDelete(
+        @Header("Authorization") accessToken: String
+    ): Response<OnlyResultModel>
 }

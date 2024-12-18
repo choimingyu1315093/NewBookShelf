@@ -34,8 +34,12 @@ import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
+import com.example.newbookshelf.data.model.setting.TicketLogModel
 import com.example.newbookshelf.data.model.setting.TicketModel
+import com.example.newbookshelf.data.model.setting.UpdateUserSettingData
+import com.example.newbookshelf.data.model.setting.UserSettingModel
 import com.example.newbookshelf.data.model.signup.CheckModel
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.example.newbookshelf.data.model.signup.SignupData
@@ -43,6 +47,7 @@ import com.example.newbookshelf.data.model.signup.SignupModel
 import com.example.newbookshelf.data.model.signup.SnsSignupData
 import com.example.newbookshelf.data.util.Resource
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 interface BookRepository {
 
@@ -84,4 +89,9 @@ interface BookRepository {
     suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Resource<ChatroomModel>
     suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Resource<DeleteChatroomModel>
     fun myBookList(accessToken: String, readType: String): Flow<Resource<MyBookModel>>
+    fun userSetting(accessToken: String): Flow<Resource<UserSettingModel>>
+    suspend fun updateUserSetting(accessToken: String, updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel>
+    fun ticketLog(accessToken: String): Flow<Resource<TicketLogModel>>
+    suspend fun passwordChange(accessToken: String, passwordChangeData: PasswordChangeData): Resource<OnlyResultModel>
+    suspend fun userDelete(accessToken: String): Resource<OnlyResultModel>
 }

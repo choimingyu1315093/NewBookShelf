@@ -40,6 +40,11 @@ import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileMemoUseCase
 import com.example.newbookshelf.domain.usecase.setting.BuyTicketUseCase
+import com.example.newbookshelf.domain.usecase.setting.PasswordChangeUseCase
+import com.example.newbookshelf.domain.usecase.setting.TicketLogUseCase
+import com.example.newbookshelf.domain.usecase.setting.UpdateUserSettingUseCase
+import com.example.newbookshelf.domain.usecase.setting.UserDeleteUseCase
+import com.example.newbookshelf.domain.usecase.setting.UserSettingUseCase
 import com.example.newbookshelf.domain.usecase.signup.EmailCheckUseCase
 import com.example.newbookshelf.domain.usecase.signup.IdCheckUseCase
 import com.example.newbookshelf.domain.usecase.signup.NicknameCheckUseCase
@@ -305,5 +310,35 @@ object UseCaseModule {
     @Provides
     fun provideKakaoMapUseCase(kakaoRepository: KakaoRepository): KakaoSearchPlaceUseCase {
         return KakaoSearchPlaceUseCase(kakaoRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserSettingUseCase(bookRepository: BookRepository): UserSettingUseCase {
+        return UserSettingUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUpdateUserSettingUseCase(bookRepository: BookRepository): UpdateUserSettingUseCase {
+        return UpdateUserSettingUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTicketLogUseCase(bookRepository: BookRepository): TicketLogUseCase {
+        return TicketLogUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun providePasswordChangeUseCase(bookRepository: BookRepository): PasswordChangeUseCase {
+        return PasswordChangeUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserDeleteUseCase(bookRepository: BookRepository): UserDeleteUseCase {
+        return UserDeleteUseCase(bookRepository)
     }
 }

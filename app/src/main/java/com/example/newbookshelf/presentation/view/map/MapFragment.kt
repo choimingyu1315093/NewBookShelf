@@ -70,11 +70,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        (activity as HomeActivity).binding.cl.visibility = View.GONE
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
@@ -82,6 +77,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMapBinding.bind(view)
+
+        (activity as HomeActivity).binding.cl.visibility = View.GONE
 
         init()
         observeViewModel()
@@ -98,7 +95,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
             map.animateCamera(cameraUpdate)
         }
         rvNearBook.apply {
-            layoutManager = LinearLayoutManager(activity)
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
             adapter = nearBookAdapter
         }
 
@@ -183,10 +180,5 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
         map = googleMap
         val cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLocation, 13f)
         map.animateCamera(cameraUpdate)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (activity as HomeActivity).binding.cl.visibility = View.VISIBLE
     }
 }

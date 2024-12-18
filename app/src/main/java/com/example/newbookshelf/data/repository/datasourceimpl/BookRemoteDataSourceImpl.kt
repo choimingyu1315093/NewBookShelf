@@ -34,8 +34,12 @@ import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
+import com.example.newbookshelf.data.model.setting.TicketLogModel
 import com.example.newbookshelf.data.model.setting.TicketModel
+import com.example.newbookshelf.data.model.setting.UpdateUserSettingData
+import com.example.newbookshelf.data.model.setting.UserSettingModel
 import com.example.newbookshelf.data.model.signup.CheckModel
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.example.newbookshelf.data.model.signup.SignupData
@@ -197,5 +201,29 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return flow {
             emit(apiService.myBookList(accessToken, readType))
         }
+    }
+
+    override fun userSetting(accessToken: String): Flow<Response<UserSettingModel>> {
+        return flow {
+            emit(apiService.userSetting(accessToken))
+        }
+    }
+
+    override suspend fun updateUserSetting(accessToken: String, updateUserSettingData: UpdateUserSettingData): Response<OnlyResultModel> {
+        return apiService.updateUserSetting(accessToken, updateUserSettingData)
+    }
+
+    override fun ticketLog(accessToken: String): Flow<Response<TicketLogModel>> {
+        return flow {
+            emit(apiService.ticketLog(accessToken))
+        }
+    }
+
+    override suspend fun passwordChange(accessToken: String, passwordChangeData: PasswordChangeData): Response<OnlyResultModel> {
+        return apiService.passwordChange(accessToken, passwordChangeData)
+    }
+
+    override suspend fun userDelete(accessToken: String): Response<OnlyResultModel> {
+        return apiService.userDelete(accessToken)
     }
 }

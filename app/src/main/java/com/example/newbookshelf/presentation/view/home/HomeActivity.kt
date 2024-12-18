@@ -36,6 +36,7 @@ import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
+import com.example.newbookshelf.presentation.view.setting.adapter.ChargeLogAdapter
 import com.example.newbookshelf.presentation.viewmodel.chat.ChatViewModel
 import com.example.newbookshelf.presentation.viewmodel.chat.ChatViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModel
@@ -48,6 +49,8 @@ import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
 import com.example.newbookshelf.presentation.viewmodel.post.PostViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModelFactory
+import com.example.newbookshelf.presentation.viewmodel.setting.SettingViewModel
+import com.example.newbookshelf.presentation.viewmodel.setting.SettingViewModelFactory
 import com.google.android.gms.maps.MapView
 import com.kakao.sdk.common.json.IntEnum
 import dagger.hilt.android.AndroidEntryPoint
@@ -112,6 +115,12 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var kakaoAdapter: KakaoAdapter
 
+    @Inject
+    lateinit var settingViewModelFactory: SettingViewModelFactory
+    lateinit var settingViewModel: SettingViewModel
+    @Inject
+    lateinit var chargeLogAdapter: ChargeLogAdapter
+
     companion object {
         const val TAG = "HomeActivity"
     }
@@ -142,6 +151,7 @@ class HomeActivity : AppCompatActivity() {
         mapViewModel = ViewModelProvider(this@HomeActivity, mapViewModelFactory).get(MapViewModel::class.java)
         chatViewMode = ViewModelProvider(this@HomeActivity, chatViewModelFactory).get(ChatViewModel::class.java)
         postViewModel = ViewModelProvider(this@HomeActivity, postViewModelFactory).get(PostViewModel::class.java)
+        settingViewModel = ViewModelProvider(this@HomeActivity, settingViewModelFactory).get(SettingViewModel::class.java)
 
         onBackPressedDispatcher.addCallback(this@HomeActivity) {
             if (!navController.popBackStack()) {

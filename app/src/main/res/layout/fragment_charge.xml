@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="낙엽 10장"
+            tools:text="낙엽 10장"
             android:textStyle="bold"
             android:fontFamily="@font/lato_regular"
             android:textSize="32sp"

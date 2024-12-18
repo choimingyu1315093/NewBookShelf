@@ -18,19 +18,19 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SearchedBookDAOTest {
     private lateinit var searchedBookDAO: SearchedBookDAO
-    private lateinit var searchedBOokDatabase: SearchedBookDatabase
+    private lateinit var searchedBookDatabase: SearchedBookDatabase
 
     @get: Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp(){
-        searchedBOokDatabase = Room.inMemoryDatabaseBuilder(
+        searchedBookDatabase = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             SearchedBookDatabase::class.java
         ).build()
 
-        searchedBookDAO = searchedBOokDatabase.getSearchedBookDao()
+        searchedBookDAO = searchedBookDatabase.getSearchedBookDao()
     }
 
     @Test
@@ -66,6 +66,6 @@ class SearchedBookDAOTest {
 
     @After
     fun tearDown(){
-        searchedBOokDatabase.close()
+        searchedBookDatabase.close()
     }
 }

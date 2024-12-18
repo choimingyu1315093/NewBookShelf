@@ -78,6 +78,9 @@
         <action
             android:id="@+id/action_settingFragment_to_chargeFragment"
             app:destination="@id/chargeFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_chargeLogFragment"
+            app:destination="@id/chargeLogFragment" />
     </fragment>
     <fragment
         android:id="@+id/chargeFragment"
@@ -85,11 +88,11 @@
         android:label="fragment_charge"
         tools:layout="@layout/fragment_charge" >
         <action
-            android:id="@+id/action_chargeFragment_to_chargeLogFragment"
-            app:destination="@id/chargeLogFragment" />
-        <action
             android:id="@+id/action_chargeFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
+        <argument
+            android:name="ticket"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/chargeLogFragment"
@@ -97,8 +100,8 @@
         android:label="fragment_charge_log"
         tools:layout="@layout/fragment_charge_log" >
         <action
-            android:id="@+id/action_chargeLogFragment_to_chargeFragment"
-            app:destination="@id/chargeFragment" />
+            android:id="@+id/action_chargeLogFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
     </fragment>
     <fragment
         android:id="@+id/passwordChangeFragment"
@@ -116,28 +119,25 @@
         android:id="@+id/passwordChangeSuccessFragment"
         android:name="com.example.newbookshelf.presentation.view.setting.PasswordChangeSuccessFragment"
         android:label="fragment_password_change_success"
-        tools:layout="@layout/fragment_password_change_success" />
+        tools:layout="@layout/fragment_password_change_success" >
+        <action
+            android:id="@+id/action_passwordChangeSuccessFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+    </fragment>
     <fragment
         android:id="@+id/secessionFragment"
         android:name="com.example.newbookshelf.presentation.view.setting.SecessionFragment"
         android:label="fragment_secession"
         tools:layout="@layout/fragment_secession" >
         <action
-            android:id="@+id/action_secessionFragment_to_secessionNextFragment"
-            app:destination="@id/secessionNextFragment" />
+            android:id="@+id/action_secessionFragment_to_secessionSuccessFragment"
+            app:destination="@id/secessionSuccessFragment" />
     </fragment>
     <fragment
         android:id="@+id/secessionNextFragment"
         android:name="com.example.newbookshelf.presentation.view.setting.SecessionNextFragment"
         android:label="fragment_secession_next"
-        tools:layout="@layout/fragment_secession_next" >
-        <action
-            android:id="@+id/action_secessionNextFragment_to_secessionSuccessFragment"
-            app:destination="@id/secessionSuccessFragment" />
-        <action
-            android:id="@+id/action_secessionNextFragment_to_secessionFragment"
-            app:destination="@id/secessionFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_secession_next" />
     <fragment
         android:id="@+id/secessionSuccessFragment"
         android:name="com.example.newbookshelf.presentation.view.setting.SecessionSuccessFragment"

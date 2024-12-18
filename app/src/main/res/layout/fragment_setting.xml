@@ -58,7 +58,7 @@
             android:id="@+id/tvWelcome"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="홍길동 님, 환영합니다."
+            tools:text="홍길동 님, 환영합니다."
             android:textSize="20sp"
             android:textColor="@color/black"
             android:textStyle="bold"
@@ -454,5 +454,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -1,6 +1,5 @@
 package com.example.newbookshelf.presentation.view.post.dialog
 
-import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -10,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.newbookshelf.R
-import com.example.newbookshelf.databinding.FragmentReadingClassJoinDialogBinding
+import com.example.newbookshelf.databinding.FragmentReadingClassAddDialogBinding
 
-class ReadingClassJoinDialog : DialogFragment() {
-    private lateinit var binding: FragmentReadingClassJoinDialogBinding
+class ReadingClassAddDialog : DialogFragment() {
+    private lateinit var binding: FragmentReadingClassAddDialogBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,17 +26,12 @@ class ReadingClassJoinDialog : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState)
-
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_reading_class_join_dialog, container, false)
+        return inflater.inflate(R.layout.fragment_reading_class_add_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentReadingClassJoinDialogBinding.bind(view)
+        binding = FragmentReadingClassAddDialogBinding.bind(view)
     }
 }

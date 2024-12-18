@@ -25,6 +25,11 @@ class PostFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        isGeneral = "general"
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_post, container, false)
     }
@@ -35,12 +40,7 @@ class PostFragment : Fragment() {
 
         (activity as HomeActivity).binding.cl.visibility = View.GONE
 
-        init()
         bindViews()
-    }
-
-    private fun init() = with(binding){
-
     }
 
     private fun bindViews() = with(binding){
