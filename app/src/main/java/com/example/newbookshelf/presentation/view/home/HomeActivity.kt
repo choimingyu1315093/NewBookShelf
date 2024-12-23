@@ -3,18 +3,12 @@ package com.example.newbookshelf.presentation.view.home
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
@@ -25,6 +19,11 @@ import com.example.newbookshelf.presentation.view.chat.adapter.ChatMessageAdapte
 import com.example.newbookshelf.presentation.view.detail.adapter.MemoAdapter
 import com.example.newbookshelf.presentation.view.detail.adapter.ReviewAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.DetailAttentionBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.DetailNewBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.DetailWeekBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.FilterForeignAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.FilterKoreaAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NotificationAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
@@ -51,8 +50,6 @@ import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.setting.SettingViewModel
 import com.example.newbookshelf.presentation.viewmodel.setting.SettingViewModelFactory
-import com.google.android.gms.maps.MapView
-import com.kakao.sdk.common.json.IntEnum
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -69,6 +66,12 @@ class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var attentionBestseller: AttentionBestsellerAdapter
     @Inject
+    lateinit var detailWeekBestsellerAdapter: DetailWeekBestsellerAdapter
+    @Inject
+    lateinit var detailNewBestsellerAdapter: DetailNewBestsellerAdapter
+    @Inject
+    lateinit var detailAttentionBestsellerAdapter: DetailAttentionBestsellerAdapter
+    @Inject
     lateinit var notificationAdapter: NotificationAdapter
     @Inject
     lateinit var searchBookTitleAdapter: SearchBookTitleAdapter
@@ -76,6 +79,10 @@ class HomeActivity : AppCompatActivity() {
     lateinit var searchBookAdapter: SearchBookAdapter
     @Inject
     lateinit var searchMoreBookAdapter: SearchMoreBookAdapter
+    @Inject
+    lateinit var filterKoreaAdapter: FilterKoreaAdapter
+    @Inject
+    lateinit var filterForeignAdapter: FilterForeignAdapter
 
     @Inject
     lateinit var detailViewModelFactory: DetailViewModelFactory
@@ -154,8 +161,12 @@ class HomeActivity : AppCompatActivity() {
         settingViewModel = ViewModelProvider(this@HomeActivity, settingViewModelFactory).get(SettingViewModel::class.java)
 
         onBackPressedDispatcher.addCallback(this@HomeActivity) {
-            if (!navController.popBackStack()) {
-                finish()
+            if(homeViewModel.isDetail.value == true){
+                homeViewModel.setDetail(false)
+            }else {
+                if (!navController.popBackStack()) {
+                    finish()
+                }
             }
         }
     }

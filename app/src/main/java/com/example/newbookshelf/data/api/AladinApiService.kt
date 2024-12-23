@@ -11,7 +11,7 @@ interface AladinApiService {
     suspend fun weekBestseller(
         @Query("ttbkey") ttbkey: String = "ttbthdwhddnd4271541001",
         @Query("QueryType") queryType: String = "Bestseller",
-        @Query("MaxResults") maxResults: String = "10",
+        @Query("MaxResults") maxResults: String = "30",
         @Query("start") start: Int = 1,
         @Query("SearchTarget") searchTarget: String,
         @Query("output") output: String = "js",
@@ -25,7 +25,7 @@ interface AladinApiService {
     suspend fun newBestsellerList(
         @Query("ttbkey") ttbkey: String = "ttbthdwhddnd4271541001",
         @Query("QueryType") queryType: String = "ItemNewAll",
-        @Query("MaxResults") maxResults: String = "10",
+        @Query("MaxResults") maxResults: String = "30",
         @Query("start") start: Int = 1,
         @Query("SearchTarget") searchTarget: String,
         @Query("output") output: String = "js",
@@ -39,7 +39,7 @@ interface AladinApiService {
     suspend fun attentionBestsellerList(
         @Query("ttbkey") ttbkey: String = "ttbthdwhddnd4271541001",
         @Query("QueryType") queryType: String = "ItemNewSpecial",
-        @Query("MaxResults") maxResults: String = "10",
+        @Query("MaxResults") maxResults: String = "30",
         @Query("start") start: Int = 1,
         @Query("SearchTarget") searchTarget: String,
         @Query("output") output: String = "js",

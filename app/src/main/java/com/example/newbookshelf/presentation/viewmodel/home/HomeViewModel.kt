@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.Log
 import androidx.collection.emptyIntSet
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -142,6 +143,14 @@ class HomeViewModel(
 
     fun allDeleteSearchedBook() = viewModelScope.launch {
         searchedBookAllDeleteUseCase.execute()
+    }
+
+    private var _isDetail = MutableLiveData<Boolean>(false)
+    val isDetail: LiveData<Boolean>
+        get() = _isDetail
+
+    fun setDetail(isDetail: Boolean) {
+        _isDetail.value = isDetail
     }
 
     private fun isNetworkAvailable(context: Context?):Boolean{

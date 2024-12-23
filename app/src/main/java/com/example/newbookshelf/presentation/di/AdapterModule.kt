@@ -5,6 +5,11 @@ import com.example.newbookshelf.presentation.view.chat.adapter.ChatMessageAdapte
 import com.example.newbookshelf.presentation.view.detail.adapter.MemoAdapter
 import com.example.newbookshelf.presentation.view.detail.adapter.ReviewAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.AttentionBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.DetailAttentionBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.DetailNewBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.DetailWeekBestsellerAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.FilterForeignAdapter
+import com.example.newbookshelf.presentation.view.home.adapter.FilterKoreaAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.NotificationAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
@@ -43,6 +48,36 @@ object AdapterModule {
     @Provides
     fun provideAttentionBestsellerAdapter(): AttentionBestsellerAdapter {
         return AttentionBestsellerAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDetailWeekBestsellerAdapter(): DetailWeekBestsellerAdapter {
+        return DetailWeekBestsellerAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDetailNewBestsellerAdapter(): DetailNewBestsellerAdapter {
+        return DetailNewBestsellerAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDetailAttentionBestsellerAdapter(): DetailAttentionBestsellerAdapter {
+        return DetailAttentionBestsellerAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideFilterKoreaAdapter(): FilterKoreaAdapter {
+        return FilterKoreaAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDetailFilterForeignAdapter(): FilterForeignAdapter {
+        return FilterForeignAdapter()
     }
 
     @Singleton

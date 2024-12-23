@@ -166,4 +166,8 @@ dependencies {
     implementation("io.socket:socket.io-client:2.1.0") {
         exclude(group = "org.json", module = "json")
     }
+
+    //Paging 라이브러리
+    implementation("androidx.paging:paging-runtime:3.2.0")
+    implementation("androidx.paging:paging-common:3.2.0")
 }
