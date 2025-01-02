@@ -52,7 +52,7 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
     private fun init() = with(binding){
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         detailViewModel = (activity as HomeActivity).detailViewModel
-        detailViewModel.detailBook(accessToken, isbn)
+        detailViewModel.detailBook(isbn)
         reviewAdapter = (activity as HomeActivity).reviewAdapter
         reviewAdapter.setOnUpdateListener {
             val dialog = ReviewDialog(isbn, true, it.book_comment_idx ,it.comment_content, it.comment_rate, this@ReviewFragment)
@@ -107,7 +107,7 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
             when (response) {
                 is Resource.Success -> {
                     if(isDelete){
-                        detailViewModel.detailBook(accessToken, isbn)
+                        detailViewModel.detailBook(isbn)
                         Toast.makeText(activity, "후기를 삭제했습니다.", Toast.LENGTH_SHORT).show()
                         isDelete = false
                     }
@@ -120,7 +120,7 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
 
     override fun commentReload(b: Boolean, isUpdate: Boolean) {
         if(b){
-            detailViewModel.detailBook(accessToken, isbn)
+            detailViewModel.detailBook(isbn)
             if(isUpdate){
                 Toast.makeText(activity, "후기를 수정했습니다.", Toast.LENGTH_SHORT).show()
             }

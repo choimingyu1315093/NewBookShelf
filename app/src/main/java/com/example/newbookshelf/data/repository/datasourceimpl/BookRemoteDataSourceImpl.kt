@@ -57,8 +57,8 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return apiService.login(loginData)
     }
 
-    override suspend fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData): Response<OnlyResultModel> {
-        return apiService.updateLocation(accessToken, updateLocationData)
+    override suspend fun updateLocation(updateLocationData: UpdateLocationData): Response<OnlyResultModel> {
+        return apiService.updateLocation(updateLocationData)
     }
 
     override suspend fun snsLogin(snsLoginData: SnsLoginData): Response<LoginModel> {
@@ -121,8 +121,8 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return apiService.searchBook(accessToken, bookName)
     }
 
-    override suspend fun detailBook(accessToken: String, bookIsbn: String): Response<DetailBookModel> {
-        return apiService.detailBook(accessToken, bookIsbn)
+    override suspend fun detailBook(bookIsbn: String): Response<DetailBookModel> {
+        return apiService.detailBook(bookIsbn)
     }
 
     override suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Response<AddMyBookModel> {

@@ -59,8 +59,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.login(loginData))
     }
 
-    override suspend fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData): Resource<OnlyResultModel> {
-        return responseToResource(bookRemoteDataSource.updateLocation(accessToken, updateLocationData))
+    override suspend fun updateLocation(updateLocationData: UpdateLocationData): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.updateLocation(updateLocationData))
     }
 
     override suspend fun snsLogin(snsLoginData: SnsLoginData): Resource<LoginModel> {
@@ -147,8 +147,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         bookLocalDataSource.allDelete()
     }
 
-    override suspend fun detailBook(accessToken: String, bookIsbn: String): Resource<DetailBookModel> {
-        return responseToResource(bookRemoteDataSource.detailBook(accessToken, bookIsbn))
+    override suspend fun detailBook(bookIsbn: String): Resource<DetailBookModel> {
+        return responseToResource(bookRemoteDataSource.detailBook(bookIsbn))
     }
 
     override suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Resource<AddMyBookModel> {

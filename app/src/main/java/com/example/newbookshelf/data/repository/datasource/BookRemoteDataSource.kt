@@ -50,7 +50,7 @@ import retrofit2.Response
 interface BookRemoteDataSource {
 
     suspend fun login(loginData: LoginData): Response<LoginModel>
-    suspend fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData): Response<OnlyResultModel>
+    suspend fun updateLocation(updateLocationData: UpdateLocationData): Response<OnlyResultModel>
     suspend fun snsLogin(snsLoginData: SnsLoginData): Response<LoginModel>
     suspend fun findId(findIdData: FindIdData): Response<FindModel>
     suspend fun findPw(findPwData: FindPwData): Response<FindModel>
@@ -65,7 +65,7 @@ interface BookRemoteDataSource {
     suspend fun alarmAllDelete(accessToken: String): Response<OnlyResultModel>
     suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Response<OnlyResultModel>
     suspend fun searchBook(accessToken: String, bookName: String): Response<SearchBookModel>
-    suspend fun detailBook(accessToken: String, bookIsbn: String): Response<DetailBookModel>
+    suspend fun detailBook(bookIsbn: String): Response<DetailBookModel>
     suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Response<AddMyBookModel>
     suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Response<AddBookReviewModel>
     suspend fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Response<UpdateBookReviewModel>

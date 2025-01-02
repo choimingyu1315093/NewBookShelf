@@ -67,7 +67,6 @@ interface ApiService {
     //현재 위치 업데이트
     @PATCH("users/location")
     suspend fun updateLocation(
-        @Header("Authorization") accessToken: String,
         @Body updateLocationData: UpdateLocationData
     ): Response<OnlyResultModel>
 
@@ -161,7 +160,6 @@ interface ApiService {
     //책 상세 검색
     @GET("books/{book_isbn}")
     suspend fun detailBook(
-        @Header("Authorization") accessToken: String,
         @Path("book_isbn") bookIsbn: String
     ): Response<DetailBookModel>
 

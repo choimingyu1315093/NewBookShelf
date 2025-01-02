@@ -49,12 +49,12 @@ class DetailViewModel(
 ): AndroidViewModel(app) {
 
     val detailBookResult = MutableLiveData<Resource<DetailBookModel>>()
-    fun detailBook(accessToken: String, isbn: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun detailBook(isbn: String) = viewModelScope.launch(Dispatchers.IO) {
         detailBookResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 detailBookResult.postValue(Resource.Loading())
-                val result = detailBookUseCase.execute("Bearer $accessToken", isbn)
+                val result = detailBookUseCase.execute(isbn)
                 detailBookResult.postValue(result)
             }
         }catch (e: Exception){

@@ -32,8 +32,6 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
         const val TAG = "HomeFragment"
     }
 
-    private lateinit var accessToken: String
-
     private lateinit var weekBestsellerAdapter: WeekBestsellerAdapter
     private lateinit var newBestsellerAdapter: NewBestsellerAdapter
     private lateinit var attentionBestsellerAdapter: AttentionBestsellerAdapter
@@ -74,7 +72,6 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         homeViewModel = (activity as HomeActivity).homeViewModel
 
         weekBestsellerAdapter = (activity as HomeActivity).weekBestsellerAdapter

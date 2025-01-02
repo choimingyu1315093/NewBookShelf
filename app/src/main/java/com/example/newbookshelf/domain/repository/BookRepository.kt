@@ -52,7 +52,7 @@ import retrofit2.Response
 interface BookRepository {
 
     suspend fun login(loginData: LoginData): Resource<LoginModel>
-    suspend fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData): Resource<OnlyResultModel>
+    suspend fun updateLocation(updateLocationData: UpdateLocationData): Resource<OnlyResultModel>
     suspend fun snsLogin(snsLoginData: SnsLoginData): Resource<LoginModel>
     suspend fun findId(findIdData: FindIdData): Resource<FindModel>
     suspend fun findPw(findPwData: FindPwData): Resource<FindModel>
@@ -71,7 +71,7 @@ interface BookRepository {
     suspend fun insert(searchedBook: SearchedBook)
     suspend fun delete(searchedBook: SearchedBook)
     suspend fun allDelete()
-    suspend fun detailBook(accessToken: String, bookIsbn: String): Resource<DetailBookModel>
+    suspend fun detailBook(bookIsbn: String): Resource<DetailBookModel>
     suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Resource<AddMyBookModel>
     suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Resource<AddBookReviewModel>
     suspend fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Resource<UpdateBookReviewModel>

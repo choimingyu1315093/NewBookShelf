@@ -41,7 +41,6 @@ class DetailFragment : Fragment() {
         const val TAG = "DetailFragment"
     }
 
-    private lateinit var accessToken: String
     private var book: Item? = null
     private var searchBook: SearchBookResult? = null
 
@@ -90,16 +89,15 @@ class DetailFragment : Fragment() {
 
     private fun init() = with(binding){
         (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         detailViewModel = (activity as HomeActivity).detailViewModel
 
         setCurrentDate()
 
         if(book != null){
-            detailViewModel.detailBook(accessToken, book?.isbn!!)
+            detailViewModel.detailBook(book?.isbn!!)
             bookIsbn = book?.isbn!!
         }else {
-            detailViewModel.detailBook(accessToken, searchBook?.book_isbn!!)
+            detailViewModel.detailBook(searchBook?.book_isbn!!)
             bookIsbn = searchBook?.book_isbn!!
         }
 
@@ -254,35 +252,35 @@ class DetailFragment : Fragment() {
         }
 
         btnSave.setOnClickListener {
-            if (isHaveBook == "n") {
-                val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
-                detailViewModel.addMyBook(accessToken, addMyBookData)
-            } else {
-                when (readType) {
-                    "wish" -> {
-                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
-                        detailViewModel.addMyBook(accessToken, addMyBookData)
-                    }
-                    
-                    "reading" -> {
-                        readingStartDate = etStart.text.toString()
-                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, readingStartDate, readType)
-                        detailViewModel.addMyBook(accessToken, addMyBookData)
-                    }
-
-                    "read" -> {
-                        readStartDate = etStartDate.text.toString()
-                        readEndDate = etEndDate.text.toString()
-                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, readEndDate, readPage, readStartDate, readType)
-                        detailViewModel.addMyBook(accessToken, addMyBookData)
-                    }
-
-                    else -> {
-                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
-                        detailViewModel.addMyBook(accessToken, addMyBookData)
-                    }
-                }
-            }
+//            if (isHaveBook == "n") {
+//                val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
+//                detailViewModel.addMyBook(accessToken, addMyBookData)
+//            } else {
+//                when (readType) {
+//                    "wish" -> {
+//                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
+//                        detailViewModel.addMyBook(accessToken, addMyBookData)
+//                    }
+//
+//                    "reading" -> {
+//                        readingStartDate = etStart.text.toString()
+//                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, readingStartDate, readType)
+//                        detailViewModel.addMyBook(accessToken, addMyBookData)
+//                    }
+//
+//                    "read" -> {
+//                        readStartDate = etStartDate.text.toString()
+//                        readEndDate = etEndDate.text.toString()
+//                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, readEndDate, readPage, readStartDate, readType)
+//                        detailViewModel.addMyBook(accessToken, addMyBookData)
+//                    }
+//
+//                    else -> {
+//                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
+//                        detailViewModel.addMyBook(accessToken, addMyBookData)
+//                    }
+//                }
+//            }
             buttonClicked = true
         }
     }

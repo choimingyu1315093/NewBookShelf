@@ -64,10 +64,17 @@ class LoginViewModel(
     }
 
     val updateLocationResult = MutableLiveData<Resource<OnlyResultModel>>()
-    fun updateLocation(accessToken: String, updateLocationData: UpdateLocationData) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateLocation(updateLocationData: UpdateLocationData) = viewModelScope.launch(Dispatchers.IO) {
         updateLocationResult.postValue(Resource.Loading())
-        val result = updateLocationUseCase.execute("Bearer $accessToken", updateLocationData)
-        updateLocationResult.postValue(result)
+        try {
+            if(isNetworkAvailable(app)){
+                updateLocationResult.postValue(Resource.Loading())
+                val result = updateLocationUseCase.execute(updateLocationData)
+                updateLocationResult.postValue(result)
+            }
+        }catch (e: Exception){
+            updateLocationResult.postValue(Resource.Error(e.message.toString()))
+        }
     }
 
     private fun isNetworkAvailable(context: Context?):Boolean{

@@ -255,9 +255,10 @@ class LoginFragment : Fragment() {
                     hideProgressBar()
                     if(response.data!!.result){
                         BookShelfApp.prefs.setAutoLogin("autoLogin", true)
-                        BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.accessToken)
-                        BookShelfApp.prefs.setUserIdx("userIdx", response.data.data.userIdx)
-                        loginViewModel.updateLocation(response.data.data.accessToken, UpdateLocationData(loginViewModel.latitude.value!!, loginViewModel.longitude.value!!))
+                        //TODO("현재 위치 업데이트 api 연동")
+                        loginViewModel.updateLocation(UpdateLocationData(loginViewModel.latitude.value!!, loginViewModel.longitude.value!!))
+//                        val intent = Intent(requireContext(), HomeActivity::class.java)
+//                        startActivity(intent)
                     }
                 }
                 is Resource.Error -> {

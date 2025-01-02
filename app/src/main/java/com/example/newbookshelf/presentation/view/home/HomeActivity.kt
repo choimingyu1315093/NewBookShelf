@@ -11,7 +11,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.newbookshelf.BookShelfApp
+import com.example.newbookshelf.BuildConfig
 import com.example.newbookshelf.R
+import com.example.newbookshelf.data.util.CustomCookieJar
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.ActivityHomeBinding
 import com.example.newbookshelf.presentation.view.chat.adapter.ChatListAdapter
@@ -51,7 +53,18 @@ import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModelF
 import com.example.newbookshelf.presentation.viewmodel.setting.SettingViewModel
 import com.example.newbookshelf.presentation.viewmodel.setting.SettingViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.OkHttpClient
 import javax.inject.Inject
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.sse.EventSource
+import okhttp3.sse.EventSourceListener
+import okhttp3.sse.EventSources
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -191,21 +204,21 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() = with(binding){
-        homeViewModel.alarmCount(accessToken).observe(this@HomeActivity){ response ->
-            when(response){
-                is Resource.Success -> {
-                    response.data?.let {
-                        if(it.data == 0){
-                            tvNotifyCount.visibility = View.GONE
-                        }else {
-                            tvNotifyCount.visibility = View.VISIBLE
-                            tvNotifyCount.text = "${it.data}"
-                        }
-                    }
-                }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
-            }
-        }
+//        homeViewModel.alarmCount(accessToken).observe(this@HomeActivity){ response ->
+//            when(response){
+//                is Resource.Success -> {
+//                    response.data?.let {
+//                        if(it.data == 0){
+//                            tvNotifyCount.visibility = View.GONE
+//                        }else {
+//                            tvNotifyCount.visibility = View.VISIBLE
+//                            tvNotifyCount.text = "${it.data}"
+//                        }
+//                    }
+//                }
+//                is Resource.Error -> Unit
+//                is Resource.Loading -> Unit
+//            }
+//        }
     }
 }

@@ -67,11 +67,11 @@ class HomeViewModel(
         }
     }
 
-    fun alarmCount(accessToken: String) = liveData {
-        alarmCountUseCase.execute("Bearer $accessToken").collect {
-            emit(it)
-        }
-    }
+//    fun alarmCount(accessToken: String) = liveData {
+//        alarmCountUseCase.execute("Bearer $accessToken").collect {
+//            emit(it)
+//        }
+//    }
 
     fun alarmList(accessToken: String) = liveData {
         alarmListUseCase.execute("Bearer $accessToken").collect {
