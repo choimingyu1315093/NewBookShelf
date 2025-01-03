@@ -21,7 +21,9 @@ import com.example.newbookshelf.domain.usecase.home.AlarmAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmCountUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmListUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmOneDeleteUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
+import com.example.newbookshelf.domain.usecase.home.ChatStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookAllDeleteUseCase
@@ -146,8 +148,20 @@ object UseCaseModule {
 
     @Singleton
     @Provides
+    fun provideChatStatusUseCase(bookRepository: BookRepository): ChatStatusUseCase {
+        return ChatStatusUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
     fun provideAlarmCountUseCase(bookRepository: BookRepository): AlarmCountUseCase {
         return AlarmCountUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlarmStatusUseCase(bookRepository: BookRepository): AlarmStatusUseCase {
+        return AlarmStatusUseCase(bookRepository)
     }
 
     @Singleton

@@ -20,11 +20,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
+import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.ActivityLoginBinding
+import com.example.newbookshelf.presentation.view.login.LoginFragment.Companion
 import com.example.newbookshelf.presentation.viewmodel.find.FindViewModel
 import com.example.newbookshelf.presentation.viewmodel.find.FindViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModel
 import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModelFactory
+import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
+import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel
 import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -45,15 +49,17 @@ class LoginActivity : AppCompatActivity() {
 
     @Inject
     lateinit var loginViewModelFactory: LoginViewModelFactory
+    lateinit var loginViewModel: LoginViewModel
+
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
     @Inject
     lateinit var findViewModelFactory: FindViewModelFactory
+    lateinit var findViewModel: FindViewModel
+
     @Inject
     lateinit var signupViewModelFactory: SignupViewModelFactory
-
-    lateinit var loginViewModel: LoginViewModel
-    lateinit var findViewModel: FindViewModel
     lateinit var signupViewModel: SignupViewModel
 
     companion object {

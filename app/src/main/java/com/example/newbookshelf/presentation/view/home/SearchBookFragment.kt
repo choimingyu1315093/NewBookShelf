@@ -249,7 +249,7 @@ class SearchBookFragment : Fragment() {
 
     private fun searchKeyword(bookName: String){
         bookTitle = bookName
-        homeViewModel.getSearchBook(accessToken, bookName)
+        homeViewModel.getSearchBook(bookName)
         homeViewModel.insertSearchedBook(SearchedBook(title = bookName))
         binding.etSearch.setText("")
     }

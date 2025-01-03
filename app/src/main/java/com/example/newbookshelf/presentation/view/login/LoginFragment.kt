@@ -24,8 +24,11 @@ import com.example.newbookshelf.data.model.signup.SnsSignupData
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentLoginBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
+import com.example.newbookshelf.presentation.view.login.LoginActivity.Companion
 import com.example.newbookshelf.presentation.view.signup.SignUpActivity
+import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
 import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModel
+import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -255,10 +258,8 @@ class LoginFragment : Fragment() {
                     hideProgressBar()
                     if(response.data!!.result){
                         BookShelfApp.prefs.setAutoLogin("autoLogin", true)
-                        //TODO("현재 위치 업데이트 api 연동")
+                        BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.access_token)
                         loginViewModel.updateLocation(UpdateLocationData(loginViewModel.latitude.value!!, loginViewModel.longitude.value!!))
-//                        val intent = Intent(requireContext(), HomeActivity::class.java)
-//                        startActivity(intent)
                     }
                 }
                 is Resource.Error -> {

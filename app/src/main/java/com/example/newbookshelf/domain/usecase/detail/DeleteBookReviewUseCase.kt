@@ -7,7 +7,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class DeleteBookReviewUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(accessToken: String, bookCommentIdx: Int): Resource<DeleteBookReviewModel>{
-        return bookRepository.deleteBookReview(accessToken, bookCommentIdx)
+    suspend fun execute(bookCommentIdx: Int): Resource<DeleteBookReviewModel>{
+        return bookRepository.deleteBookReview(bookCommentIdx)
     }
 }

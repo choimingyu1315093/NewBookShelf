@@ -9,7 +9,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class UpdateBookReviewUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Resource<UpdateBookReviewModel> {
-        return bookRepository.updateBookReview(accessToken, bookCommentIdx, updateBookReviewData)
+    suspend fun execute(bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Resource<UpdateBookReviewModel> {
+        return bookRepository.updateBookReview(bookCommentIdx, updateBookReviewData)
     }
 }

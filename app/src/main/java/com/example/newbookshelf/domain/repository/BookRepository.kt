@@ -62,25 +62,27 @@ interface BookRepository {
     suspend fun emailCheck(emailCheckData: EmailCheckData): Resource<CheckModel>
     suspend fun nicknameCheck(nickname: String): Resource<CheckModel>
     suspend fun buyTicket(accessToken: String, ticketData: TicketData): Resource<TicketModel>
+    fun chatStatus(accessToken: String): Flow<Resource<OnlyResultModel>>
     fun alarmCount(accessToken: String): Flow<Resource<AlarmCountModel>>
+    fun alarmStatus(accessToken: String): Flow<Resource<OnlyResultModel>>
     fun alarmList(accessToken: String): Flow<Resource<AlarmListModel>>
     suspend fun alarmAllDelete(accessToken: String): Resource<OnlyResultModel>
     suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Resource<OnlyResultModel>
-    suspend fun searchBook(accessToken: String, bookName: String): Resource<SearchBookModel>
+    suspend fun searchBook(bookName: String): Resource<SearchBookModel>
     fun searchedBook(): Flow<List<SearchedBook>>
     suspend fun insert(searchedBook: SearchedBook)
     suspend fun delete(searchedBook: SearchedBook)
     suspend fun allDelete()
     suspend fun detailBook(bookIsbn: String): Resource<DetailBookModel>
-    suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Resource<AddMyBookModel>
-    suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Resource<AddBookReviewModel>
-    suspend fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Resource<UpdateBookReviewModel>
-    suspend fun deleteBookReview(accessToken: String, bookCommentIdx: Int): Resource<DeleteBookReviewModel>
+    suspend fun addMyBook(addMyBookData: AddMyBookData): Resource<AddMyBookModel>
+    suspend fun addBookReview(addBookReviewData: AddBookReviewData): Resource<AddBookReviewModel>
+    suspend fun updateBookReview(bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Resource<UpdateBookReviewModel>
+    suspend fun deleteBookReview(bookCommentIdx: Int): Resource<DeleteBookReviewModel>
     suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Resource<GetBookMemoModel>
     suspend fun addBookMemo(accessToken: String, addBookMemoData: AddBookMemoData): Resource<AddBookMemoModel>
     suspend fun updateBookMemo(accessToken: String, bookMemoIdx: Int, updateBookMemoData: UpdateBookMemoData): Resource<UpdateBookMemoModel>
     suspend fun deleteBookMemo(accessToken: String, bookMemoIdx: Int): Resource<DeleteBookMemoModel>
-    fun myProfile(accessToken: String): Flow<Resource<MyProfileModel>>
+    fun myProfile(): Flow<Resource<MyProfileModel>>
     fun profileActivity(accessToken: String, userIdx: Int): Flow<Resource<ActivityModel>>
     fun profileMemo(accessToken: String): Flow<Resource<MemoModel>>
     suspend fun nicknameChange(accessToken: String, nickname: String): Resource<OnlyResultModel>

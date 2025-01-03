@@ -70,7 +70,7 @@ class MemoFragment(private val isbn: String) : Fragment(), MemoDialog.OnDialogCl
 
     private fun bindViews() = with(binding){
         btnWrite.setOnClickListener {
-            val dialog = MemoDialog(isbn, false, 0, "","n", this@MemoFragment)
+            val dialog = MemoDialog(isbn, false, 0, "","y", this@MemoFragment)
             dialog.show(requireActivity().supportFragmentManager, "MemoDialog")
         }
 

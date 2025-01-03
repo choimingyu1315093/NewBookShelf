@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class MyProfileUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(accessToken: String): Flow<Resource<MyProfileModel>> {
-        return bookRepository.myProfile(accessToken)
+    fun execute(): Flow<Resource<MyProfileModel>> {
+        return bookRepository.myProfile()
     }
 }

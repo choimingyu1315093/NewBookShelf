@@ -125,11 +125,23 @@ interface ApiService {
         @Body ticketData: TicketData
     ): Response<TicketModel>
 
+    //채팅 여부
+    @GET("chat-rooms/status")
+    suspend fun chatStatus(
+        @Header("Authorization") accessToken: String,
+    ): Response<OnlyResultModel>
+
     //알람 갯수
     @GET("alarms/count")
     suspend fun alarmCount(
         @Header("Authorization") accessToken: String,
     ): Response<AlarmCountModel>
+
+    //알람 여부
+    @GET("alarms/status")
+    suspend fun alarmStatus(
+        @Header("Authorization") accessToken: String,
+    ): Response<OnlyResultModel>
 
     //알람 리스트
     @GET("alarms/list")
@@ -153,7 +165,6 @@ interface ApiService {
     //책 검색
     @GET("books/list")
     suspend fun searchBook(
-        @Header("Authorization") accessToken: String,
         @Query("book_name") bookName: String
     ): Response<SearchBookModel>
 
@@ -166,21 +177,18 @@ interface ApiService {
     //내 책 등록
     @POST("my-books")
     suspend fun addMyBook(
-        @Header("Authorization") accessToken: String,
         @Body addMyBookData: AddMyBookData
     ): Response<AddMyBookModel>
 
     //책 평가 등록
     @POST("book-comments")
     suspend fun addReview(
-        @Header("Authorization") accessToken: String,
         @Body addBookReviewData: AddBookReviewData
     ): Response<AddBookReviewModel>
 
     //책 평가 수정
     @PUT("book-comments/{book_comment_idx}")
     suspend fun updateReview(
-        @Header("Authorization") accessToken: String,
         @Path("book_comment_idx") bookCommentIdx: Int,
         @Body updateBookReviewData: UpdateBookReviewData
     ): Response<UpdateBookReviewModel>
@@ -188,7 +196,6 @@ interface ApiService {
     //책 평가 삭제
     @DELETE("book-comments/{book_comment_idx}")
     suspend fun deleteReview(
-        @Header("Authorization") accessToken: String,
         @Path("book_comment_idx") bookCommentIdx: Int,
     ): Response<DeleteBookReviewModel>
 
@@ -225,7 +232,6 @@ interface ApiService {
     //내 프로필 조회
     @GET("users/profile")
     suspend fun myProfile(
-        @Header("Authorization") accessToken: String
     ): Response<MyProfileModel>
 
     //활동 조회

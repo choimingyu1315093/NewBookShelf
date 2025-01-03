@@ -53,7 +53,8 @@ class DetailFragment : Fragment() {
     private var readEndDate = ""
     private var readPage = 0
     private var totalPage = 0
-    private var percent = 0
+    private var percent = 0.0
+    private var roundedPercent = 0
 
     private var buttonClicked = false
 
@@ -66,6 +67,7 @@ class DetailFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        binding.progressBar.visibility = View.VISIBLE
         (activity as HomeActivity).binding.cl.visibility = View.GONE
         (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
     }
@@ -113,6 +115,7 @@ class DetailFragment : Fragment() {
 
         detailAdapter = DetailAdapter(requireParentFragment(), bookIsbn)
         vpType.adapter = detailAdapter
+        vpType.offscreenPageLimit = 1
         TabLayoutMediator(tlType, vpType){tab, position ->
             when(position){
                 0 -> {
@@ -169,8 +172,8 @@ class DetailFragment : Fragment() {
                         tvPercent.text = "0%"
                         progress.progress = 0
                     }else {
-                        val percent = (readPage.toDouble()/totalPage.toDouble())*100
-                        val roundedPercent = round(percent).toInt()
+                        percent = (readPage.toDouble()/totalPage.toDouble())*100
+                        roundedPercent = round(percent).toInt()
                         tvPercent.text = "${roundedPercent}%"
                         progress.progress = roundedPercent
                     }
@@ -252,35 +255,32 @@ class DetailFragment : Fragment() {
         }
 
         btnSave.setOnClickListener {
-//            if (isHaveBook == "n") {
-//                val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
-//                detailViewModel.addMyBook(accessToken, addMyBookData)
-//            } else {
-//                when (readType) {
-//                    "wish" -> {
-//                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
-//                        detailViewModel.addMyBook(accessToken, addMyBookData)
-//                    }
-//
-//                    "reading" -> {
-//                        readingStartDate = etStart.text.toString()
-//                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, readingStartDate, readType)
-//                        detailViewModel.addMyBook(accessToken, addMyBookData)
-//                    }
-//
-//                    "read" -> {
-//                        readStartDate = etStartDate.text.toString()
-//                        readEndDate = etEndDate.text.toString()
-//                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, readEndDate, readPage, readStartDate, readType)
-//                        detailViewModel.addMyBook(accessToken, addMyBookData)
-//                    }
-//
-//                    else -> {
-//                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
-//                        detailViewModel.addMyBook(accessToken, addMyBookData)
-//                    }
-//                }
-//            }
+            if (isHaveBook == "n") {
+                val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
+                detailViewModel.addMyBook(addMyBookData)
+            } else {
+                when (readType) {
+                    "wish" -> {
+                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
+                        detailViewModel.addMyBook(addMyBookData)
+                    }
+                    "reading" -> {
+                        readingStartDate = etStart.text.toString()
+                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, readingStartDate, readType)
+                        detailViewModel.addMyBook(addMyBookData)
+                    }
+                    "read" -> {
+                        readStartDate = etStartDate.text.toString()
+                        readEndDate = etEndDate.text.toString()
+                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, readEndDate, readPage, readStartDate, readType)
+                        detailViewModel.addMyBook(addMyBookData)
+                    }
+                    else -> {
+                        val addMyBookData = AddMyBookData(totalPage, bookIsbn, isHaveBook, null, readPage, null, readType)
+                        detailViewModel.addMyBook(addMyBookData)
+                    }
+                }
+            }
             buttonClicked = true
         }
     }
@@ -291,30 +291,11 @@ class DetailFragment : Fragment() {
                 is Resource.Success -> {
                     response.data?.let {
                         myBookIdx = it.data.my_book_idx
-                        readType = it.data.read_type
+
                         if(it.data.book_image == ""){
                             Glide.with(ivBook).load(R.drawable.no_image).into(ivBook)
                         }else {
                             Glide.with(ivBook).load(it.data.book_image).into(ivBook)
-                        }
-
-                        if(it.data.book_full_page == 0){
-                            clPage.visibility = View.GONE
-                        }else {
-                            clPage.visibility = View.VISIBLE
-                            etPage.setText(it.data.read_page.toString())
-                            totalPage = it.data.book_full_page
-                            readPage = it.data.read_page
-                            if(it.data.read_page == 0){
-                                tvPage.text = "0/${totalPage}"
-                                tvPercent.text = "0%"
-                                progress.progress = 0
-                            }else {
-                                tvPage.text = "${readPage}/${totalPage}"
-                                percent = readPage/totalPage
-                                tvPercent.text = "${percent}%"
-                                progress.progress = percent
-                            }
                         }
 
                         tvTitle.text = it.data.book_name
@@ -346,7 +327,9 @@ class DetailFragment : Fragment() {
                         }
 
                         swHave.isChecked = it.data.is_have_book == "y"
-                        when(it.data.read_type){
+
+                        readType = it.data.read_type
+                        when(readType){
                             "wish" -> {
                                 btnWishBook.setBackgroundResource(R.drawable.btn_main_no_10)
                                 btnReadingBook.setBackgroundResource(R.drawable.btn_e9e9e9_10)
@@ -357,15 +340,7 @@ class DetailFragment : Fragment() {
                                 readingStartDate = ""
                                 readStartDate = ""
                                 readEndDate = ""
-                            }
-                            "read" -> {
-                                btnWishBook.setBackgroundResource(R.drawable.btn_e9e9e9_10)
-                                btnReadingBook.setBackgroundResource(R.drawable.btn_e9e9e9_10)
-                                btnReadBook.setBackgroundResource(R.drawable.btn_main_no_10)
-                                clReading.visibility = View.GONE
-                                clRead.visibility = View.VISIBLE
-                                readType = "read"
-                                readingStartDate = ""
+                                setCurrentDate()
                             }
                             "reading" -> {
                                 btnWishBook.setBackgroundResource(R.drawable.btn_e9e9e9_10)
@@ -376,6 +351,29 @@ class DetailFragment : Fragment() {
                                 readType = "reading"
                                 readStartDate = ""
                                 readEndDate = ""
+                                setCurrentDate()
+                            }
+                            "read" -> {
+                                btnWishBook.setBackgroundResource(R.drawable.btn_e9e9e9_10)
+                                btnReadingBook.setBackgroundResource(R.drawable.btn_e9e9e9_10)
+                                btnReadBook.setBackgroundResource(R.drawable.btn_main_no_10)
+                                clReading.visibility = View.GONE
+                                clRead.visibility = View.VISIBLE
+                                readType = "read"
+                                readingStartDate = ""
+                                setCurrentDate()
+                            }
+                            else -> {
+                                btnWishBook.setBackgroundResource(R.drawable.btn_e9e9e9_10)
+                                btnReadingBook.setBackgroundResource(R.drawable.btn_e9e9e9_10)
+                                btnReadBook.setBackgroundResource(R.drawable.btn_e9e9e9_10)
+                                clReading.visibility = View.GONE
+                                clRead.visibility = View.GONE
+                                readType = "none"
+                                readingStartDate = ""
+                                readStartDate = ""
+                                readEndDate = ""
+                                setCurrentDate()
                             }
                         }
 
@@ -386,6 +384,28 @@ class DetailFragment : Fragment() {
                         if(it.data.read_end_date != "none"){
                             etEndDate.setText(it.data.read_end_date.split(" ")[0])
                         }
+
+                        if(it.data.book_full_page == 0){
+                            clPage.visibility = View.GONE
+                        }else {
+                            clPage.visibility = View.VISIBLE
+                            etPage.setText(it.data.read_page.toString())
+                            totalPage = it.data.book_full_page
+                            readPage = it.data.read_page
+                            if(it.data.read_page == 0){
+                                tvPage.text = "0/${totalPage}"
+                                tvPercent.text = "0%"
+                                progress.progress = 0
+                            }else {
+                                tvPage.text = "${readPage}/${totalPage}"
+                                percent = (readPage.toDouble()/totalPage.toDouble())*100
+                                roundedPercent = round(percent).toInt()
+                                tvPercent.text = "${roundedPercent}%"
+                                progress.progress = roundedPercent
+                            }
+                        }
+
+                        progressBar.visibility = View.GONE
                     }
                 }
                 is Resource.Error -> Unit

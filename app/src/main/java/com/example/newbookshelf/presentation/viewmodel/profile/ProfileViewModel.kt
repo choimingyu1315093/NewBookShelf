@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
@@ -35,8 +36,8 @@ class ProfileViewModel(
     var userName = MutableLiveData<String>()
     var userDescription = MutableLiveData<String>()
 
-    fun myProfile(accessToken: String) = liveData {
-        myProfileUseCase.execute("Bearer $accessToken").collect {
+    fun myProfile() = liveData {
+        myProfileUseCase.execute().collect {
             emit(it)
         }
     }

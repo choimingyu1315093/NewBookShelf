@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,12 +22,17 @@ import com.example.newbookshelf.presentation.view.home.adapter.DetailWeekBestsel
 import com.example.newbookshelf.presentation.view.home.adapter.NewBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
 import com.example.newbookshelf.presentation.view.home.dialog.BestsellerFilterDialog
+import com.example.newbookshelf.presentation.view.login.LoginActivity
+import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModel
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
+import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var detailViewModel: DetailViewModel
+    private lateinit var profileViewModel: ProfileViewModel
 
     companion object {
         const val TAG = "HomeFragment"
@@ -73,6 +79,8 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
 
     private fun init() = with(binding){
         homeViewModel = (activity as HomeActivity).homeViewModel
+        detailViewModel = (activity as HomeActivity).detailViewModel
+        profileViewModel = (activity as HomeActivity).profileViewModel
 
         weekBestsellerAdapter = (activity as HomeActivity).weekBestsellerAdapter
         weekBestsellerAdapter.setOnClickListener {
@@ -217,6 +225,18 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
             }else {
                 cl3.visibility = View.VISIBLE
                 cl4.visibility = View.GONE
+            }
+        }
+
+        profileViewModel.myProfile().observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    response.data?.let {
+                        BookShelfApp.prefs.setUserIdx("userIdx", it.data.user_idx)
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
             }
         }
     }

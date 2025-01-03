@@ -7,7 +7,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class AddBookReviewUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(accessToken: String, addBookReviewData: AddBookReviewData): Resource<AddBookReviewModel>{
-        return bookRepository.addBookReview(accessToken, addBookReviewData)
+    suspend fun execute(addBookReviewData: AddBookReviewData): Resource<AddBookReviewModel>{
+        return bookRepository.addBookReview(addBookReviewData)
     }
 }

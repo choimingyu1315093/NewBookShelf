@@ -97,9 +97,21 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return apiService.buyTickets(accessToken, ticketData)
     }
 
+    override fun chatStatus(accessToken: String): Flow<Response<OnlyResultModel>> {
+        return flow {
+            emit(apiService.chatStatus(accessToken))
+        }
+    }
+
     override fun alarmCount(accessToken: String): Flow<Response<AlarmCountModel>> {
         return flow {
             emit(apiService.alarmCount(accessToken))
+        }
+    }
+
+    override fun alarmStatus(accessToken: String): Flow<Response<OnlyResultModel>> {
+        return flow {
+            emit(apiService.alarmStatus(accessToken))
         }
     }
 
@@ -117,28 +129,28 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return apiService.alarmOneDelete(accessToken, alarmIdx)
     }
 
-    override suspend fun searchBook(accessToken: String, bookName: String): Response<SearchBookModel> {
-        return apiService.searchBook(accessToken, bookName)
+    override suspend fun searchBook(bookName: String): Response<SearchBookModel> {
+        return apiService.searchBook(bookName)
     }
 
     override suspend fun detailBook(bookIsbn: String): Response<DetailBookModel> {
         return apiService.detailBook(bookIsbn)
     }
 
-    override suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Response<AddMyBookModel> {
-        return apiService.addMyBook(accessToken, addMyBookData)
+    override suspend fun addMyBook(addMyBookData: AddMyBookData): Response<AddMyBookModel> {
+        return apiService.addMyBook(addMyBookData)
     }
 
-    override suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Response<AddBookReviewModel> {
-        return apiService.addReview(accessToken, addBookReviewData)
+    override suspend fun addBookReview(addBookReviewData: AddBookReviewData): Response<AddBookReviewModel> {
+        return apiService.addReview(addBookReviewData)
     }
 
-    override suspend fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Response<UpdateBookReviewModel> {
-        return apiService.updateReview(accessToken, bookCommentIdx, updateBookReviewData)
+    override suspend fun updateBookReview(bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Response<UpdateBookReviewModel> {
+        return apiService.updateReview(bookCommentIdx, updateBookReviewData)
     }
 
-    override suspend fun deleteBookReview(accessToken: String, bookCommentIdx: Int): Response<DeleteBookReviewModel> {
-        return apiService.deleteReview(accessToken, bookCommentIdx)
+    override suspend fun deleteBookReview(bookCommentIdx: Int): Response<DeleteBookReviewModel> {
+        return apiService.deleteReview(bookCommentIdx)
     }
 
     override suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Response<GetBookMemoModel> {
@@ -157,9 +169,9 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
        return apiService.deleteMemo(accessToken, memoIdx)
     }
 
-    override fun myProfile(accessToken: String): Flow<Response<MyProfileModel>> {
+    override fun myProfile(): Flow<Response<MyProfileModel>> {
         return flow {
-            emit(apiService.myProfile(accessToken))
+            emit(apiService.myProfile())
         }
     }
 

@@ -28,7 +28,6 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
         const val TAG = "ReviewFragment"
     }
 
-    private lateinit var accessToken: String
     private var isDelete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +49,6 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         detailViewModel = (activity as HomeActivity).detailViewModel
         detailViewModel.detailBook(isbn)
         reviewAdapter = (activity as HomeActivity).reviewAdapter
@@ -60,7 +58,7 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
         }
         reviewAdapter.setOnDeleteListener {
             isDelete = true
-            detailViewModel.deleteBookReview(accessToken, it.book_comment_idx)
+            detailViewModel.deleteBookReview(it.book_comment_idx)
         }
         rvReview.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -82,8 +80,14 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
                 is Resource.Success -> {
                     val book = response.data?.data
                     if(book!!.book_average_rate != null){
-                        rb.rating = book.book_average_rate!!.toFloat()
-                        tvAverage.text = book.book_average_rate.toString()
+                        val rate = book.book_average_rate!!.toFloat()
+                        val roundedRate = if ((rate * 10) % 10 >= 5) {
+                            kotlin.math.floor(rate * 10 + 1) / 10
+                        } else {
+                            kotlin.math.floor(rate * 10) / 10
+                        }
+                        rb.rating = book.book_average_rate.toFloat()
+                        tvAverage.text = roundedRate.toString()
                     }else {
                         tvAverage.text = "0.0"
                     }

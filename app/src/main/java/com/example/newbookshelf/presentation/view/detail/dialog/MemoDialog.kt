@@ -30,7 +30,7 @@ class MemoDialog(
     private var update: Boolean,
     private val bookMemoIdx: Int,
     private val description: String,
-    private var isPrivate: String,
+    private var isPublic: String,
     private val onDialogCloseListener: OnDialogCloseListener
 ) : DialogFragment() {
 
@@ -81,7 +81,7 @@ class MemoDialog(
         detailViewModel = (activity as HomeActivity).detailViewModel
         if(description != ""){
             etMemo.setText(description)
-            if(isPrivate == "n"){
+            if(isPublic == "y"){
                 rb1.isChecked = true
             }else {
                 rb2.isChecked = true
@@ -93,10 +93,10 @@ class MemoDialog(
         rg.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.rb1 -> {
-                    isPrivate = "n"
+                    isPublic = "y"
                 }
                 R.id.rb2 -> {
-                    isPrivate = "y"
+                    isPublic = "n"
                 }
             }
         }
@@ -107,11 +107,11 @@ class MemoDialog(
             if(etMemo.text.toString() == ""){
                 Toast.makeText(requireContext(), "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
             }else if(update){
-                val updateBookMemoData = UpdateBookMemoData(isPrivate, etMemo.text.toString())
+                val updateBookMemoData = UpdateBookMemoData(isPublic, etMemo.text.toString())
                 detailViewModel.updateBookMemo(accessToken, bookMemoIdx, updateBookMemoData)
                 update = false
             }else {
-                val addBookMemoData = AddBookMemoData(bookIsbn, isPrivate, etMemo.text.toString())
+                val addBookMemoData = AddBookMemoData(bookIsbn, isPublic, etMemo.text.toString())
                 detailViewModel.addBookMemo(accessToken, addBookMemoData)
             }
         }

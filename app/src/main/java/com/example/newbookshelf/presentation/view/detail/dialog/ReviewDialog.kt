@@ -42,8 +42,6 @@ class ReviewDialog(
         const val TAG = "ReviewDialog"
     }
 
-    private lateinit var accessToken: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -74,7 +72,6 @@ class ReviewDialog(
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         detailViewModel = (activity as HomeActivity).detailViewModel
         if(description != ""){
             etReview.setText(description)
@@ -90,11 +87,11 @@ class ReviewDialog(
                 Toast.makeText(requireContext(), "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
             }else if(update){
                 val updateBookReviewData = UpdateBookReviewData(etReview.text.toString(), rb.rating.toDouble())
-                detailViewModel.updateBookReview(accessToken, bookCommentIdx, updateBookReviewData)
+                detailViewModel.updateBookReview(bookCommentIdx, updateBookReviewData)
                 update = false
             }else {
                 val addBookReviewData = AddBookReviewData(bookIsbn, etReview.text.toString(), rb.rating.toDouble())
-                detailViewModel.addBookReview(accessToken, addBookReviewData)
+                detailViewModel.addBookReview(addBookReviewData)
             }
         }
     }

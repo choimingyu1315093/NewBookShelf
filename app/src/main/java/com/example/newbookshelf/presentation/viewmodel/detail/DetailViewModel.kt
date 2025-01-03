@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -22,6 +23,7 @@ import com.example.newbookshelf.data.model.detail.review.AddBookReviewModel
 import com.example.newbookshelf.data.model.detail.review.DeleteBookReviewModel
 import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewData
 import com.example.newbookshelf.data.model.detail.review.UpdateBookReviewModel
+import com.example.newbookshelf.data.model.home.bestseller.Item
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.detail.AddBookMemoUseCase
 import com.example.newbookshelf.domain.usecase.detail.AddBookReviewUseCase
@@ -63,12 +65,13 @@ class DetailViewModel(
     }
 
     val addMyBookResult = MutableLiveData<Resource<AddMyBookModel>>()
-    fun addMyBook(accessToken: String, addMyBookData: AddMyBookData) = viewModelScope.launch(Dispatchers.IO) {
+    fun addMyBook(addMyBookData: AddMyBookData) = viewModelScope.launch(Dispatchers.IO) {
         addMyBookResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 addMyBookResult.postValue(Resource.Loading())
-                val result = addMyBookUseCase.execute("Bearer $accessToken", addMyBookData)
+                val result = addMyBookUseCase.execute(addMyBookData)
+                Log.d("TAG", "addMyBook: result $result")
                 addMyBookResult.postValue(result)
             }
         }catch (e: Exception){
@@ -77,12 +80,12 @@ class DetailViewModel(
     }
 
     val addBookReviewResult = MutableLiveData<Resource<AddBookReviewModel>>()
-    fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData) = viewModelScope.launch(Dispatchers.IO) {
+    fun addBookReview(addBookReviewData: AddBookReviewData) = viewModelScope.launch(Dispatchers.IO) {
         addBookReviewResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 addBookReviewResult.postValue(Resource.Loading())
-                val result = addBookReviewUseCase.execute("Bearer $accessToken", addBookReviewData)
+                val result = addBookReviewUseCase.execute(addBookReviewData)
                 addBookReviewResult.postValue(result)
             }
         }catch (e: Exception){
@@ -91,12 +94,12 @@ class DetailViewModel(
     }
 
     val updateBookReviewResult = MutableLiveData<Resource<UpdateBookReviewModel>>()
-    fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateBookReview(bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData) = viewModelScope.launch(Dispatchers.IO) {
         updateBookReviewResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 updateBookReviewResult.postValue(Resource.Loading())
-                val result = updateBookReviewUseCase.execute("Bearer $accessToken", bookCommentIdx, updateBookReviewData)
+                val result = updateBookReviewUseCase.execute(bookCommentIdx, updateBookReviewData)
                 updateBookReviewResult.postValue(result)
             }
         }catch (e: Exception){
@@ -105,12 +108,12 @@ class DetailViewModel(
     }
 
     val deleteBookReviewResult = MutableLiveData<Resource<DeleteBookReviewModel>>()
-    fun deleteBookReview(accessToken: String, bookCommentIdx: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteBookReview(bookCommentIdx: Int) = viewModelScope.launch(Dispatchers.IO) {
         deleteBookReviewResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 deleteBookReviewResult.postValue(Resource.Loading())
-                val result = deleteBookReviewUseCase.execute("Bearer $accessToken", bookCommentIdx)
+                val result = deleteBookReviewUseCase.execute(bookCommentIdx)
                 deleteBookReviewResult.postValue(result)
             }
         }catch (e: Exception){
@@ -124,7 +127,7 @@ class DetailViewModel(
         try {
             if(isNetworkAvailable(app)){
                 getBookMemoResult.postValue(Resource.Loading())
-                val result = bookMemoUseCase.execute("Bearer $accessToken", isbn, getType)
+                val result = bookMemoUseCase.execute(accessToken, isbn, getType)
                 getBookMemoResult.postValue(result)
             }
         }catch (e: Exception){
@@ -138,7 +141,7 @@ class DetailViewModel(
         try {
             if(isNetworkAvailable(app)){
                 addBookMemoResult.postValue(Resource.Loading())
-                val result = addBookMemoUseCase.execute("Bearer $accessToken", addBookMemoData)
+                val result = addBookMemoUseCase.execute(accessToken, addBookMemoData)
                 addBookMemoResult.postValue(result)
             }
         }catch (e: Exception){
@@ -152,7 +155,7 @@ class DetailViewModel(
         try {
             if(isNetworkAvailable(app)){
                 updateBookMemoResult.postValue(Resource.Loading())
-                val result = updateBookMemoUseCase.execute("Bearer $accessToken", memoIdx, updateBookMemoData)
+                val result = updateBookMemoUseCase.execute(accessToken, memoIdx, updateBookMemoData)
                 updateBookMemoResult.postValue(result)
             }
         }catch (e: Exception){
@@ -166,7 +169,7 @@ class DetailViewModel(
         try {
             if(isNetworkAvailable(app)){
                 deleteBookMemoResult.postValue(Resource.Loading())
-                val result = deleteBookMemoUseCase.execute("Bearer $accessToken", memoIdx)
+                val result = deleteBookMemoUseCase.execute(accessToken, memoIdx)
                 deleteBookMemoResult.postValue(result)
             }
         }catch (e: Exception){

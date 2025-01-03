@@ -121,7 +121,7 @@ class ApiServiceTest {
         """.trimIndent()
         enqueueMockResponse(mockResponseBody)
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzM1NzAxMiwiZXhwIjoxNzMzNDQzNDEyfQ.Eh2wFDW5od_Inn6BGKNgTcpLzQ-U6I8Hyoww7keU6YE"
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsImlhdCI6MTczNTg3ODU4MiwiZXhwIjoxNzM1ODg1NzgyfQ.CcB7kUoDAUZ8_AXUEr_jZRU7sjn2pOMFvCtVtUGqZOw"
         val response = service.alarmCount(accessToken)
         val request = server.takeRequest()
 
@@ -139,11 +139,9 @@ class ApiServiceTest {
     fun searchBookTest() = runBlocking {
         enqueueMockResponseJson("searchbook.json")
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzM3MzE5OCwiZXhwIjoxNzMzNDU5NTk4fQ.SSzTJeOGVEB6-nPBffDadgD-WWVSyzCShivk-98OxVw"
-        val responseBody = service.searchBook(accessToken, "돈의 속성")
+        val responseBody = service.searchBook("돈의 속성")
         val request = server.takeRequest()
 
-        Truth.assertThat(request.getHeader("Authorization")).isEqualTo(accessToken)
         Truth.assertThat(request.path).isEqualTo("/books/list?book_name=%EB%8F%88%EC%9D%98%20%EC%86%8D%EC%84%B1")
         Truth.assertThat(responseBody.body()).isNotNull()
     }
@@ -174,8 +172,7 @@ class ApiServiceTest {
         """.trimIndent()
         enqueueMockResponse(mockResponseBody)
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzcyNjQ0OSwiZXhwIjoxNzMzODEyODQ5fQ.3XTdQtRL14fjfihSw83dWpZcmSvbOM9iqaRKqsGnC5w"
-        val response = service.detailBook(accessToken, "1188331795")
+        val response = service.detailBook("1188331795")
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/books/1188331795")
@@ -190,9 +187,8 @@ class ApiServiceTest {
     fun addMyBookTest() = runBlocking {
         enqueueMockResponseJson("addmybook.json")
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzcyNjQ0OSwiZXhwIjoxNzMzODEyODQ5fQ.3XTdQtRL14fjfihSw83dWpZcmSvbOM9iqaRKqsGnC5w"
         val addMyBookData = AddMyBookData(216, "K662930932", "n", null, 0, null, "none")
-        val response = service.addMyBook(accessToken, addMyBookData)
+        val response = service.addMyBook(addMyBookData)
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/my-books")
@@ -223,8 +219,8 @@ class ApiServiceTest {
         """.trimIndent()
         enqueueMockResponse(mockResponseBody)
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzc4ODUwOSwiZXhwIjoxNzMzODc0OTA5fQ.xL9ra7qdTQPw7-ckmnflOMY_AZ2bIP8lDT4m5PMDFTU"
-        val response = service.bookMemo(accessToken, "K662930932", "all")
+        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsImlhdCI6MTczNTg4Njc5NywiZXhwIjoxNzM1ODkzOTk3fQ.pyl4xKXhQOs8lC2rinAefGt14SGtcNAUcRSUa0gFcPo"
+        val response = service.bookMemo(accessToken,"K662930932", "all")
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/memos/%7Bbook_isbn%7D?book_isbn=K662930932&get_type=all")
@@ -254,8 +250,7 @@ class ApiServiceTest {
         """.trimIndent()
         enqueueMockResponse(mockResponseBody)
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzk3Njk0OSwiZXhwIjoxNzM0MDYzMzQ5fQ.SZn2PF_rNAiB0Kh6WFmClqQJSYwgKmK6t-SCPoDtoH8"
-        val response = service.myProfile(accessToken)
+        val response = service.myProfile()
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/users/profile")

@@ -2,7 +2,7 @@ package com.example.newbookshelf.data.model.detail.review
 
 data class UpdateBookReviewModelBooks(
     val book_author: String,
-    val book_average_rate: Int,
+    val book_average_rate: Double,
     val book_content: String,
     val book_full_page: Int,
     val book_image: String,

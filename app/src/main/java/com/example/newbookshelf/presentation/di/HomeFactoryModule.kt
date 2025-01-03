@@ -7,7 +7,9 @@ import com.example.newbookshelf.domain.usecase.home.AlarmAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmCountUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmListUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmOneDeleteUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
+import com.example.newbookshelf.domain.usecase.home.ChatStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookAllDeleteUseCase
@@ -34,7 +36,9 @@ object HomeFactoryModule {
         weekBestsellerUseCase: WeekBestsellerUseCase,
         newBestsellerUseCase: NewBestsellerUseCase,
         attentionBestsellerUseCase: AttentionBestsellerUseCase,
+        chatStatusUseCase: ChatStatusUseCase,
         alarmCountUseCase: AlarmCountUseCase,
+        alarmStatusUseCase: AlarmStatusUseCase,
         alarmListUseCase: AlarmListUseCase,
         alarmAllDeleteUseCase: AlarmAllDeleteUseCase,
         alarmOneDeleteUseCase: AlarmOneDeleteUseCase,
@@ -44,6 +48,6 @@ object HomeFactoryModule {
         searchedBookDeleteUseCase: SearchedBookDeleteUseCase,
         searchedBookAllDeleteUseCase: SearchedBookAllDeleteUseCase
     ): HomeViewModelFactory{
-        return HomeViewModelFactory(application, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, alarmCountUseCase, alarmListUseCase, alarmAllDeleteUseCase, alarmOneDeleteUseCase, searchBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase)
+        return HomeViewModelFactory(application, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, chatStatusUseCase, alarmCountUseCase, alarmStatusUseCase, alarmListUseCase, alarmAllDeleteUseCase, alarmOneDeleteUseCase, searchBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase)
     }
 }

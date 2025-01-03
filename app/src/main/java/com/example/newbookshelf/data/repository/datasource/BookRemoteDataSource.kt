@@ -60,21 +60,23 @@ interface BookRemoteDataSource {
     suspend fun emailCheck(emailCheckData: EmailCheckData): Response<CheckModel>
     suspend fun nicknameCheck(nickname: String): Response<CheckModel>
     suspend fun buyTicket(accessToken: String, ticketData: TicketData): Response<TicketModel>
+    fun chatStatus(accessToken: String): Flow<Response<OnlyResultModel>>
     fun alarmCount(accessToken: String): Flow<Response<AlarmCountModel>>
+    fun alarmStatus(accessToken: String): Flow<Response<OnlyResultModel>>
     fun alarmList(accessToken: String): Flow<Response<AlarmListModel>>
     suspend fun alarmAllDelete(accessToken: String): Response<OnlyResultModel>
     suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Response<OnlyResultModel>
-    suspend fun searchBook(accessToken: String, bookName: String): Response<SearchBookModel>
+    suspend fun searchBook(bookName: String): Response<SearchBookModel>
     suspend fun detailBook(bookIsbn: String): Response<DetailBookModel>
-    suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Response<AddMyBookModel>
-    suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Response<AddBookReviewModel>
-    suspend fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Response<UpdateBookReviewModel>
-    suspend fun deleteBookReview(accessToken: String, bookCommentIdx: Int): Response<DeleteBookReviewModel>
+    suspend fun addMyBook(addMyBookData: AddMyBookData): Response<AddMyBookModel>
+    suspend fun addBookReview(addBookReviewData: AddBookReviewData): Response<AddBookReviewModel>
+    suspend fun updateBookReview(bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Response<UpdateBookReviewModel>
+    suspend fun deleteBookReview(bookCommentIdx: Int): Response<DeleteBookReviewModel>
     suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Response<GetBookMemoModel>
     suspend fun addBookMemo(accessToken: String, addBookMemoData: AddBookMemoData): Response<AddBookMemoModel>
     suspend fun updateBookMemo(accessToken: String, memoIdx: Int, updateBookMemoData: UpdateBookMemoData): Response<UpdateBookMemoModel>
     suspend fun deleteBookMemo(accessToken: String, memoIdx: Int): Response<DeleteBookMemoModel>
-    fun myProfile(accessToken: String): Flow<Response<MyProfileModel>>
+    fun myProfile(): Flow<Response<MyProfileModel>>
     fun profileActivity(accessToken: String, userIdx: Int): Flow<Response<ActivityModel>>
     fun profileMemo(accessToken: String): Flow<Response<MemoModel>>
     suspend fun nicknameChange(accessToken: String, nickname: String): Response<OnlyResultModel>

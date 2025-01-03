@@ -99,8 +99,28 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.buyTicket(accessToken, ticketData))
     }
 
+    override fun chatStatus(accessToken: String): Flow<Resource<OnlyResultModel>> {
+        return bookRemoteDataSource.chatStatus(accessToken).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
+    }
+
     override fun alarmCount(accessToken: String): Flow<Resource<AlarmCountModel>> {
         return bookRemoteDataSource.alarmCount(accessToken).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
+    }
+
+    override fun alarmStatus(accessToken: String): Flow<Resource<OnlyResultModel>> {
+        return bookRemoteDataSource.alarmStatus(accessToken).map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
             }else {
@@ -127,8 +147,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.alarmOneDelete(accessToken, alarmIdx))
     }
 
-    override suspend fun searchBook(accessToken: String, bookName: String): Resource<SearchBookModel> {
-        return responseToResource(bookRemoteDataSource.searchBook(accessToken, bookName))
+    override suspend fun searchBook(bookName: String): Resource<SearchBookModel> {
+        return responseToResource(bookRemoteDataSource.searchBook(bookName))
     }
 
     override fun searchedBook(): Flow<List<SearchedBook>> {
@@ -151,20 +171,20 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.detailBook(bookIsbn))
     }
 
-    override suspend fun addMyBook(accessToken: String, addMyBookData: AddMyBookData): Resource<AddMyBookModel> {
-        return responseToResource(bookRemoteDataSource.addMyBook(accessToken, addMyBookData))
+    override suspend fun addMyBook(addMyBookData: AddMyBookData): Resource<AddMyBookModel> {
+        return responseToResource(bookRemoteDataSource.addMyBook(addMyBookData))
     }
 
-    override suspend fun addBookReview(accessToken: String, addBookReviewData: AddBookReviewData): Resource<AddBookReviewModel> {
-        return responseToResource(bookRemoteDataSource.addBookReview(accessToken, addBookReviewData))
+    override suspend fun addBookReview(addBookReviewData: AddBookReviewData): Resource<AddBookReviewModel> {
+        return responseToResource(bookRemoteDataSource.addBookReview(addBookReviewData))
     }
 
-    override suspend fun updateBookReview(accessToken: String, bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Resource<UpdateBookReviewModel> {
-        return responseToResource(bookRemoteDataSource.updateBookReview(accessToken, bookCommentIdx, updateBookReviewData))
+    override suspend fun updateBookReview(bookCommentIdx: Int, updateBookReviewData: UpdateBookReviewData): Resource<UpdateBookReviewModel> {
+        return responseToResource(bookRemoteDataSource.updateBookReview(bookCommentIdx, updateBookReviewData))
     }
 
-    override suspend fun deleteBookReview(accessToken: String, bookCommentIdx: Int): Resource<DeleteBookReviewModel> {
-        return responseToResource(bookRemoteDataSource.deleteBookReview(accessToken, bookCommentIdx))
+    override suspend fun deleteBookReview(bookCommentIdx: Int): Resource<DeleteBookReviewModel> {
+        return responseToResource(bookRemoteDataSource.deleteBookReview(bookCommentIdx))
     }
 
     override suspend fun bookMemo(accessToken: String, bookIsbn: String, getType: String): Resource<GetBookMemoModel> {
@@ -183,8 +203,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.deleteBookMemo(accessToken, bookMemoIdx))
     }
 
-    override fun myProfile(accessToken: String): Flow<Resource<MyProfileModel>> {
-        return bookRemoteDataSource.myProfile(accessToken).map { response ->
+    override fun myProfile(): Flow<Resource<MyProfileModel>> {
+        return bookRemoteDataSource.myProfile().map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
             }else {

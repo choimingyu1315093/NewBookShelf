@@ -85,7 +85,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeViewModel() = with(binding){
-        profileViewModel.myProfile(accessToken).observe(viewLifecycleOwner){ response ->
+        profileViewModel.myProfile().observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
                     response.data?.let {

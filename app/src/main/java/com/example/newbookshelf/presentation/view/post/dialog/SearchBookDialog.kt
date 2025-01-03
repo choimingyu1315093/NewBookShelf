@@ -105,7 +105,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
     }
 
     private fun searchKeyword(book: String) = with(binding){
-        homeViewModel.getSearchBook(accessToken, book)
+        homeViewModel.getSearchBook(book)
 //        postViewModel.searchPlace(kakaoKey, place).observe(viewLifecycleOwner){ response ->
 //            when(response){
 //                is Resource.Success -> {

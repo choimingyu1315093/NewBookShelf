@@ -20,7 +20,9 @@ import com.example.newbookshelf.domain.usecase.home.AlarmAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmCountUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmListUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmOneDeleteUseCase
+import com.example.newbookshelf.domain.usecase.home.AlarmStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
+import com.example.newbookshelf.domain.usecase.home.ChatStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookAllDeleteUseCase
@@ -38,7 +40,9 @@ class HomeViewModel(
     private val weekBestsellerUseCase: WeekBestsellerUseCase,
     private val newBestsellerUseCase: NewBestsellerUseCase,
     private val attentionBestsellerUseCase: AttentionBestsellerUseCase,
+    private val chatStatusUseCase: ChatStatusUseCase,
     private val alarmCountUseCase: AlarmCountUseCase,
+    private val alarmStatusUseCase: AlarmStatusUseCase,
     private val alarmListUseCase: AlarmListUseCase,
     private val alarmAllDeleteUseCase: AlarmAllDeleteUseCase,
     private val alarmOneDeleteUseCase: AlarmOneDeleteUseCase,
@@ -67,11 +71,23 @@ class HomeViewModel(
         }
     }
 
-//    fun alarmCount(accessToken: String) = liveData {
-//        alarmCountUseCase.execute("Bearer $accessToken").collect {
-//            emit(it)
-//        }
-//    }
+    fun chatStatus(accessToken: String) = liveData {
+        chatStatusUseCase.execute(accessToken).collect {
+            emit(it)
+        }
+    }
+
+    fun alarmCount(accessToken: String) = liveData {
+        alarmCountUseCase.execute("Bearer $accessToken").collect {
+            emit(it)
+        }
+    }
+
+    fun alarmStatus(accessToken: String) = liveData {
+        alarmStatusUseCase.execute(accessToken).collect {
+            emit(it)
+        }
+    }
 
     fun alarmList(accessToken: String) = liveData {
         alarmListUseCase.execute("Bearer $accessToken").collect {
@@ -112,12 +128,12 @@ class HomeViewModel(
     }
 
     val searchBook = MutableLiveData<Resource<SearchBookModel>>()
-    fun getSearchBook(accessToken: String, bookName: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun getSearchBook(bookName: String) = viewModelScope.launch(Dispatchers.IO) {
         searchBook.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 searchBook.postValue(Resource.Loading())
-                val result = searchBookUseCase.execute("Bearer $accessToken", bookName)
+                val result = searchBookUseCase.execute(bookName)
                 searchBook.postValue(result)
             }else {
                 searchBook.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
