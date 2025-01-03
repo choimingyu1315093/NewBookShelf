@@ -23,6 +23,7 @@ import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
 import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
+import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.model.login.LoginData
@@ -99,7 +100,7 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.buyTicket(accessToken, ticketData))
     }
 
-    override fun chatStatus(accessToken: String): Flow<Resource<OnlyResultModel>> {
+    override fun chatStatus(accessToken: String): Flow<Resource<StatusModel>> {
         return bookRemoteDataSource.chatStatus(accessToken).map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
@@ -119,7 +120,7 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override fun alarmStatus(accessToken: String): Flow<Resource<OnlyResultModel>> {
+    override fun alarmStatus(accessToken: String): Flow<Resource<StatusModel>> {
         return bookRemoteDataSource.alarmStatus(accessToken).map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
@@ -129,8 +130,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override fun alarmList(accessToken: String): Flow<Resource<AlarmListModel>> {
-        return bookRemoteDataSource.alarmList(accessToken).map { response ->
+    override fun alarmList(): Flow<Resource<AlarmListModel>> {
+        return bookRemoteDataSource.alarmList().map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
             }else {
@@ -139,12 +140,12 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override suspend fun alarmAllDelete(accessToken: String): Resource<OnlyResultModel> {
-        return responseToResource(bookRemoteDataSource.alarmAllDelete(accessToken))
+    override suspend fun alarmAllDelete(): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.alarmAllDelete())
     }
 
-    override suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Resource<OnlyResultModel> {
-        return responseToResource(bookRemoteDataSource.alarmOneDelete(accessToken, alarmIdx))
+    override suspend fun alarmOneDelete(alarmIdx: Int): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.alarmOneDelete(alarmIdx))
     }
 
     override suspend fun searchBook(bookName: String): Resource<SearchBookModel> {
@@ -233,16 +234,16 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override suspend fun nicknameChange(accessToken: String, nickname: String): Resource<OnlyResultModel> {
-        return responseToResource(bookRemoteDataSource.nicknameChange(accessToken, nickname))
+    override suspend fun nicknameChange(nickname: String): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.nicknameChange(nickname))
     }
 
-    override suspend fun descriptionChange(accessToken: String, description: String): Resource<OnlyResultModel> {
-        return responseToResource(bookRemoteDataSource.descriptionChange(accessToken, description))
+    override suspend fun descriptionChange(description: String): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.descriptionChange(description))
     }
 
-    override fun wishBookHaveUser(accessToken: String): Flow<Resource<WishBookHaveUserModel>> {
-        return bookRemoteDataSource.wishBookHaveUser(accessToken).map { response ->
+    override fun wishBookHaveUser(): Flow<Resource<WishBookHaveUserModel>> {
+        return bookRemoteDataSource.wishBookHaveUser().map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
             }else {
@@ -259,8 +260,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.deleteChatroom(accessToken, chatroomIdx))
     }
 
-    override fun myBookList(accessToken: String, readType: String): Flow<Resource<MyBookModel>> {
-        return bookRemoteDataSource.myBookList(accessToken, readType).map { response ->
+    override fun myBookList(readType: String): Flow<Resource<MyBookModel>> {
+        return bookRemoteDataSource.myBookList(readType).map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
             }else {
@@ -269,8 +270,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override fun userSetting(accessToken: String): Flow<Resource<UserSettingModel>> {
-        return bookRemoteDataSource.userSetting(accessToken).map { response ->
+    override fun userSetting(): Flow<Resource<UserSettingModel>> {
+        return bookRemoteDataSource.userSetting().map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
             }else {
@@ -279,12 +280,12 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override suspend fun updateUserSetting(accessToken: String, updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel> {
-        return responseToResource(bookRemoteDataSource.updateUserSetting(accessToken, updateUserSettingData))
+    override suspend fun updateUserSetting(updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.updateUserSetting(updateUserSettingData))
     }
 
-    override fun ticketLog(accessToken: String): Flow<Resource<TicketLogModel>> {
-        return bookRemoteDataSource.ticketLog(accessToken).map { response ->
+    override fun ticketLog(): Flow<Resource<TicketLogModel>> {
+        return bookRemoteDataSource.ticketLog().map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
             }else {
@@ -293,12 +294,12 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override suspend fun passwordChange(accessToken: String, passwordChangeData: PasswordChangeData): Resource<OnlyResultModel> {
-        return responseToResource(bookRemoteDataSource.passwordChange(accessToken, passwordChangeData))
+    override suspend fun passwordChange(passwordChangeData: PasswordChangeData): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.passwordChange(passwordChangeData))
     }
 
-    override suspend fun userDelete(accessToken: String): Resource<OnlyResultModel> {
-        return responseToResource(bookRemoteDataSource.userDelete(accessToken))
+    override suspend fun userDelete(): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.userDelete())
     }
 
 //    private fun responseToResource(response: Response<LoginModel>): Resource<LoginModel>{

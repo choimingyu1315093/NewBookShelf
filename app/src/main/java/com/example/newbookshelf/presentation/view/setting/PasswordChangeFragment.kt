@@ -25,7 +25,6 @@ class PasswordChangeFragment : Fragment() {
         const val TAG = "PasswordChangeFragment"
     }
 
-    private lateinit var accessToken: String
     private var isCurrent = false
     private var isNew = false
     private var isCheck = false
@@ -51,7 +50,6 @@ class PasswordChangeFragment : Fragment() {
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         settingViewModel = (activity as HomeActivity).settingViewModel
     }
 
@@ -103,7 +101,7 @@ class PasswordChangeFragment : Fragment() {
         btnChange.setOnClickListener {
             isClicked = true
             val passwordChangeData = PasswordChangeData(etCurrentPw.text.toString(), etCheckPw.text.toString())
-            settingViewModel.passwordChange(accessToken, passwordChangeData)
+            settingViewModel.passwordChange(passwordChangeData)
         }
     }
 

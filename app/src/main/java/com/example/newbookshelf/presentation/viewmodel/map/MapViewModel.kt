@@ -24,8 +24,8 @@ class MapViewModel(
     private val createChatroomUseCase: CreateChatroomUseCase
 ): AndroidViewModel(app) {
 
-    fun wishBookHaveUser(accessToken: String) = liveData {
-        wishBookHaveUserUseCase.execute("Bearer $accessToken").collect {
+    fun wishBookHaveUser() = liveData {
+        wishBookHaveUserUseCase.execute().collect {
             emit(it)
         }
     }

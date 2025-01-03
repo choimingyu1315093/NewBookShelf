@@ -33,7 +33,6 @@ class NicknameChangeDialog(private val onClickListener: OnClickListener) : Dialo
         const val TAG = "NicknameChangeDialog"
     }
 
-    private lateinit var accessToken: String
     private var isClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +65,6 @@ class NicknameChangeDialog(private val onClickListener: OnClickListener) : Dialo
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         profileViewModel = (activity as HomeActivity).profileViewModel
 
         cl.setOnClickListener {
@@ -102,7 +100,7 @@ class NicknameChangeDialog(private val onClickListener: OnClickListener) : Dialo
         btnCancel.setOnClickListener { dismiss() }
         btnOk.setOnClickListener {
             isClicked = true
-            profileViewModel.nicknameChange(accessToken, etNickname.text.toString())
+            profileViewModel.nicknameChange(etNickname.text.toString())
         }
     }
 

@@ -55,12 +55,12 @@ class ProfileViewModel(
     }
 
     val nicknameChangeResult = MutableLiveData<Resource<OnlyResultModel>>()
-    fun nicknameChange(accessToken: String, nickname: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun nicknameChange(nickname: String) = viewModelScope.launch(Dispatchers.IO) {
         nicknameChangeResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 nicknameChangeResult.postValue(Resource.Loading())
-                val result = nickNameChangeUseCase.execute("Bearer $accessToken", nickname)
+                val result = nickNameChangeUseCase.execute(nickname)
                 nicknameChangeResult.postValue(result)
             }
         }catch (e: Exception){
@@ -69,12 +69,12 @@ class ProfileViewModel(
     }
 
     val descriptionChangeResult = MutableLiveData<Resource<OnlyResultModel>>()
-    fun descriptionChange(accessToken: String, description: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun descriptionChange(description: String) = viewModelScope.launch(Dispatchers.IO) {
         descriptionChangeResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 descriptionChangeResult.postValue(Resource.Loading())
-                val result = descriptionChangeUseCase.execute("Bearer $accessToken", description)
+                val result = descriptionChangeUseCase.execute(description)
                 descriptionChangeResult.postValue(result)
             }
         }catch (e: Exception){
@@ -82,8 +82,8 @@ class ProfileViewModel(
         }
     }
 
-    fun myBookList(accessToken: String, type: String) = liveData {
-        myBookListUseCase.execute("Bearer $accessToken", type).collect {
+    fun myBookList(type: String) = liveData {
+        myBookListUseCase.execute(type).collect {
             emit(it)
         }
     }

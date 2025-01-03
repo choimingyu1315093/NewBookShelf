@@ -22,8 +22,6 @@ class NotificationFragment : Fragment() {
         const val TAG = "NotificationFragment"
     }
 
-    private lateinit var accessToken: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,11 +41,10 @@ class NotificationFragment : Fragment() {
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         homeViewModel = (activity as HomeActivity).homeViewModel
         notificationAdapter = (activity as HomeActivity).notificationAdapter
         notificationAdapter.setOnClickListener {
-            homeViewModel.alarmOneDelete(accessToken, it.alarm_idx)
+            homeViewModel.alarmOneDelete(it.alarm_idx)
         }
 
         rvNotification.apply {
@@ -62,12 +59,12 @@ class NotificationFragment : Fragment() {
         }
 
         txtClear.setOnClickListener {
-            homeViewModel.alarmAllDelete(accessToken)
+            homeViewModel.alarmAllDelete()
         }
     }
 
     private fun observeViewModel() = with(binding){
-        homeViewModel.alarmList(accessToken).observe(viewLifecycleOwner){
+        homeViewModel.alarmList().observe(viewLifecycleOwner){
             if(it.data!!.data.isNotEmpty()){
                 notificationAdapter.differ.submitList(it.data.data)
                 rvNotification.visibility = View.VISIBLE

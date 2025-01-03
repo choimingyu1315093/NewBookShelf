@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class AlarmListUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(accessToken: String): Flow<Resource<AlarmListModel>> {
-        return bookRepository.alarmList(accessToken)
+    fun execute(): Flow<Resource<AlarmListModel>> {
+        return bookRepository.alarmList()
     }
 }

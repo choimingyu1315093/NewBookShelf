@@ -23,6 +23,7 @@ import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
 import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
+import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
@@ -60,12 +61,12 @@ interface BookRemoteDataSource {
     suspend fun emailCheck(emailCheckData: EmailCheckData): Response<CheckModel>
     suspend fun nicknameCheck(nickname: String): Response<CheckModel>
     suspend fun buyTicket(accessToken: String, ticketData: TicketData): Response<TicketModel>
-    fun chatStatus(accessToken: String): Flow<Response<OnlyResultModel>>
+    fun chatStatus(accessToken: String): Flow<Response<StatusModel>>
     fun alarmCount(accessToken: String): Flow<Response<AlarmCountModel>>
-    fun alarmStatus(accessToken: String): Flow<Response<OnlyResultModel>>
-    fun alarmList(accessToken: String): Flow<Response<AlarmListModel>>
-    suspend fun alarmAllDelete(accessToken: String): Response<OnlyResultModel>
-    suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Response<OnlyResultModel>
+    fun alarmStatus(accessToken: String): Flow<Response<StatusModel>>
+    fun alarmList(): Flow<Response<AlarmListModel>>
+    suspend fun alarmAllDelete(): Response<OnlyResultModel>
+    suspend fun alarmOneDelete(alarmIdx: Int): Response<OnlyResultModel>
     suspend fun searchBook(bookName: String): Response<SearchBookModel>
     suspend fun detailBook(bookIsbn: String): Response<DetailBookModel>
     suspend fun addMyBook(addMyBookData: AddMyBookData): Response<AddMyBookModel>
@@ -79,15 +80,15 @@ interface BookRemoteDataSource {
     fun myProfile(): Flow<Response<MyProfileModel>>
     fun profileActivity(accessToken: String, userIdx: Int): Flow<Response<ActivityModel>>
     fun profileMemo(accessToken: String): Flow<Response<MemoModel>>
-    suspend fun nicknameChange(accessToken: String, nickname: String): Response<OnlyResultModel>
-    suspend fun descriptionChange(accessToken: String, description: String): Response<OnlyResultModel>
-    fun wishBookHaveUser(accessToken: String): Flow<Response<WishBookHaveUserModel>>
+    suspend fun nicknameChange(nickname: String): Response<OnlyResultModel>
+    suspend fun descriptionChange(description: String): Response<OnlyResultModel>
+    fun wishBookHaveUser(): Flow<Response<WishBookHaveUserModel>>
     suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Response<ChatroomModel>
     suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Response<DeleteChatroomModel>
-    fun myBookList(accessToken: String, readType: String): Flow<Response<MyBookModel>>
-    fun userSetting(accessToken: String): Flow<Response<UserSettingModel>>
-    suspend fun updateUserSetting(accessToken: String, updateUserSettingData: UpdateUserSettingData): Response<OnlyResultModel>
-    fun ticketLog(accessToken: String): Flow<Response<TicketLogModel>>
-    suspend fun passwordChange(accessToken: String, passwordChangeData: PasswordChangeData): Response<OnlyResultModel>
-    suspend fun userDelete(accessToken: String): Response<OnlyResultModel>
+    fun myBookList(readType: String): Flow<Response<MyBookModel>>
+    fun userSetting(): Flow<Response<UserSettingModel>>
+    suspend fun updateUserSetting(updateUserSettingData: UpdateUserSettingData): Response<OnlyResultModel>
+    fun ticketLog(): Flow<Response<TicketLogModel>>
+    suspend fun passwordChange(passwordChangeData: PasswordChangeData): Response<OnlyResultModel>
+    suspend fun userDelete(): Response<OnlyResultModel>
 }

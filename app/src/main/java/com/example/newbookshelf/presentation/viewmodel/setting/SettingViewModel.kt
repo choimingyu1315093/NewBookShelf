@@ -31,19 +31,19 @@ class SettingViewModel(
     private val userDeleteUseCase: UserDeleteUseCase
 ): AndroidViewModel(app) {
 
-    fun userSetting(accessToken: String) = liveData {
-        userSettingUseCase.execute("Bearer $accessToken").collect {
+    fun userSetting() = liveData {
+        userSettingUseCase.execute().collect {
             emit(it)
         }
     }
 
     val updateUserSettingResult = MutableLiveData<Resource<OnlyResultModel>>()
-    fun updateUserSetting(accessToken: String, updateUserSettingData: UpdateUserSettingData) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateUserSetting(updateUserSettingData: UpdateUserSettingData) = viewModelScope.launch(Dispatchers.IO) {
         updateUserSettingResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 updateUserSettingResult.postValue(Resource.Loading())
-                val result = updateUserSettingUseCase.execute("Bearer $accessToken", updateUserSettingData)
+                val result = updateUserSettingUseCase.execute(updateUserSettingData)
                 updateUserSettingResult.postValue(result)
             }
         }catch (e: Exception){
@@ -51,19 +51,19 @@ class SettingViewModel(
         }
     }
 
-    fun ticketLog(accessToken: String) = liveData {
-        ticketLogUseCase.execute("Bearer $accessToken").collect {
+    fun ticketLog() = liveData {
+        ticketLogUseCase.execute().collect {
             emit(it)
         }
     }
 
     val passwordChangeResult = MutableLiveData<Resource<OnlyResultModel>>()
-    fun passwordChange(accessToken: String, passwordChangeData: PasswordChangeData) = viewModelScope.launch(Dispatchers.IO) {
+    fun passwordChange(passwordChangeData: PasswordChangeData) = viewModelScope.launch(Dispatchers.IO) {
         passwordChangeResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 passwordChangeResult.postValue(Resource.Loading())
-                val result = passwordChangeUseCase.execute("Bearer $accessToken", passwordChangeData)
+                val result = passwordChangeUseCase.execute(passwordChangeData)
                 passwordChangeResult.postValue(result)
             }
         }catch (e: Exception){
@@ -72,12 +72,12 @@ class SettingViewModel(
     }
 
     val userDeleteResult = MutableLiveData<Resource<OnlyResultModel>>()
-    fun userDelete(accessToken: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun userDelete() = viewModelScope.launch(Dispatchers.IO) {
         userDeleteResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 userDeleteResult.postValue(Resource.Loading())
-                val result = userDeleteUseCase.execute("Bearer $accessToken")
+                val result = userDeleteUseCase.execute()
                 userDeleteResult.postValue(result)
             }
         }catch (e: Exception){

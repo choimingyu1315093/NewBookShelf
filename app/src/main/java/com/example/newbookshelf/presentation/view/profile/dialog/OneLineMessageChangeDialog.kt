@@ -31,7 +31,6 @@ class OneLineMessageChangeDialog(private val onClickListener: OnClickListener) :
         const val TAG = "OneLineMessageChangeDialog"
     }
 
-    private lateinit var accessToken: String
     private var isClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +63,6 @@ class OneLineMessageChangeDialog(private val onClickListener: OnClickListener) :
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         profileViewModel = (activity as HomeActivity).profileViewModel
 
         cl.setOnClickListener {
@@ -94,7 +92,7 @@ class OneLineMessageChangeDialog(private val onClickListener: OnClickListener) :
         btnCancel.setOnClickListener { dismiss() }
         btnOk.setOnClickListener {
             isClicked = true
-            profileViewModel.descriptionChange(accessToken, etDescription.text.toString())
+            profileViewModel.descriptionChange(etDescription.text.toString())
         }
     }
 

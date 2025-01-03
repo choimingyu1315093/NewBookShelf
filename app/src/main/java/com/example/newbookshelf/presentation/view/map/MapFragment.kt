@@ -53,7 +53,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
         const val TAG = "MapFragment"
     }
 
-    private lateinit var accessToken: String
     private lateinit var nearBookAdapter: NearBookAdapter
 
     private lateinit var map: GoogleMap
@@ -86,7 +85,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
 
     private fun init() = with(binding){
         currentLocation = LatLng(BookShelfApp.prefs.getLatitude("latitude", 0.0F).toDouble(), BookShelfApp.prefs.getLongitude("longitude", 0.0F).toDouble())
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         mapViewModel = (activity as HomeActivity).mapViewModel
         nearBookAdapter = (activity as HomeActivity).nearBookAdapter
         nearBookAdapter.setOnClickListener {
@@ -104,7 +102,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
 
     @SuppressLint("PotentialBehaviorOverride")
     private fun observeViewModel() = with(binding){
-        mapViewModel.wishBookHaveUser(accessToken).observe(viewLifecycleOwner){ response ->
+        mapViewModel.wishBookHaveUser().observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
                     if(response.data!!.data.isNotEmpty()){

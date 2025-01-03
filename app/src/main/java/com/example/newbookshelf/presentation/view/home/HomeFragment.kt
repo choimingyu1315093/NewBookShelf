@@ -233,6 +233,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
                 is Resource.Success -> {
                     response.data?.let {
                         BookShelfApp.prefs.setUserIdx("userIdx", it.data.user_idx)
+                        BookShelfApp.prefs.setNickname("nickname", it.data.user_name)
                     }
                 }
                 is Resource.Error -> Unit

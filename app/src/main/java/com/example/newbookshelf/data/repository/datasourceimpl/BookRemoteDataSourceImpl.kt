@@ -24,6 +24,7 @@ import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
 import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
+import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
@@ -97,7 +98,7 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return apiService.buyTickets(accessToken, ticketData)
     }
 
-    override fun chatStatus(accessToken: String): Flow<Response<OnlyResultModel>> {
+    override fun chatStatus(accessToken: String): Flow<Response<StatusModel>> {
         return flow {
             emit(apiService.chatStatus(accessToken))
         }
@@ -109,24 +110,24 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         }
     }
 
-    override fun alarmStatus(accessToken: String): Flow<Response<OnlyResultModel>> {
+    override fun alarmStatus(accessToken: String): Flow<Response<StatusModel>> {
         return flow {
             emit(apiService.alarmStatus(accessToken))
         }
     }
 
-    override fun alarmList(accessToken: String): Flow<Response<AlarmListModel>> {
+    override fun alarmList(): Flow<Response<AlarmListModel>> {
         return flow {
-            emit(apiService.alarmList(accessToken))
+            emit(apiService.alarmList())
         }
     }
 
-    override suspend fun alarmAllDelete(accessToken: String): Response<OnlyResultModel> {
-        return apiService.alarmAllDelete(accessToken)
+    override suspend fun alarmAllDelete(): Response<OnlyResultModel> {
+        return apiService.alarmAllDelete()
     }
 
-    override suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Response<OnlyResultModel> {
-        return apiService.alarmOneDelete(accessToken, alarmIdx)
+    override suspend fun alarmOneDelete(alarmIdx: Int): Response<OnlyResultModel> {
+        return apiService.alarmOneDelete(alarmIdx)
     }
 
     override suspend fun searchBook(bookName: String): Response<SearchBookModel> {
@@ -187,17 +188,17 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         }
     }
 
-    override suspend fun nicknameChange(accessToken: String, nickname: String): Response<OnlyResultModel> {
-        return apiService.nicknameChange(accessToken, nickname)
+    override suspend fun nicknameChange(nickname: String): Response<OnlyResultModel> {
+        return apiService.nicknameChange(nickname)
     }
 
-    override suspend fun descriptionChange(accessToken: String, description: String): Response<OnlyResultModel> {
-        return apiService.descriptionChange(accessToken, description)
+    override suspend fun descriptionChange(description: String): Response<OnlyResultModel> {
+        return apiService.descriptionChange(description)
     }
 
-    override fun wishBookHaveUser(accessToken: String): Flow<Response<WishBookHaveUserModel>> {
+    override fun wishBookHaveUser(): Flow<Response<WishBookHaveUserModel>> {
         return flow {
-            emit(apiService.wishBookHaveUser(accessToken))
+            emit(apiService.wishBookHaveUser())
         }
     }
 
@@ -209,33 +210,33 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return apiService.deleteChatroom(accessToken, chatroomIdx)
     }
 
-    override fun myBookList(accessToken: String, readType: String): Flow<Response<MyBookModel>> {
+    override fun myBookList(readType: String): Flow<Response<MyBookModel>> {
         return flow {
-            emit(apiService.myBookList(accessToken, readType))
+            emit(apiService.myBookList(readType))
         }
     }
 
-    override fun userSetting(accessToken: String): Flow<Response<UserSettingModel>> {
+    override fun userSetting(): Flow<Response<UserSettingModel>> {
         return flow {
-            emit(apiService.userSetting(accessToken))
+            emit(apiService.userSetting())
         }
     }
 
-    override suspend fun updateUserSetting(accessToken: String, updateUserSettingData: UpdateUserSettingData): Response<OnlyResultModel> {
-        return apiService.updateUserSetting(accessToken, updateUserSettingData)
+    override suspend fun updateUserSetting(updateUserSettingData: UpdateUserSettingData): Response<OnlyResultModel> {
+        return apiService.updateUserSetting(updateUserSettingData)
     }
 
-    override fun ticketLog(accessToken: String): Flow<Response<TicketLogModel>> {
+    override fun ticketLog(): Flow<Response<TicketLogModel>> {
         return flow {
-            emit(apiService.ticketLog(accessToken))
+            emit(apiService.ticketLog())
         }
     }
 
-    override suspend fun passwordChange(accessToken: String, passwordChangeData: PasswordChangeData): Response<OnlyResultModel> {
-        return apiService.passwordChange(accessToken, passwordChangeData)
+    override suspend fun passwordChange(passwordChangeData: PasswordChangeData): Response<OnlyResultModel> {
+        return apiService.passwordChange(passwordChangeData)
     }
 
-    override suspend fun userDelete(accessToken: String): Response<OnlyResultModel> {
-        return apiService.userDelete(accessToken)
+    override suspend fun userDelete(): Response<OnlyResultModel> {
+        return apiService.userDelete()
     }
 }

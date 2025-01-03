@@ -23,6 +23,7 @@ import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
 import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
+import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.model.login.LoginData
@@ -62,12 +63,12 @@ interface BookRepository {
     suspend fun emailCheck(emailCheckData: EmailCheckData): Resource<CheckModel>
     suspend fun nicknameCheck(nickname: String): Resource<CheckModel>
     suspend fun buyTicket(accessToken: String, ticketData: TicketData): Resource<TicketModel>
-    fun chatStatus(accessToken: String): Flow<Resource<OnlyResultModel>>
+    fun chatStatus(accessToken: String): Flow<Resource<StatusModel>>
     fun alarmCount(accessToken: String): Flow<Resource<AlarmCountModel>>
-    fun alarmStatus(accessToken: String): Flow<Resource<OnlyResultModel>>
-    fun alarmList(accessToken: String): Flow<Resource<AlarmListModel>>
-    suspend fun alarmAllDelete(accessToken: String): Resource<OnlyResultModel>
-    suspend fun alarmOneDelete(accessToken: String, alarmIdx: Int): Resource<OnlyResultModel>
+    fun alarmStatus(accessToken: String): Flow<Resource<StatusModel>>
+    fun alarmList(): Flow<Resource<AlarmListModel>>
+    suspend fun alarmAllDelete(): Resource<OnlyResultModel>
+    suspend fun alarmOneDelete(alarmIdx: Int): Resource<OnlyResultModel>
     suspend fun searchBook(bookName: String): Resource<SearchBookModel>
     fun searchedBook(): Flow<List<SearchedBook>>
     suspend fun insert(searchedBook: SearchedBook)
@@ -85,15 +86,15 @@ interface BookRepository {
     fun myProfile(): Flow<Resource<MyProfileModel>>
     fun profileActivity(accessToken: String, userIdx: Int): Flow<Resource<ActivityModel>>
     fun profileMemo(accessToken: String): Flow<Resource<MemoModel>>
-    suspend fun nicknameChange(accessToken: String, nickname: String): Resource<OnlyResultModel>
-    suspend fun descriptionChange(accessToken: String, description: String): Resource<OnlyResultModel>
-    fun wishBookHaveUser(accessToken: String): Flow<Resource<WishBookHaveUserModel>>
+    suspend fun nicknameChange(nickname: String): Resource<OnlyResultModel>
+    suspend fun descriptionChange(description: String): Resource<OnlyResultModel>
+    fun wishBookHaveUser(): Flow<Resource<WishBookHaveUserModel>>
     suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Resource<ChatroomModel>
     suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Resource<DeleteChatroomModel>
-    fun myBookList(accessToken: String, readType: String): Flow<Resource<MyBookModel>>
-    fun userSetting(accessToken: String): Flow<Resource<UserSettingModel>>
-    suspend fun updateUserSetting(accessToken: String, updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel>
-    fun ticketLog(accessToken: String): Flow<Resource<TicketLogModel>>
-    suspend fun passwordChange(accessToken: String, passwordChangeData: PasswordChangeData): Resource<OnlyResultModel>
-    suspend fun userDelete(accessToken: String): Resource<OnlyResultModel>
+    fun myBookList(readType: String): Flow<Resource<MyBookModel>>
+    fun userSetting(): Flow<Resource<UserSettingModel>>
+    suspend fun updateUserSetting(updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel>
+    fun ticketLog(): Flow<Resource<TicketLogModel>>
+    suspend fun passwordChange(passwordChangeData: PasswordChangeData): Resource<OnlyResultModel>
+    suspend fun userDelete(): Resource<OnlyResultModel>
 }

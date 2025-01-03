@@ -6,7 +6,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class DescriptionChangeUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(accessToken: String, description: String): Resource<OnlyResultModel> {
-        return bookRepository.descriptionChange(accessToken, description)
+    suspend fun execute(description: String): Resource<OnlyResultModel> {
+        return bookRepository.descriptionChange(description)
     }
 }

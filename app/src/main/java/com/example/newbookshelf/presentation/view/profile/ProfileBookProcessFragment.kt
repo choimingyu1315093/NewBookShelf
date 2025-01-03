@@ -25,7 +25,6 @@ class ProfileBookProcessFragment(private val type: String) : Fragment() {
         const val TAG = "ProfileBookProcessFragment"
     }
 
-    private lateinit var accessToken: String
     private lateinit var myBookListAdapter: MyBookListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,8 +45,8 @@ class ProfileBookProcessFragment(private val type: String) : Fragment() {
             "읽고 있는 책" -> "읽고 있는 책이 없어요."
             else -> "읽은 책이 없어요."
         }
-
-        profileViewModel.myBookList(accessToken, category).observe(viewLifecycleOwner) { response ->
+        binding.progressBar.visibility = View.VISIBLE
+        profileViewModel.myBookList(category).observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     response.data?.let {
@@ -84,7 +83,6 @@ class ProfileBookProcessFragment(private val type: String) : Fragment() {
 
     private fun init() = with(binding){
         rvBook.visibility = View.GONE
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         profileViewModel = (activity as HomeActivity).profileViewModel
         myBookListAdapter = (activity as HomeActivity).myBookListAdapter
         rvBook.apply {

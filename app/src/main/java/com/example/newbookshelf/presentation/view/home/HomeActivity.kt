@@ -202,7 +202,7 @@ class HomeActivity : AppCompatActivity() {
             when(response){
                 is Resource.Success -> {
                     response.data?.let {
-                        if(it.result){
+                        if(it.data.status){
                             tvChatCount.visibility = View.VISIBLE
                         }else {
                             tvChatCount.visibility = View.GONE
@@ -218,7 +218,7 @@ class HomeActivity : AppCompatActivity() {
             when(response){
                 is Resource.Success -> {
                     response.data?.let {
-                        if(it.result){
+                        if(it.data.status){
                             tvNotifyCount.visibility = View.VISIBLE
                         }else {
                             tvNotifyCount.visibility = View.GONE

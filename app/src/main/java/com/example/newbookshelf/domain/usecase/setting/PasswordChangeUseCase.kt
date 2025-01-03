@@ -7,7 +7,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class PasswordChangeUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(accessToken: String, passwordChangeData: PasswordChangeData): Resource<OnlyResultModel> {
-        return bookRepository.passwordChange(accessToken, passwordChangeData)
+    suspend fun execute(passwordChangeData: PasswordChangeData): Resource<OnlyResultModel> {
+        return bookRepository.passwordChange(passwordChangeData)
     }
 }

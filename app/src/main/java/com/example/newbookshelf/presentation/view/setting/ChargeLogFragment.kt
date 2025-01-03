@@ -23,7 +23,6 @@ class ChargeLogFragment : Fragment() {
         const val TAG = "ChargeLogFragment"
     }
 
-    private lateinit var accessToken: String
     private lateinit var chargeLogAdapter: ChargeLogAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,14 +43,13 @@ class ChargeLogFragment : Fragment() {
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         chargeLogAdapter = (activity as HomeActivity).chargeLogAdapter
         rvCharge.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = chargeLogAdapter
         }
         settingViewModel = (activity as HomeActivity).settingViewModel
-        settingViewModel.ticketLog(accessToken).observe(viewLifecycleOwner){ response ->
+        settingViewModel.ticketLog().observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
                     response.data?.let {

@@ -59,6 +59,7 @@ class ProfileFragment : Fragment() {
 
         profileAdapter = ProfileAdapter(requireParentFragment())
         vpType.adapter = profileAdapter
+        vpType.offscreenPageLimit = 1
         TabLayoutMediator(tlType, vpType){tab, position ->
             when(position){
                 0 -> {

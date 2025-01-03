@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class TicketLogUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(accessToken: String): Flow<Resource<TicketLogModel>> {
-        return bookRepository.ticketLog(accessToken)
+    fun execute(): Flow<Resource<TicketLogModel>> {
+        return bookRepository.ticketLog()
     }
 }

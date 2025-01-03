@@ -6,7 +6,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class AlarmOneDeleteUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(accessToken: String, alarmIdx: Int): Resource<OnlyResultModel>{
-        return bookRepository.alarmOneDelete(accessToken, alarmIdx)
+    suspend fun execute(alarmIdx: Int): Resource<OnlyResultModel>{
+        return bookRepository.alarmOneDelete(alarmIdx)
     }
 }

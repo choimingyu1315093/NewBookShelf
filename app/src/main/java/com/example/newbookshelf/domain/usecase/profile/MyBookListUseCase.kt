@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class MyBookListUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(accessToken: String, readType: String): Flow<Resource<MyBookModel>> {
-        return bookRepository.myBookList(accessToken, readType)
+    fun execute(readType: String): Flow<Resource<MyBookModel>> {
+        return bookRepository.myBookList(readType)
     }
 }

@@ -23,6 +23,7 @@ import com.example.newbookshelf.data.model.find.FindModel
 import com.example.newbookshelf.data.model.find.FindPwData
 import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
+import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
@@ -129,7 +130,7 @@ interface ApiService {
     @GET("chat-rooms/status")
     suspend fun chatStatus(
         @Header("Authorization") accessToken: String,
-    ): Response<OnlyResultModel>
+    ): Response<StatusModel>
 
     //알람 갯수
     @GET("alarms/count")
@@ -141,24 +142,21 @@ interface ApiService {
     @GET("alarms/status")
     suspend fun alarmStatus(
         @Header("Authorization") accessToken: String,
-    ): Response<OnlyResultModel>
+    ): Response<StatusModel>
 
     //알람 리스트
     @GET("alarms/list")
     suspend fun alarmList(
-        @Header("Authorization") accessToken: String,
     ): Response<AlarmListModel>
 
     //알람 전체 삭제
     @DELETE("alarms/all")
     suspend fun alarmAllDelete(
-        @Header("Authorization") accessToken: String,
     ): Response<OnlyResultModel>
 
     //알람 개별 삭제
     @DELETE("alarms/{alarm_idx}")
     suspend fun alarmOneDelete(
-        @Header("Authorization") accessToken: String,
         @Path("alarm_idx") alarmIdx: Int
     ): Response<OnlyResultModel>
 
@@ -250,21 +248,18 @@ interface ApiService {
     //닉네임 변경
     @PATCH("users/name/{user_name}")
     suspend fun nicknameChange(
-        @Header("Authorization") accessToken: String,
         @Path("user_name") userName: String
     ): Response<OnlyResultModel>
 
     //한 줄 메시지 변경
     @PATCH("users/description/{user_description}")
     suspend fun descriptionChange(
-        @Header("Authorization") accessToken: String,
         @Path("user_description") userDescription: String
     ): Response<OnlyResultModel>
 
     //내가 읽고 싶은 책을 보유 중인 유저 목록 조회
     @GET("users/list/wish-book")
     suspend fun wishBookHaveUser(
-        @Header("Authorization") accessToken: String
     ): Response<WishBookHaveUserModel>
 
     //채팅방 생성
@@ -284,39 +279,33 @@ interface ApiService {
     //내 책 목록 조회
     @GET("my-books/list")
     suspend fun myBookList(
-        @Header("Authorization") accessToken: String,
         @Query("read_type") readType: String
     ): Response<MyBookModel>
 
     //설정 관련 유저 정보 조회
     @GET("users/setting")
     suspend fun userSetting(
-        @Header("Authorization") accessToken: String,
     ): Response<UserSettingModel>
 
     //설정 업데이트
     @PATCH("users/setting")
     suspend fun updateUserSetting(
-        @Header("Authorization") accessToken: String,
         @Body updateUserSettingData: UpdateUserSettingData
     ): Response<OnlyResultModel>
 
     //구매 내역 조회
     @GET("ticket-logs")
     suspend fun ticketLog(
-        @Header("Authorization") accessToken: String
     ): Response<TicketLogModel>
 
     //비밀번호 변경
     @PATCH("authentications/change/password")
     suspend fun passwordChange(
-        @Header("Authorization") accessToken: String,
         @Body passwordChangeData: PasswordChangeData
     ): Response<OnlyResultModel>
 
     //회원 탈퇴
     @DELETE("authentications")
     suspend fun userDelete(
-        @Header("Authorization") accessToken: String
     ): Response<OnlyResultModel>
 }

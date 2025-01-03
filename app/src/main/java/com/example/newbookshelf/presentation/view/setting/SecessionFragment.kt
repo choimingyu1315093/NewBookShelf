@@ -21,8 +21,6 @@ class SecessionFragment : Fragment() {
         const val TAG = "SecessionFragment"
     }
 
-    private lateinit var accessToken: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,7 +40,6 @@ class SecessionFragment : Fragment() {
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         settingViewModel = (activity as HomeActivity).settingViewModel
     }
 
@@ -52,7 +49,7 @@ class SecessionFragment : Fragment() {
         }
 
         btnOk.setOnClickListener {
-            settingViewModel.userDelete(accessToken)
+            settingViewModel.userDelete()
             BookShelfApp.prefs.setAutoLogin("autoLogin", false)
             BookShelfApp.prefs.setLoginId("id", "")
             BookShelfApp.prefs.setLoginPw("password", "")

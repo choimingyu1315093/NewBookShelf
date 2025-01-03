@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class WishBookHaveUserUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(accessToken: String): Flow<Resource<WishBookHaveUserModel>> {
-        return bookRepository.wishBookHaveUser(accessToken)
+    fun execute(): Flow<Resource<WishBookHaveUserModel>> {
+        return bookRepository.wishBookHaveUser()
     }
 }

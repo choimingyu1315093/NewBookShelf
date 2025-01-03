@@ -6,7 +6,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class NicknameChangeUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(accessToken: String, nickname: String): Resource<OnlyResultModel> {
-        return bookRepository.nicknameChange(accessToken, nickname)
+    suspend fun execute(nickname: String): Resource<OnlyResultModel> {
+        return bookRepository.nicknameChange(nickname)
     }
 }

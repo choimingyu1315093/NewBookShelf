@@ -6,7 +6,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class UserDeleteUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(accessToken: String): Resource<OnlyResultModel> {
-        return bookRepository.userDelete(accessToken)
+    suspend fun execute(): Resource<OnlyResultModel> {
+        return bookRepository.userDelete()
     }
 }

@@ -47,29 +47,12 @@ class SettingFragment : Fragment() {
 
         init()
         bindViews()
+        observeViewModel()
     }
 
     private fun init() = with(binding){
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         settingViewModel = (activity as HomeActivity).settingViewModel
-        settingViewModel.userSetting(accessToken).observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    response.data?.let {
-                        ticket = it.data.ticket_count
-                        tvWelcome.text = "${it.data.user_name} 님, 환영합니다."
-                        btnMoney.text = "${it.data.ticket_count}장"
-                        swChat.isChecked = it.data.setting_chat_alarm == 1
-                        swMarketing.isChecked = it.data.setting_marketing_alarm == 1
-                        swNear.isChecked = it.data.setting_wish_book_alarm == 1
-                        swChatRequest.isChecked = it.data.setting_chat_receive == 1
-                        progressBar.visibility = View.GONE
-                    }
-                }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
-            }
-        }
     }
 
     private fun bindViews() = with(binding){
@@ -77,6 +60,7 @@ class SettingFragment : Fragment() {
         setupSwitchListener(swMarketing, "setting_marketing_alarm")
         setupSwitchListener(swNear, "setting_wish_book_alarm")
         setupSwitchListener(swChatRequest, "setting_chat_receive")
+        setupSwitchListener(swReadingClass, "setting_recommend_club")
 
         cl3.setOnClickListener {
             val bundle = Bundle().apply {
@@ -110,10 +94,32 @@ class SettingFragment : Fragment() {
         }
     }
 
+    private fun observeViewModel() = with(binding){
+        settingViewModel.userSetting().observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    response.data?.let {
+                        ticket = it.data.ticket_count
+                        tvWelcome.text = "${it.data.user_name} 님, 환영합니다."
+                        btnMoney.text = "${it.data.ticket_count}장"
+                        swChat.isChecked = it.data.setting_chat_alarm == 1
+                        swMarketing.isChecked = it.data.setting_marketing_alarm == 1
+                        swNear.isChecked = it.data.setting_wish_book_alarm == 1
+                        swChatRequest.isChecked = it.data.setting_chat_receive == 1
+                        swReadingClass.isChecked = it.data.setting_recommend_club == 1
+                        progressBar.visibility = View.GONE
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
+    }
+
     private fun setupSwitchListener(switch: SwitchCompat, settingKey: String) {
         switch.setOnCheckedChangeListener { _, isChecked ->
             val updateUserSettingData = UpdateUserSettingData(settingKey, isChecked)
-            settingViewModel.updateUserSetting(accessToken, updateUserSettingData)
+            settingViewModel.updateUserSetting(updateUserSettingData)
         }
     }
 }

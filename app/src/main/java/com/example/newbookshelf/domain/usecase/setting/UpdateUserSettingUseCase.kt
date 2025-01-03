@@ -7,7 +7,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class UpdateUserSettingUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(accessToken: String, updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel> {
-        return bookRepository.updateUserSetting(accessToken, updateUserSettingData)
+    suspend fun execute(updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel> {
+        return bookRepository.updateUserSetting(updateUserSettingData)
     }
 }

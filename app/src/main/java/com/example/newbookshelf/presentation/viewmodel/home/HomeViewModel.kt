@@ -89,19 +89,19 @@ class HomeViewModel(
         }
     }
 
-    fun alarmList(accessToken: String) = liveData {
-        alarmListUseCase.execute("Bearer $accessToken").collect {
+    fun alarmList() = liveData {
+        alarmListUseCase.execute().collect {
             emit(it)
         }
     }
 
     val alarmAllDeleteResult = MutableLiveData<Resource<OnlyResultModel>>()
-    fun alarmAllDelete(accessToken: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun alarmAllDelete() = viewModelScope.launch(Dispatchers.IO) {
         alarmAllDeleteResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 alarmAllDeleteResult.postValue(Resource.Loading())
-                val result = alarmAllDeleteUseCase.execute("Bearer $accessToken")
+                val result = alarmAllDeleteUseCase.execute()
                 alarmAllDeleteResult.postValue(result)
             }else {
                 alarmAllDeleteResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
@@ -112,12 +112,12 @@ class HomeViewModel(
     }
 
     val alarmOneDeleteResult = MutableLiveData<Resource<OnlyResultModel>>()
-    fun alarmOneDelete(accessToken: String, alarmIdx: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun alarmOneDelete(alarmIdx: Int) = viewModelScope.launch(Dispatchers.IO) {
         alarmOneDeleteResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 alarmOneDeleteResult.postValue(Resource.Loading())
-                val result = alarmOneDeleteUseCase.execute("Bearer $accessToken", alarmIdx)
+                val result = alarmOneDeleteUseCase.execute(alarmIdx)
                 alarmOneDeleteResult.postValue(result)
             }else {
                 alarmOneDeleteResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))

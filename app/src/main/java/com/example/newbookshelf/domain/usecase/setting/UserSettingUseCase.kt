@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class UserSettingUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(accessToken: String): Flow<Resource<UserSettingModel>> {
-        return bookRepository.userSetting(accessToken)
+    fun execute(): Flow<Resource<UserSettingModel>> {
+        return bookRepository.userSetting()
     }
 }

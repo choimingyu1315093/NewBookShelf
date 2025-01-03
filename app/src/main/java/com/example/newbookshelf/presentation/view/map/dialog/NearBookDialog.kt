@@ -41,6 +41,7 @@ class NearBookDialog(
     }
 
     private lateinit var accessToken: String
+    private var nickname = ""
     private var buttonClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,9 +76,10 @@ class NearBookDialog(
 
     private fun init() = with(binding){
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
+        nickname = BookShelfApp.prefs.getNickname("nickname", "")
         mapViewModel = (activity as HomeActivity).mapViewModel
         
-        txtWishBook.text = "${name}님이 읽고 싶었던"
+        txtWishBook.text = "${nickname}님이 읽고 싶었던"
         Glide.with(ivBook).load(img).into(ivBook)
         tvTitle.text = "<${title}>"
     }
