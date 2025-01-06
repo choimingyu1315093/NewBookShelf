@@ -30,6 +30,14 @@ import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
 import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.post.AddScrapData
+import com.example.newbookshelf.data.model.post.AddScrapModel
+import com.example.newbookshelf.data.model.post.general.AddPostData
+import com.example.newbookshelf.data.model.post.general.AddPostModel
+import com.example.newbookshelf.data.model.post.general.PostCommentData
+import com.example.newbookshelf.data.model.post.general.PostCommentModel
+import com.example.newbookshelf.data.model.post.general.PostDetailModel
+import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
@@ -64,7 +72,7 @@ interface BookRemoteDataSource {
     fun chatStatus(accessToken: String): Flow<Response<StatusModel>>
     fun alarmCount(accessToken: String): Flow<Response<AlarmCountModel>>
     fun alarmStatus(accessToken: String): Flow<Response<StatusModel>>
-    fun alarmList(): Flow<Response<AlarmListModel>>
+    suspend fun alarmList(): Response<AlarmListModel>
     suspend fun alarmAllDelete(): Response<OnlyResultModel>
     suspend fun alarmOneDelete(alarmIdx: Int): Response<OnlyResultModel>
     suspend fun searchBook(bookName: String): Response<SearchBookModel>
@@ -78,10 +86,17 @@ interface BookRemoteDataSource {
     suspend fun updateBookMemo(accessToken: String, memoIdx: Int, updateBookMemoData: UpdateBookMemoData): Response<UpdateBookMemoModel>
     suspend fun deleteBookMemo(accessToken: String, memoIdx: Int): Response<DeleteBookMemoModel>
     fun myProfile(): Flow<Response<MyProfileModel>>
-    fun profileActivity(accessToken: String, userIdx: Int): Flow<Response<ActivityModel>>
-    fun profileMemo(accessToken: String): Flow<Response<MemoModel>>
+    fun profileActivity(userIdx: Int): Flow<Response<ActivityModel>>
+    fun profileMemo(): Flow<Response<MemoModel>>
     suspend fun nicknameChange(nickname: String): Response<OnlyResultModel>
     suspend fun descriptionChange(description: String): Response<OnlyResultModel>
+    suspend fun addPost(addPostData: AddPostData): Response<AddPostModel>
+    suspend fun postList(userIdx: Int, limit: Int, currentPage: Int): Response<PostModel>
+    suspend fun postDetail(postIdx: Int): Response<PostDetailModel>
+    suspend fun postComment(postCommentData: PostCommentData): Response<PostCommentModel>
+    suspend fun postCommentDelete(postCommentIdx: Int): Response<OnlyResultModel>
+    suspend fun postDelete(postIdx: Int): Response<OnlyResultModel>
+    suspend fun addScrap(addScrapData: AddScrapData): Response<AddScrapModel>
     fun wishBookHaveUser(): Flow<Response<WishBookHaveUserModel>>
     suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Response<ChatroomModel>
     suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Response<DeleteChatroomModel>

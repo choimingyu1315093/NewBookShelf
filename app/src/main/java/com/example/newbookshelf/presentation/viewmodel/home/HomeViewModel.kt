@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.newbookshelf.data.model.common.OnlyResultModel
+import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.util.Resource
@@ -89,9 +90,19 @@ class HomeViewModel(
         }
     }
 
-    fun alarmList() = liveData {
-        alarmListUseCase.execute().collect {
-            emit(it)
+    val alarmListResult = MutableLiveData<Resource<AlarmListModel>>()
+    fun alarmList() = viewModelScope.launch(Dispatchers.IO) {
+        alarmListResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                alarmListResult.postValue(Resource.Loading())
+                val result = alarmListUseCase.execute()
+                alarmListResult.postValue(result)
+            }else {
+                alarmListResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            alarmListResult.postValue(Resource.Error(e.message.toString()))
         }
     }
 

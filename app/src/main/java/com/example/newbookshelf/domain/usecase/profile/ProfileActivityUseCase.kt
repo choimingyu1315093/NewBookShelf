@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class ProfileActivityUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(accessToken: String, userIdx: Int): Flow<Resource<ActivityModel>> {
-        return bookRepository.profileActivity(accessToken, userIdx)
+    fun execute(userIdx: Int): Flow<Resource<ActivityModel>> {
+        return bookRepository.profileActivity(userIdx)
     }
 }

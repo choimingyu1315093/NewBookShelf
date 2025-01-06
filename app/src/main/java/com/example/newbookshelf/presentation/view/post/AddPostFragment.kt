@@ -8,10 +8,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.newbookshelf.BuildConfig
 import com.example.newbookshelf.R
+import com.example.newbookshelf.data.model.home.searchbook.SearchBookResult
+import com.example.newbookshelf.data.model.post.general.AddPostData
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentAddPostBinding
 import com.example.newbookshelf.presentation.view.chat.ChatroomFragmentArgs
@@ -32,6 +35,7 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
 
     private lateinit var type: String
     private lateinit var kakaoKey: String
+    private var isClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +55,7 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
 
         init()
         bindViews()
+        observeViewModel()
     }
 
     private fun init() = with(binding){
@@ -96,17 +101,48 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
             ).show()
         }
 
+        btnAdd.setOnClickListener {
+            isClicked = true
+            if(type == "general"){
+                if(etTitle.text.toString() == "" || etContent.text.toString() == ""){
+                    Toast.makeText(activity, "모든 항목을 입력해주세요", Toast.LENGTH_SHORT).show()
+                }else {
+                    val addPostData = AddPostData(etTitle.text.toString().trim(), etContent.text.toString().trim())
+                    postViewModel.addPost(addPostData)
+                }
+            }
+        }
+
         ivBook.setOnClickListener {
             val dialog = SearchBookDialog(this@AddPostFragment)
             dialog.show(requireActivity().supportFragmentManager, "SearchBookDialog")
         }
     }
 
+    private fun observeViewModel() = with(binding){
+        postViewModel.addPostResult.observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    if(response.data!!.result){
+                        if(isClicked){
+                            findNavController().popBackStack()
+                            isClicked = false
+                        }
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
+    }
+
+    //장소 선택
     override fun onSelectedPlace(place: String) = with(binding) {
         etPlace.setText(place)
     }
 
-    override fun onSelectedBook(book: String) = with(binding) {
-        etBook.setText(book)
+    //책 선택
+    override fun onSelectedBook(book: SearchBookResult) = with(binding) {
+        etBook.setText(book.book_name)
     }
 }

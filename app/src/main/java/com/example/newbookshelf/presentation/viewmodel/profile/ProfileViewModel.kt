@@ -42,14 +42,14 @@ class ProfileViewModel(
         }
     }
 
-    fun profileActivity(accessToken: String, userId: Int) = liveData {
-        profileActivityUseCase.execute("Bearer $accessToken", userId).collect {
+    fun profileActivity(userId: Int) = liveData {
+        profileActivityUseCase.execute(userId).collect {
             emit(it)
         }
     }
 
-    fun profileMemo(accessToken: String) = liveData {
-        profileMemoUseCase.execute("Bearer $accessToken").collect {
+    fun profileMemo() = liveData {
+        profileMemoUseCase.execute().collect {
             emit(it)
         }
     }

@@ -98,6 +98,7 @@ class DetailFragment : Fragment() {
         if(book != null){
             detailViewModel.detailBook(book?.isbn!!)
             bookIsbn = book?.isbn!!
+            Log.d(TAG, "init: bookIsbn $bookIsbn")
         }else {
             detailViewModel.detailBook(searchBook?.book_isbn!!)
             bookIsbn = searchBook?.book_isbn!!

@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
+import com.example.newbookshelf.data.model.home.searchbook.SearchBookResult
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentSearchBookDialogBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
@@ -26,7 +28,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
     private lateinit var homeViewModel: HomeViewModel
 
     interface OnSelectedBook {
-        fun onSelectedBook(book: String)
+        fun onSelectedBook(book: SearchBookResult)
     }
 
     companion object {
@@ -71,7 +73,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
         searchBookAdapter = (activity as HomeActivity).searchBookAdapter
         searchBookAdapter.setOnItemClickListener {
             dismiss()
-            onSelectedBook.onSelectedBook(it.book_name!!)
+            onSelectedBook.onSelectedBook(it)
         }
         rvBook.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -106,24 +108,6 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
 
     private fun searchKeyword(book: String) = with(binding){
         homeViewModel.getSearchBook(book)
-//        postViewModel.searchPlace(kakaoKey, place).observe(viewLifecycleOwner){ response ->
-//            when(response){
-//                is Resource.Success -> {
-//                    response.data?.let {
-//                        if(it.documents.isNotEmpty()){
-//                            txtEmpty.visibility = View.GONE
-//                            rvPlace.visibility = View.VISIBLE
-//                            kakaoAdapter.differ.submitList(it.documents)
-//                        }else {
-//                            txtEmpty.visibility = View.VISIBLE
-//                            rvPlace.visibility = View.GONE
-//                        }
-//                    }
-//                }
-//                is Resource.Error -> Unit
-//                is Resource.Loading -> Unit
-//            }
-//        }
     }
 
     private fun observeViewModel() = with(binding){

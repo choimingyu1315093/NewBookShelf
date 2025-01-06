@@ -1,0 +1,27 @@
+{
+  "result": true,
+  "data": {
+    "post_idx": 2,
+    "post_title": "첫 번째 게시글",
+    "post_content": "게시글입니다.",
+    "create_date": "2025-01-06T13:17:47.203Z",
+    "update_date": "2025-01-06T13:17:47.203Z",
+    "users": {
+      "user_idx": 33,
+      "user_name": "test001"
+    },
+    "post_comments": [
+      {
+        "post_comment_idx": 2,
+        "comment_content": "첫 번째 댓글",
+        "create_date": "2025-01-06T14:07:30.657Z",
+        "update_date": "2025-01-06T14:07:30.657Z",
+        "users": {
+          "user_idx": 33,
+          "user_name": "test001"
+        }
+      }
+    ],
+    "is_scrap": false
+  }
+}

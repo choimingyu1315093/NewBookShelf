@@ -31,6 +31,14 @@ import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
 import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.post.AddScrapData
+import com.example.newbookshelf.data.model.post.AddScrapModel
+import com.example.newbookshelf.data.model.post.general.AddPostData
+import com.example.newbookshelf.data.model.post.general.AddPostModel
+import com.example.newbookshelf.data.model.post.general.PostCommentData
+import com.example.newbookshelf.data.model.post.general.PostCommentModel
+import com.example.newbookshelf.data.model.post.general.PostDetailModel
+import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
@@ -66,7 +74,7 @@ interface BookRepository {
     fun chatStatus(accessToken: String): Flow<Resource<StatusModel>>
     fun alarmCount(accessToken: String): Flow<Resource<AlarmCountModel>>
     fun alarmStatus(accessToken: String): Flow<Resource<StatusModel>>
-    fun alarmList(): Flow<Resource<AlarmListModel>>
+    suspend fun alarmList(): Resource<AlarmListModel>
     suspend fun alarmAllDelete(): Resource<OnlyResultModel>
     suspend fun alarmOneDelete(alarmIdx: Int): Resource<OnlyResultModel>
     suspend fun searchBook(bookName: String): Resource<SearchBookModel>
@@ -84,10 +92,17 @@ interface BookRepository {
     suspend fun updateBookMemo(accessToken: String, bookMemoIdx: Int, updateBookMemoData: UpdateBookMemoData): Resource<UpdateBookMemoModel>
     suspend fun deleteBookMemo(accessToken: String, bookMemoIdx: Int): Resource<DeleteBookMemoModel>
     fun myProfile(): Flow<Resource<MyProfileModel>>
-    fun profileActivity(accessToken: String, userIdx: Int): Flow<Resource<ActivityModel>>
-    fun profileMemo(accessToken: String): Flow<Resource<MemoModel>>
+    fun profileActivity(userIdx: Int): Flow<Resource<ActivityModel>>
+    fun profileMemo(): Flow<Resource<MemoModel>>
     suspend fun nicknameChange(nickname: String): Resource<OnlyResultModel>
     suspend fun descriptionChange(description: String): Resource<OnlyResultModel>
+    suspend fun addPost(addPostData: AddPostData): Resource<AddPostModel>
+    suspend fun postList(userIdx: Int, limit: Int, currentPage: Int): Resource<PostModel>
+    suspend fun postDetail(postIdx: Int): Resource<PostDetailModel>
+    suspend fun postComment(postCommentData: PostCommentData): Resource<PostCommentModel>
+    suspend fun postCommentDelete(postCommentIdx: Int): Resource<OnlyResultModel>
+    suspend fun postDelete(postIdx: Int): Resource<OnlyResultModel>
+    suspend fun addScrap(addScrapData: AddScrapData): Resource<AddScrapModel>
     fun wishBookHaveUser(): Flow<Resource<WishBookHaveUserModel>>
     suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Resource<ChatroomModel>
     suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Resource<DeleteChatroomModel>

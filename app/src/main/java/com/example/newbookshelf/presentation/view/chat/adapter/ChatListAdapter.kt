@@ -109,7 +109,6 @@ class ChatListAdapter: RecyclerView.Adapter<ChatListAdapter.ViewHolder>() {
                     } else {
                         rcvdDate
                     }
-
             }
 
             if(chatList.me_user.unread_count != 0){

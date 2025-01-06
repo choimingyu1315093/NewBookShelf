@@ -31,6 +31,14 @@ import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
 import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.post.AddScrapData
+import com.example.newbookshelf.data.model.post.AddScrapModel
+import com.example.newbookshelf.data.model.post.general.AddPostData
+import com.example.newbookshelf.data.model.post.general.AddPostModel
+import com.example.newbookshelf.data.model.post.general.PostCommentData
+import com.example.newbookshelf.data.model.post.general.PostCommentModel
+import com.example.newbookshelf.data.model.post.general.PostDetailModel
+import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
@@ -116,10 +124,8 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         }
     }
 
-    override fun alarmList(): Flow<Response<AlarmListModel>> {
-        return flow {
-            emit(apiService.alarmList())
-        }
+    override suspend fun alarmList(): Response<AlarmListModel> {
+        return apiService.alarmList()
     }
 
     override suspend fun alarmAllDelete(): Response<OnlyResultModel> {
@@ -176,15 +182,15 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         }
     }
 
-    override fun profileActivity(accessToken: String, userIdx: Int): Flow<Response<ActivityModel>> {
+    override fun profileActivity(userIdx: Int): Flow<Response<ActivityModel>> {
         return flow {
-            emit(apiService.activitiesList(accessToken, userIdx))
+            emit(apiService.activitiesList(userIdx))
         }
     }
 
-    override fun profileMemo(accessToken: String): Flow<Response<MemoModel>> {
+    override fun profileMemo(): Flow<Response<MemoModel>> {
         return flow {
-            emit(apiService.memosList(accessToken))
+            emit(apiService.memosList())
         }
     }
 
@@ -194,6 +200,35 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
 
     override suspend fun descriptionChange(description: String): Response<OnlyResultModel> {
         return apiService.descriptionChange(description)
+    }
+
+    override suspend fun addPost(addPostData: AddPostData): Response<AddPostModel> {
+        return apiService.addPost(addPostData)
+    }
+
+
+    override suspend fun postList(userIdx: Int, limit: Int, currentPage: Int): Response<PostModel> {
+        return apiService.postList(userIdx, limit, currentPage)
+    }
+
+    override suspend fun postDetail(postIdx: Int): Response<PostDetailModel> {
+        return apiService.postDetail(postIdx)
+    }
+
+    override suspend fun postComment(postCommentData: PostCommentData): Response<PostCommentModel> {
+        return apiService.postComment(postCommentData)
+    }
+
+    override suspend fun postCommentDelete(postCommentIdx: Int): Response<OnlyResultModel> {
+        return apiService.postCommentDelete(postCommentIdx)
+    }
+
+    override suspend fun postDelete(postIdx: Int): Response<OnlyResultModel> {
+        return apiService.postDelete(postIdx)
+    }
+
+    override suspend fun addScrap(addScrapData: AddScrapData): Response<AddScrapModel> {
+        return apiService.addScrap(addScrapData)
     }
 
     override fun wishBookHaveUser(): Flow<Response<WishBookHaveUserModel>> {

@@ -1,6 +1,7 @@
 package com.example.newbookshelf.presentation.view.profile
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,13 +9,16 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.newbookshelf.R
+import com.example.newbookshelf.data.model.home.searchbook.SearchBookResult
 import com.example.newbookshelf.databinding.FragmentProfileChangeBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
+import com.example.newbookshelf.presentation.view.home.dialog.BestsellerFilterDialog
+import com.example.newbookshelf.presentation.view.post.dialog.SearchBookDialog
 import com.example.newbookshelf.presentation.view.profile.dialog.NicknameChangeDialog
 import com.example.newbookshelf.presentation.view.profile.dialog.OneLineMessageChangeDialog
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 
-class ProfileChangeFragment : Fragment(), NicknameChangeDialog.OnClickListener, OneLineMessageChangeDialog.OnClickListener {
+class ProfileChangeFragment : Fragment(), NicknameChangeDialog.OnClickListener, OneLineMessageChangeDialog.OnClickListener, SearchBookDialog.OnSelectedBook {
     private lateinit var binding: FragmentProfileChangeBinding
     private lateinit var profileViewModel: ProfileViewModel
 
@@ -58,6 +62,11 @@ class ProfileChangeFragment : Fragment(), NicknameChangeDialog.OnClickListener, 
             dialog.show(requireActivity().supportFragmentManager, "OneLineMessageChangeDialog")
         }
 
+        ivAddBook.setOnClickListener {
+            val dialog = SearchBookDialog(this@ProfileChangeFragment)
+            dialog.show(requireActivity().supportFragmentManager, "SearchBookDialog")
+        }
+
         ivBack.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -74,6 +83,10 @@ class ProfileChangeFragment : Fragment(), NicknameChangeDialog.OnClickListener, 
 
     override fun descriptionClick(b: Boolean) {
         profileSetting()
+    }
+
+    override fun onSelectedBook(book: SearchBookResult) {
+        Log.d(TAG, "onSelectedBook: book $book")
     }
 
     override fun onDestroyView() {

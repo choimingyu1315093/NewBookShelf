@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/ivBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:src="@drawable/icon_cancel2"
             android:layout_marginStart="20dp"
             app:tint="@color/black" />
@@ -217,7 +217,7 @@
         android:textColor="@color/color767676"
         android:theme="@style/EditTextStyleLogin"
         android:textColorHint="@color/color767676"
-        android:background="@drawable/btn_e9e9e9_no_10"
+        android:background="@drawable/et_white_767676_8"
         android:ems="10"
         android:hint="내용"
         android:inputType="textMultiLine"

@@ -105,9 +105,12 @@ class ProfileFragment : Fragment() {
                         profileViewModel.userName.value = it.data.user_name
                         profileViewModel.userDescription.value = it.data.user_description
                     }
+                    progressBar.visibility = View.GONE
                 }
                 is Resource.Error -> Unit
-                is Resource.Loading -> Unit
+                is Resource.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
             }
         }
     }

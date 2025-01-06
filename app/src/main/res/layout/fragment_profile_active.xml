@@ -46,7 +46,7 @@
             android:fontFamily="@font/lato_regular"
             android:text="활동 내역이 없습니다."
             android:textColor="#979797"
-            android:textSize="18sp"
+            android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivEmptyBook" />

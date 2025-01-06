@@ -235,6 +235,9 @@
         <action
             android:id="@+id/action_generalDetailFragment_to_postFragment"
             app:destination="@id/postFragment" />
+        <argument
+            android:name="postIdx"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/readingDetailFragment"

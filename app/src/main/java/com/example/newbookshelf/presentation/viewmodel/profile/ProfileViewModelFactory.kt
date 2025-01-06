@@ -3,6 +3,7 @@ package com.example.newbookshelf.presentation.viewmodel.profile
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.newbookshelf.data.api.ApiService
 import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyBookListUseCase

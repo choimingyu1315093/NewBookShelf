@@ -1,6 +1,7 @@
 package com.example.newbookshelf.presentation.view.profile
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,6 @@ class ProfileActiveFragment : Fragment() {
         const val TAG = "ProfileActiveFragment"
     }
 
-    private lateinit var accessToken: String
     private var userIdx = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,12 +46,8 @@ class ProfileActiveFragment : Fragment() {
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         userIdx = BookShelfApp.prefs.getUserIdx("userIdx", 0)
-
         profileViewModel = (activity as HomeActivity).profileViewModel
-        profileViewModel.profileActivity(accessToken, userIdx)
-
         profileActiveAdapter = (activity as HomeActivity).profileActiveAdapter
         rvActive.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -60,7 +56,7 @@ class ProfileActiveFragment : Fragment() {
     }
 
     private fun observeViewModel() = with(binding){
-        profileViewModel.profileActivity(accessToken, userIdx).observe(viewLifecycleOwner){ response ->
+        profileViewModel.profileActivity(userIdx).observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
                     response.data?.data.let {

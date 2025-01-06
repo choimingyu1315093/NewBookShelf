@@ -23,8 +23,6 @@ class ProfileMemoFragment : Fragment() {
         const val TAG = "ProfileMemoFragment"
     }
 
-    private lateinit var accessToken: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,11 +41,7 @@ class ProfileMemoFragment : Fragment() {
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
-
         profileViewModel = (activity as HomeActivity).profileViewModel
-        profileViewModel.profileMemo(accessToken)
-
         profileMemoAdapter = (activity as HomeActivity).profileMemoAdapter
         rvMemo.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -56,7 +50,7 @@ class ProfileMemoFragment : Fragment() {
     }
 
     private fun observeViewModel() = with(binding){
-        profileViewModel.profileMemo(accessToken).observe(viewLifecycleOwner) { response ->
+        profileViewModel.profileMemo().observe(viewLifecycleOwner) { response ->
             when(response){
                 is Resource.Success -> {
                     response.data?.data.let {

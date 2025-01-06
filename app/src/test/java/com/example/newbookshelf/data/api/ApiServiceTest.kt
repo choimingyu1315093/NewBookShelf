@@ -14,6 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.cert.TrustAnchor
 
 class ApiServiceTest {
 
@@ -263,8 +264,7 @@ class ApiServiceTest {
     fun profileActivityTest() = runBlocking {
         enqueueMockResponseJson("profileactivity.json")
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzk3OTg1MiwiZXhwIjoxNzM0MDY2MjUyfQ.S-pmNP_eRJYucpw4W72lzFb0COih5a01HenUVHvHkH0"
-        val response = service.activitiesList(accessToken, 33)
+        val response = service.activitiesList(33)
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/activities/list?user_idx=33")
@@ -277,8 +277,7 @@ class ApiServiceTest {
     fun profileMemoTest() = runBlocking {
         enqueueMockResponseJson("profilememo.json")
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczMzk3OTg1MiwiZXhwIjoxNzM0MDY2MjUyfQ.S-pmNP_eRJYucpw4W72lzFb0COih5a01HenUVHvHkH0"
-        val response = service.memosList(accessToken)
+        val response = service.memosList()
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/memos/list")
@@ -313,8 +312,7 @@ class ApiServiceTest {
         """.trimIndent()
         enqueueMockResponse(mockResponseBody)
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczNDA0OTQ5MCwiZXhwIjoxNzM0MTM1ODkwfQ.oSopl4lR3wcycXFVD1M_q-mj6u2HfV5-y6PKKf00wZI"
-        val response = service.wishBookHaveUser(accessToken)
+        val response = service.wishBookHaveUser()
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/users/list/wish-book")
@@ -342,8 +340,7 @@ class ApiServiceTest {
     fun myBookListTest() = runBlocking {
         enqueueMockResponseJson("mybooklist.json")
 
-        val accessToken = "Beare eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczNDM5NDUxNCwiZXhwIjoxNzM0NDgwOTE0fQ.Iwy-L7BxJdr-cA2daIA6aZHeDP-EVU3CXhg6-h3XujU"
-        val response = service.myBookList(accessToken, "read")
+       val response = service.myBookList("read")
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/my-books/list?read_type=read")
@@ -370,12 +367,56 @@ class ApiServiceTest {
         """.trimIndent()
         enqueueMockResponse(mockResponseBody)
 
-        val accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkeCI6MzMsInVzZXJfaWQiOiJ0ZXN0MDAxIiwidXNlcl90eXBlIjoidXNlciIsImlhdCI6MTczNDQ4NDYwNCwiZXhwIjoxNzM0NTcxMDA0fQ.OByLIjI2FThBvgXunJmxQArZrJabvdtc9FKpZ15U6h4"
-        val response = service.userSetting(accessToken)
+        val response = service.userSetting()
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/users/setting")
         Truth.assertThat(response.body()!!.data.user_idx).isEqualTo(33)
+    }
+
+    //일반 게시글 조회
+    @Test
+    fun postListTest() = runBlocking {
+        val mockResponseBody = """
+            {
+              "result": true,
+              "data": [
+                {
+                  "post_idx": 2,
+                  "post_title": "첫 번째 게시글",
+                  "create_date": "2025-01-06T13:17:47.203Z",
+                  "post_comment_count": 0
+                }
+              ],
+              "pagination": {
+                "total": 1,
+                "current_page": 1,
+                "limit": 10,
+                "block": 10,
+                "current_block": 1,
+                "total_page": 1,
+                "total_block": 1
+              }
+            }
+        """.trimIndent()
+        enqueueMockResponse(mockResponseBody)
+
+        val response = service.postList(33, 10, 1)
+        val request = server.takeRequest()
+
+        Truth.assertThat(request.path).isEqualTo("/posts/list?user_idx=33&limit=10&current_page=1")
+        Truth.assertThat(response.body()!!.data[0].post_idx).isEqualTo(2)
+    }
+
+    //일반 게시글 상세 조회
+    @Test
+    fun postDetailTest() = runBlocking {
+        enqueueMockResponseJson("postdetail.json")
+
+        val response = service.postDetail(2)
+        val request = server.takeRequest()
+
+        Truth.assertThat(response.body()!!.data.post_title).isEqualTo("첫 번째 게시글")
     }
 
     @After

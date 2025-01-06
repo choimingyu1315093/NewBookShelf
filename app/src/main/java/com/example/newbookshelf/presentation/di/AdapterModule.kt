@@ -17,6 +17,8 @@ import com.example.newbookshelf.presentation.view.home.adapter.SearchBookTitleAd
 import com.example.newbookshelf.presentation.view.home.adapter.SearchMoreBookAdapter
 import com.example.newbookshelf.presentation.view.home.adapter.WeekBestsellerAdapter
 import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.GeneralAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.GeneralDetailReviewAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
@@ -162,5 +164,17 @@ object AdapterModule {
     @Provides
     fun provideChargeLogAdapter(): ChargeLogAdapter {
         return ChargeLogAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideGeneralAdapter(): GeneralAdapter {
+        return GeneralAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideGeneralDetailReviewAdapter(): GeneralDetailReviewAdapter {
+        return GeneralDetailReviewAdapter()
     }
 }

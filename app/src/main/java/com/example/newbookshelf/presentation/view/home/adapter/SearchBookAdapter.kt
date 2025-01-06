@@ -54,6 +54,8 @@ class SearchBookAdapter: RecyclerView.Adapter<SearchBookAdapter.ViewHolder>() {
             tvTitle.text = book.book_name
             tvWriter.text = "${book.book_author} ⎪ ${book.book_publisher}"
             rb.setIsIndicator(true)
+            rb.visibility = View.GONE
+            tvAverage.visibility = View.GONE
             if(book.book_average_rate != null){
                 rb.rating = book.book_average_rate.toFloat()
                 val percent = book.book_average_rate

@@ -30,6 +30,14 @@ import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
 import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.post.AddScrapData
+import com.example.newbookshelf.data.model.post.AddScrapModel
+import com.example.newbookshelf.data.model.post.general.AddPostData
+import com.example.newbookshelf.data.model.post.general.AddPostModel
+import com.example.newbookshelf.data.model.post.general.PostCommentData
+import com.example.newbookshelf.data.model.post.general.PostCommentModel
+import com.example.newbookshelf.data.model.post.general.PostDetailModel
+import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.kakao.KakaoMapModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
@@ -235,14 +243,12 @@ interface ApiService {
     //활동 조회
     @GET("activities/list")
     suspend fun activitiesList(
-        @Header("Authorization") accessToken: String,
         @Query("user_idx") userIdx: Int
     ): Response<ActivityModel>
 
     //내가 작성한 메모 목록 조회
     @GET("memos/list")
     suspend fun memosList(
-        @Header("Authorization") accessToken: String
     ): Response<MemoModel>
 
     //닉네임 변경
@@ -256,6 +262,50 @@ interface ApiService {
     suspend fun descriptionChange(
         @Path("user_description") userDescription: String
     ): Response<OnlyResultModel>
+
+    //게시글 등록
+    @POST("posts")
+    suspend fun addPost(
+        @Body addPostData: AddPostData
+    ): Response<AddPostModel>
+
+    //게시글 목록 조회
+    @GET("posts/list")
+    suspend fun postList(
+        @Query("user_idx") userIdx: Int,
+        @Query("limit") limit: Int,
+        @Query("current_page") currentPage: Int
+    ): Response<PostModel>
+
+    //게시글 상세 조회
+    @GET("posts/{post_idx}")
+    suspend fun postDetail(
+        @Path("post_idx") postIdx: Int
+    ): Response<PostDetailModel>
+
+    //게시글 댓글 등록
+    @POST("post-comments")
+    suspend fun postComment(
+        @Body postCommentData: PostCommentData
+    ): Response<PostCommentModel>
+
+    //게시글 댓글 삭제
+    @DELETE("post-comments/{post_comment_idx}")
+    suspend fun postCommentDelete(
+        @Path("post_comment_idx") postCommentIdx: Int
+    ): Response<OnlyResultModel>
+
+    //게시글 삭제
+    @DELETE("posts/{post_idx}")
+    suspend fun postDelete(
+        @Path("post_idx") postIdx: Int
+    ): Response<OnlyResultModel>
+
+    //스크랩
+    @POST("scraps")
+    suspend fun addScrap(
+        @Body addScrapData: AddScrapData
+    ): Response<AddScrapModel>
 
     //내가 읽고 싶은 책을 보유 중인 유저 목록 조회
     @GET("users/list/wish-book")

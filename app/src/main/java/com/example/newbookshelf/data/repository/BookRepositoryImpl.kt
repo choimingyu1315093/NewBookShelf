@@ -31,6 +31,14 @@ import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
 import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.model.map.WishBookHaveUserModel
+import com.example.newbookshelf.data.model.post.AddScrapData
+import com.example.newbookshelf.data.model.post.AddScrapModel
+import com.example.newbookshelf.data.model.post.general.AddPostData
+import com.example.newbookshelf.data.model.post.general.AddPostModel
+import com.example.newbookshelf.data.model.post.general.PostCommentData
+import com.example.newbookshelf.data.model.post.general.PostCommentModel
+import com.example.newbookshelf.data.model.post.general.PostDetailModel
+import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
@@ -130,14 +138,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override fun alarmList(): Flow<Resource<AlarmListModel>> {
-        return bookRemoteDataSource.alarmList().map { response ->
-            if(response.isSuccessful){
-                Resource.Success(response.body()!!)
-            }else {
-                Resource.Error(response.message())
-            }
-        }
+    override suspend fun alarmList(): Resource<AlarmListModel> {
+        return responseToResource(bookRemoteDataSource.alarmList())
     }
 
     override suspend fun alarmAllDelete(): Resource<OnlyResultModel> {
@@ -214,8 +216,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override fun profileActivity(accessToken: String, userIdx: Int): Flow<Resource<ActivityModel>> {
-        return bookRemoteDataSource.profileActivity(accessToken, userIdx).map { response ->
+    override fun profileActivity(userIdx: Int): Flow<Resource<ActivityModel>> {
+        return bookRemoteDataSource.profileActivity(userIdx).map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
             }else {
@@ -224,8 +226,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override fun profileMemo(accessToken: String): Flow<Resource<MemoModel>> {
-        return bookRemoteDataSource.profileMemo(accessToken).map { response ->
+    override fun profileMemo(): Flow<Resource<MemoModel>> {
+        return bookRemoteDataSource.profileMemo().map { response ->
             if(response.isSuccessful){
                 Resource.Success(response.body()!!)
             }else {
@@ -240,6 +242,34 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
 
     override suspend fun descriptionChange(description: String): Resource<OnlyResultModel> {
         return responseToResource(bookRemoteDataSource.descriptionChange(description))
+    }
+
+    override suspend fun addPost(addPostData: AddPostData): Resource<AddPostModel> {
+        return responseToResource(bookRemoteDataSource.addPost(addPostData))
+    }
+
+    override suspend fun postList(userIdx: Int, limit: Int, currentPage: Int): Resource<PostModel> {
+        return responseToResource(bookRemoteDataSource.postList(userIdx, limit, currentPage))
+    }
+
+    override suspend fun postDetail(postIdx: Int): Resource<PostDetailModel> {
+        return responseToResource(bookRemoteDataSource.postDetail(postIdx))
+    }
+
+    override suspend fun postComment(postCommentData: PostCommentData): Resource<PostCommentModel> {
+        return responseToResource(bookRemoteDataSource.postComment(postCommentData))
+    }
+
+    override suspend fun postCommentDelete(postCommentIdx: Int): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.postCommentDelete(postCommentIdx))
+    }
+
+    override suspend fun postDelete(postIdx: Int): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.postDelete(postIdx))
+    }
+
+    override suspend fun addScrap(addScrapData: AddScrapData): Resource<AddScrapModel> {
+        return responseToResource(bookRemoteDataSource.addScrap(addScrapData))
     }
 
     override fun wishBookHaveUser(): Flow<Resource<WishBookHaveUserModel>> {

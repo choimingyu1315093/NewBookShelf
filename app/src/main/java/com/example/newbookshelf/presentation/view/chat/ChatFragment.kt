@@ -122,10 +122,10 @@ class ChatFragment : Fragment() {
             val gson = Gson()
             val chatListData = gson.fromJson(jsonObject, ChatListModel::class.java)
 
-            if(chatListData.result.isNotEmpty()){
+            if(chatListData.result.size != 0){
                 BookShelfApp.prefs.setChatUserIdx("chatUserIdx", chatListData.result[0].me_user.users.user_idx)
                 chatroomList = chatListData.result
-                chatListAdapter.differ.submitList(chatroomList) //List<ChatList>
+                chatListAdapter.differ.submitList(chatroomList)
             }else {
                 binding.rvChatList.visibility = View.GONE
                 binding.ivEmpty.visibility = View.VISIBLE

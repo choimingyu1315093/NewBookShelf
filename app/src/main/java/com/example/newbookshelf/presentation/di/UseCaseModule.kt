@@ -34,7 +34,14 @@ import com.example.newbookshelf.domain.usecase.home.WeekBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
+import com.example.newbookshelf.domain.usecase.post.AddPostUseCase
+import com.example.newbookshelf.domain.usecase.post.AddScrapUseCase
 import com.example.newbookshelf.domain.usecase.post.KakaoSearchPlaceUseCase
+import com.example.newbookshelf.domain.usecase.post.PostCommentDeleteUseCase
+import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
+import com.example.newbookshelf.domain.usecase.post.PostDeleteUseCase
+import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.PostListUseCase
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyBookListUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
@@ -294,6 +301,48 @@ object UseCaseModule {
     @Provides
     fun provideDescriptionChangeUseCase(bookRepository: BookRepository): DescriptionChangeUseCase {
         return DescriptionChangeUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddPostUseCase(bookRepository: BookRepository): AddPostUseCase {
+        return AddPostUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun providePostListUseCase(bookRepository: BookRepository): PostListUseCase {
+        return PostListUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun providePostDetailUseCase(bookRepository: BookRepository): PostDetailUseCase {
+        return PostDetailUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun providePostCommentUseCase(bookRepository: BookRepository): PostCommentUseCase {
+        return PostCommentUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun providePostCommentDeleteUseCase(bookRepository: BookRepository): PostCommentDeleteUseCase {
+        return PostCommentDeleteUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun providePostDeleteUseCase(bookRepository: BookRepository): PostDeleteUseCase {
+        return PostDeleteUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddScrapUseCase(bookRepository: BookRepository): AddScrapUseCase {
+        return AddScrapUseCase(bookRepository)
     }
 
     @Singleton

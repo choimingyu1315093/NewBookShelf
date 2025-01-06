@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class ProfileMemoUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(accessToken: String): Flow<Resource<MemoModel>> {
-        return bookRepository.profileMemo(accessToken)
+    fun execute(): Flow<Resource<MemoModel>> {
+        return bookRepository.profileMemo()
     }
 }

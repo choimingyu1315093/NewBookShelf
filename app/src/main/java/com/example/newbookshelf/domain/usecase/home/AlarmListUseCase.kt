@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class AlarmListUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(): Flow<Resource<AlarmListModel>> {
+    suspend fun execute(): Resource<AlarmListModel> {
         return bookRepository.alarmList()
     }
 }
