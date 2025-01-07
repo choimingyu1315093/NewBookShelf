@@ -42,12 +42,15 @@ import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyBookListUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
 import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileMemoUseCase
+import com.example.newbookshelf.domain.usecase.profile.TopBookChangeUseCase
 import com.example.newbookshelf.domain.usecase.setting.BuyTicketUseCase
 import com.example.newbookshelf.domain.usecase.setting.PasswordChangeUseCase
 import com.example.newbookshelf.domain.usecase.setting.TicketLogUseCase
@@ -305,6 +308,12 @@ object UseCaseModule {
 
     @Singleton
     @Provides
+    fun provideTopBookChangeUseCase(bookRepository: BookRepository): TopBookChangeUseCase {
+        return TopBookChangeUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
     fun provideAddPostUseCase(bookRepository: BookRepository): AddPostUseCase {
         return AddPostUseCase(bookRepository)
     }
@@ -343,6 +352,18 @@ object UseCaseModule {
     @Provides
     fun provideAddScrapUseCase(bookRepository: BookRepository): AddScrapUseCase {
         return AddScrapUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideReadingClassUseCase(bookRepository: BookRepository): ReadingClassUseCase {
+        return ReadingClassUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideReadingClassDetailUseCase(bookRepository: BookRepository): ReadingClassDetailUseCase {
+        return ReadingClassDetailUseCase(bookRepository)
     }
 
     @Singleton

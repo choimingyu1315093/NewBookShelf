@@ -12,6 +12,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
+import com.example.newbookshelf.data.model.profile.TopBookData
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
@@ -20,6 +21,7 @@ import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
 import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileMemoUseCase
+import com.example.newbookshelf.domain.usecase.profile.TopBookChangeUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -30,11 +32,14 @@ class ProfileViewModel(
     private val profileMemoUseCase: ProfileMemoUseCase,
     private val nickNameChangeUseCase: NicknameChangeUseCase,
     private val descriptionChangeUseCase: DescriptionChangeUseCase,
+    private val topBookChangeUseCase: TopBookChangeUseCase,
     private val myBookListUseCase: MyBookListUseCase
 ): AndroidViewModel(app) {
 
     var userName = MutableLiveData<String>()
     var userDescription = MutableLiveData<String>()
+    var userImageList = MutableLiveData<ArrayList<String>>()
+    var userIsbnList = MutableLiveData<ArrayList<String>>()
 
     fun myProfile() = liveData {
         myProfileUseCase.execute().collect {
@@ -79,6 +84,21 @@ class ProfileViewModel(
             }
         }catch (e: Exception){
             descriptionChangeResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val topBookChangeResult = MutableLiveData<Resource<OnlyResultModel>>()
+    fun topBookChange(topBookData: TopBookData) = viewModelScope.launch(Dispatchers.IO) {
+        topBookChangeResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                topBookChangeResult.postValue(Resource.Loading())
+                val result = topBookChangeUseCase.execute(topBookData)
+                Log.d("TAG", "topBookChange: result $result")
+                topBookChangeResult.postValue(result)
+            }
+        }catch (e: Exception){
+            topBookChangeResult.postValue(Resource.Error(e.message.toString()))
         }
     }
 

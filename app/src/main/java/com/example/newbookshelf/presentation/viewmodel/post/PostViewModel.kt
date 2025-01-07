@@ -19,6 +19,8 @@ import com.example.newbookshelf.data.model.post.general.PostCommentData
 import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModel
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.post.AddPostUseCase
 import com.example.newbookshelf.domain.usecase.post.AddScrapUseCase
@@ -28,6 +30,8 @@ import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -40,7 +44,9 @@ class PostViewModel(
     private val postCommentUseCase: PostCommentUseCase,
     private val postCommentDeleteUseCase: PostCommentDeleteUseCase,
     private val addScrapUseCase: AddScrapUseCase,
-    private val postDeleteUseCase: PostDeleteUseCase
+    private val postDeleteUseCase: PostDeleteUseCase,
+    private val readingClassUseCase: ReadingClassUseCase,
+    private val readingClassDetailUseCase: ReadingClassDetailUseCase
 ): AndroidViewModel(app) {
 
     fun searchPlace(accessToken: String, q: String) = liveData {
@@ -66,12 +72,12 @@ class PostViewModel(
     }
 
     val postListResult = MutableLiveData<Resource<PostModel>>()
-    fun postList(userIdx: Int, limit: Int, currentPage: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun postList(limit: Int, currentPage: Int) = viewModelScope.launch(Dispatchers.IO) {
         postListResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
                 postListResult.postValue(Resource.Loading())
-                val result = postListUseCase.execute(userIdx, limit, currentPage)
+                val result = postListUseCase.execute(limit, currentPage)
                 postListResult.postValue(result)
             }else {
                 postListResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
@@ -130,7 +136,7 @@ class PostViewModel(
     }
 
     val addScrapResult = MutableLiveData<Resource<AddScrapModel>>()
-    fun addScrap(addScrapData: AddScrapData)= viewModelScope.launch(Dispatchers.IO) {
+    fun addScrap(addScrapData: AddScrapData) = viewModelScope.launch(Dispatchers.IO) {
         addScrapResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
@@ -146,7 +152,7 @@ class PostViewModel(
     }
 
     val postDeleteResult = MutableLiveData<Resource<OnlyResultModel>>()
-    fun postDelete(postIdx: Int)= viewModelScope.launch(Dispatchers.IO) {
+    fun postDelete(postIdx: Int) = viewModelScope.launch(Dispatchers.IO) {
         postDeleteResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
@@ -158,6 +164,38 @@ class PostViewModel(
             }
         }catch (e: Exception){
             postDeleteResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val readingClassListResult = MutableLiveData<Resource<ReadingClassModel>>()
+    fun readingClassList(searchWord: String, filterType: String, limit: Int, currentPage: Int) = viewModelScope.launch(Dispatchers.IO) {
+        readingClassListResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                readingClassListResult.postValue(Resource.Loading())
+                val result = readingClassUseCase.execute(searchWord, filterType, limit, currentPage)
+                readingClassListResult.postValue(result)
+            }else {
+                readingClassListResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            readingClassListResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val readingClassDetailResult = MutableLiveData<Resource<ReadingClassDetailModel>>()
+    fun readingClassDetail(readingClassIdx: Int) = viewModelScope.launch(Dispatchers.IO) {
+        readingClassDetailResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                readingClassDetailResult.postValue(Resource.Loading())
+                val result = readingClassDetailUseCase.execute(readingClassIdx)
+                readingClassDetailResult.postValue(result)
+            }else {
+                readingClassDetailResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            readingClassDetailResult.postValue(Resource.Error(e.message.toString()))
         }
     }
 

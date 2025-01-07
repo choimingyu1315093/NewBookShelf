@@ -8,5 +8,8 @@ data class MyProfileModelData(
     val user_idx: Int,
     val user_max_point: Int,
     val user_name: String,
-    val user_point: Int
+    val user_point: Int,
+    val top1_book: Top1Book?,
+    val top2_book: Top1Book?,
+    val top3_book: Top1Book?,
 )

@@ -34,6 +34,7 @@ import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralDetailReviewAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.ReadingClassAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
@@ -134,6 +135,8 @@ class HomeActivity : AppCompatActivity() {
     lateinit var generalAdapter: GeneralAdapter
     @Inject
     lateinit var generalDetailReviewAdapter: GeneralDetailReviewAdapter
+    @Inject
+    lateinit var readingClassAdapter: ReadingClassAdapter
 
     @Inject
     lateinit var settingViewModelFactory: SettingViewModelFactory

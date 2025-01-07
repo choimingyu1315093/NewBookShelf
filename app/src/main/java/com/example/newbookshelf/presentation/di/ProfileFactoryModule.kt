@@ -7,6 +7,7 @@ import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
 import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileMemoUseCase
+import com.example.newbookshelf.domain.usecase.profile.TopBookChangeUseCase
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -27,8 +28,9 @@ object ProfileFactoryModule {
         profileMemoUseCase: ProfileMemoUseCase,
         nicknameChangeUseCase: NicknameChangeUseCase,
         descriptionChangeUseCase: DescriptionChangeUseCase,
+        topBookChangeUseCase: TopBookChangeUseCase,
         myBookListUseCase: MyBookListUseCase
     ): ProfileViewModelFactory {
-        return ProfileViewModelFactory(app, myProfileUseCase, profileActivityUseCase, profileMemoUseCase, nicknameChangeUseCase, descriptionChangeUseCase, myBookListUseCase)
+        return ProfileViewModelFactory(app, myProfileUseCase, profileActivityUseCase, profileMemoUseCase, nicknameChangeUseCase, descriptionChangeUseCase, topBookChangeUseCase, myBookListUseCase)
     }
 }

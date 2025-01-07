@@ -12,6 +12,8 @@ import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
 import com.example.newbookshelf.presentation.viewmodel.map.MapViewModel
 
 class PostViewModelFactory(
@@ -23,12 +25,14 @@ class PostViewModelFactory(
     private val postCommentUseCase: PostCommentUseCase,
     private val postCommentDeleteUseCase: PostCommentDeleteUseCase,
     private val addScrapUseCase: AddScrapUseCase,
-    private val postDeleteUseCase: PostDeleteUseCase
+    private val postDeleteUseCase: PostDeleteUseCase,
+    private val readingClassUseCase: ReadingClassUseCase,
+    private val readingClassDetailUseCase: ReadingClassDetailUseCase
 ): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(PostViewModel::class.java)){
-            return PostViewModel(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase) as T
+            return PostViewModel(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, readingClassUseCase, readingClassDetailUseCase) as T
         }
         throw IllegalArgumentException("Unknown View Model Class")
     }

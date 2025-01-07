@@ -11,6 +11,7 @@ import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
 import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileMemoUseCase
+import com.example.newbookshelf.domain.usecase.profile.TopBookChangeUseCase
 import com.example.newbookshelf.presentation.viewmodel.detail.DetailViewModel
 
 class ProfileViewModelFactory(
@@ -20,12 +21,13 @@ class ProfileViewModelFactory(
     private val profileMemoUseCase: ProfileMemoUseCase,
     private val nickNameChangeUseCase: NicknameChangeUseCase,
     private val descriptionChangeUseCase: DescriptionChangeUseCase,
+    private val topBookChangeUseCase: TopBookChangeUseCase,
     private val myBookListUseCase: MyBookListUseCase
 ): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(ProfileViewModel::class.java)){
-            return ProfileViewModel(app, myProfileUseCase, profileActivityUseCase, profileMemoUseCase, nickNameChangeUseCase, descriptionChangeUseCase, myBookListUseCase) as T
+            return ProfileViewModel(app, myProfileUseCase, profileActivityUseCase, profileMemoUseCase, nickNameChangeUseCase, descriptionChangeUseCase, topBookChangeUseCase, myBookListUseCase) as T
         }
         throw IllegalArgumentException("Unknown View Model Class")
     }

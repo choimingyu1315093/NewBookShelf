@@ -1,4 +1,4 @@
-package com.example.newbookshelf.data.model.post.general
+package com.example.newbookshelf.data.model.post
 
 data class Pagination(
     val block: Int,

@@ -32,6 +32,8 @@ class ProfileFragment : Fragment() {
 
     private lateinit var accessToken: String
     private lateinit var profileAdapter: ProfileAdapter
+    private var topBookImageList: ArrayList<String> = arrayListOf()
+    private var topBookIsbnList: ArrayList<String> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,12 +65,15 @@ class ProfileFragment : Fragment() {
         TabLayoutMediator(tlType, vpType){tab, position ->
             when(position){
                 0 -> {
-                    tab.text = "활동"
+                    tab.text = "통계"
                 }
                 1 -> {
-                    tab.text = "메모"
+                    tab.text = "활동"
                 }
                 2 -> {
+                    tab.text = "메모"
+                }
+                3 -> {
                     tab.text = "모임"
                 }
             }
@@ -102,8 +107,27 @@ class ProfileFragment : Fragment() {
                         setColoredText(tvFriend, it.data.relation_count)
                         setColoredText(tvRequest, it.data.relation_request_count)
 
+                        topBookImageList.clear()
+                        topBookImageList.add("")
+                        topBookIsbnList.clear()
+                        topBookIsbnList.add("")
+                        if(it.data.top1_book != null){
+                            topBookImageList.add(it.data.top1_book.book_image)
+                            topBookIsbnList.add(it.data.top1_book.book_isbn)
+                        }
+                        if(it.data.top2_book != null){
+                            topBookImageList.add(it.data.top2_book.book_image)
+                            topBookIsbnList.add(it.data.top2_book.book_isbn)
+                        }
+                        if(it.data.top3_book != null){
+                            topBookImageList.add(it.data.top3_book.book_image)
+                            topBookIsbnList.add(it.data.top3_book.book_isbn)
+                        }
+
                         profileViewModel.userName.value = it.data.user_name
                         profileViewModel.userDescription.value = it.data.user_description
+                        profileViewModel.userImageList.value = topBookImageList
+                        profileViewModel.userIsbnList.value = topBookIsbnList
                     }
                     progressBar.visibility = View.GONE
                 }

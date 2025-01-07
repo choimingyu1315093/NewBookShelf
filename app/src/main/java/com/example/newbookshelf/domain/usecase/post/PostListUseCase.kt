@@ -6,7 +6,7 @@ import com.example.newbookshelf.domain.repository.BookRepository
 
 class PostListUseCase(private val bookRepository: BookRepository) {
 
-    suspend fun execute(userIdx: Int, limit: Int, currentPage: Int): Resource<PostModel> {
-        return bookRepository.postList(userIdx, limit, currentPage)
+    suspend fun execute(limit: Int, currentPage: Int): Resource<PostModel> {
+        return bookRepository.postList(limit, currentPage)
     }
 }

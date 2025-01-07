@@ -45,6 +45,7 @@ class GeneralAdapter: RecyclerView.Adapter<GeneralAdapter.ViewHolder>() {
 
         fun bind(post: PostModelData) = with(binding){
             tvTitle.text = post.post_title
+            tvName.text = post.user_name
 
             if(post.post_comment_count != 0){
                 tvCount.text = "[${post.post_comment_count}]"

@@ -401,7 +401,7 @@ class ApiServiceTest {
         """.trimIndent()
         enqueueMockResponse(mockResponseBody)
 
-        val response = service.postList(33, 10, 1)
+        val response = service.postList(10, 1)
         val request = server.takeRequest()
 
         Truth.assertThat(request.path).isEqualTo("/posts/list?user_idx=33&limit=10&current_page=1")
@@ -417,6 +417,75 @@ class ApiServiceTest {
         val request = server.takeRequest()
 
         Truth.assertThat(response.body()!!.data.post_title).isEqualTo("첫 번째 게시글")
+    }
+
+    //독서모임글 조회
+    @Test
+    fun readingClassListText() = runBlocking {
+        val mockResponseBody = """
+            {
+              "result": true,
+              "data": [
+                {
+                  "club_post_idx": 1,
+                  "post_title": "string",
+                  "club_latitude": "0.0000000000000",
+                  "club_longitude": "0.0000000000000",
+                  "club_meet_date": "2024-12-31T12:56:21.000Z",
+                  "book_name": "영원한 천국",
+                  "book_image": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6706295%3Ftimestamp%3D20240824161450"
+                }
+              ],
+              "pagination": {
+                "total": 1,
+                "current_page": 1,
+                "limit": 10,
+                "block": 10,
+                "current_block": 1,
+                "total_page": 1,
+                "total_block": 1
+              }
+            }
+        """.trimIndent()
+        enqueueMockResponse(mockResponseBody)
+
+        val response = service.readingClassList("", "latest", 10, 1)
+        Truth.assertThat(response.body()!!.data[0].post_title).isEqualTo("string")
+    }
+
+    //독서모임글 상세 조회
+    @Test
+    fun readingClassDetailTest() = runBlocking {
+        val mockResponseBody = """
+            {
+              "result": true,
+              "data": {
+                "club_post_idx": 1,
+                "user_idx": 36,
+                "user_name": "",
+                "create_date": "2024-12-31T12:56:24.775Z",
+                "update_date": "2024-12-31T12:56:24.775Z",
+                "post_title": "string",
+                "post_content": "string",
+                "club_latitude": "0.0000000000000",
+                "club_longitude": "0.0000000000000",
+                "club_meet_date": "2024-12-31T12:56:21.000Z",
+                "club_result_image": "",
+                "book_isbn": "1167374568",
+                "book_name": "영원한 천국",
+                "book_author": "정유정",
+                "book_translator": "",
+                "book_publisher": "은행나무",
+                "book_image": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6706295%3Ftimestamp%3D20240824161450",
+                "user_type": "viewer",
+                "is_scrap": false
+              }
+            }
+        """.trimIndent()
+        enqueueMockResponse(mockResponseBody)
+
+        val response = service.readingClassDetail(1)
+        Truth.assertThat(response.body()!!.data.book_name).isEqualTo("영원한 천국")
     }
 
     @After

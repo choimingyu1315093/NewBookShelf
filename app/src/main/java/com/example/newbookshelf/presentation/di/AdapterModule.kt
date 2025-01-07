@@ -20,6 +20,7 @@ import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralDetailReviewAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.ReadingClassAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
@@ -176,5 +177,11 @@ object AdapterModule {
     @Provides
     fun provideGeneralDetailReviewAdapter(): GeneralDetailReviewAdapter {
         return GeneralDetailReviewAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideReadingAdapter(): ReadingClassAdapter {
+        return ReadingClassAdapter()
     }
 }

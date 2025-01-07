@@ -39,10 +39,13 @@ import com.example.newbookshelf.data.model.post.general.PostCommentData
 import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.profile.TopBookData
 import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketLogModel
@@ -244,12 +247,16 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.descriptionChange(description))
     }
 
+    override suspend fun topBookChange(topBookData: TopBookData): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.topBookChange(topBookData))
+    }
+
     override suspend fun addPost(addPostData: AddPostData): Resource<AddPostModel> {
         return responseToResource(bookRemoteDataSource.addPost(addPostData))
     }
 
-    override suspend fun postList(userIdx: Int, limit: Int, currentPage: Int): Resource<PostModel> {
-        return responseToResource(bookRemoteDataSource.postList(userIdx, limit, currentPage))
+    override suspend fun postList(limit: Int, currentPage: Int): Resource<PostModel> {
+        return responseToResource(bookRemoteDataSource.postList(limit, currentPage))
     }
 
     override suspend fun postDetail(postIdx: Int): Resource<PostDetailModel> {
@@ -270,6 +277,14 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
 
     override suspend fun addScrap(addScrapData: AddScrapData): Resource<AddScrapModel> {
         return responseToResource(bookRemoteDataSource.addScrap(addScrapData))
+    }
+
+    override suspend fun readingClassList(searchWord: String, filterType: String, limit: Int, currentPage: Int): Resource<ReadingClassModel> {
+        return responseToResource(bookRemoteDataSource.readingClassList(searchWord, filterType, limit, currentPage))
+    }
+
+    override suspend fun readingClassDetail(readingClassIdx: Int): Resource<ReadingClassDetailModel> {
+        return responseToResource(bookRemoteDataSource.readingClassDetail(readingClassIdx))
     }
 
     override fun wishBookHaveUser(): Flow<Resource<WishBookHaveUserModel>> {

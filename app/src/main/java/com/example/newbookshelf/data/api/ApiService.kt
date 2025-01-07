@@ -39,10 +39,13 @@ import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.kakao.KakaoMapModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.profile.TopBookData
 import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketLogModel
@@ -263,6 +266,12 @@ interface ApiService {
         @Path("user_description") userDescription: String
     ): Response<OnlyResultModel>
 
+    //인생 책 변경
+    @PATCH("users/top_books")
+    suspend fun topBookChange(
+        @Body topBookData: TopBookData
+    ): Response<OnlyResultModel>
+
     //게시글 등록
     @POST("posts")
     suspend fun addPost(
@@ -272,7 +281,6 @@ interface ApiService {
     //게시글 목록 조회
     @GET("posts/list")
     suspend fun postList(
-        @Query("user_idx") userIdx: Int,
         @Query("limit") limit: Int,
         @Query("current_page") currentPage: Int
     ): Response<PostModel>
@@ -306,6 +314,21 @@ interface ApiService {
     suspend fun addScrap(
         @Body addScrapData: AddScrapData
     ): Response<AddScrapModel>
+
+    //독서 모임글 목록 조회
+    @GET("club-posts/list")
+    suspend fun readingClassList(
+        @Query("search_word") searchWord: String,
+        @Query("filter_type") filterType: String,
+        @Query("limit") limit: Int,
+        @Query("current_page") currentPage: Int
+    ): Response<ReadingClassModel>
+
+    //독서 모임글 상세 조회
+    @GET("club-posts/{club_post_idx}")
+    suspend fun readingClassDetail(
+        @Path("club_post_idx") clubPostIdx: Int
+    ): Response<ReadingClassDetailModel>
 
     //내가 읽고 싶은 책을 보유 중인 유저 목록 조회
     @GET("users/list/wish-book")

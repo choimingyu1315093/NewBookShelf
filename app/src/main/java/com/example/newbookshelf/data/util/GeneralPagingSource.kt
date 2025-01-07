@@ -19,7 +19,7 @@ class GeneralPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PostModelData> {
         return try {
             val currentPage = params.key ?: 1
-            val response = apiService.postList(BookShelfApp.prefs.getUserIdx("userIdx", 0), 10, currentPage)
+            val response = apiService.postList(10, currentPage)
             LoadResult.Page(
                 data = response.body()!!.data,
                 prevKey = if (currentPage == 1) null else currentPage - 1,

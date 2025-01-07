@@ -39,10 +39,13 @@ import com.example.newbookshelf.data.model.post.general.PostCommentData
 import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.profile.TopBookData
 import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.setting.TicketLogModel
@@ -202,13 +205,17 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return apiService.descriptionChange(description)
     }
 
+    override suspend fun topBookChange(topBookData: TopBookData): Response<OnlyResultModel> {
+        return apiService.topBookChange(topBookData)
+    }
+
     override suspend fun addPost(addPostData: AddPostData): Response<AddPostModel> {
         return apiService.addPost(addPostData)
     }
 
 
-    override suspend fun postList(userIdx: Int, limit: Int, currentPage: Int): Response<PostModel> {
-        return apiService.postList(userIdx, limit, currentPage)
+    override suspend fun postList(limit: Int, currentPage: Int): Response<PostModel> {
+        return apiService.postList(limit, currentPage)
     }
 
     override suspend fun postDetail(postIdx: Int): Response<PostDetailModel> {
@@ -229,6 +236,14 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
 
     override suspend fun addScrap(addScrapData: AddScrapData): Response<AddScrapModel> {
         return apiService.addScrap(addScrapData)
+    }
+
+    override suspend fun readingClassList(searchWord: String, filterType: String, limit: Int, currentPage: Int): Response<ReadingClassModel> {
+        return apiService.readingClassList(searchWord, filterType, limit, currentPage)
+    }
+
+    override suspend fun readingClassDetail(readingClassIdx: Int): Response<ReadingClassDetailModel> {
+        return apiService.readingClassDetail(readingClassIdx)
     }
 
     override fun wishBookHaveUser(): Flow<Response<WishBookHaveUserModel>> {
