@@ -21,6 +21,7 @@ import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentSearchBookDialogBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
+import com.example.newbookshelf.presentation.view.profile.adapter.ProfileSearchBookAdapter
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
 
 class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragment() {
@@ -35,8 +36,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
         const val TAG = "SearchBookDialog"
     }
 
-    private lateinit var accessToken: String
-    private lateinit var searchBookAdapter: SearchBookAdapter
+    private lateinit var profileSearchBookAdapter: ProfileSearchBookAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,16 +68,15 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
     }
 
     private fun init() = with(binding){
-        accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         homeViewModel = (activity as HomeActivity).homeViewModel
-        searchBookAdapter = (activity as HomeActivity).searchBookAdapter
-        searchBookAdapter.setOnItemClickListener {
+        profileSearchBookAdapter = (activity as HomeActivity).profileSearchBookAdapter
+        profileSearchBookAdapter.setOnItemClickListener {
             dismiss()
             onSelectedBook.onSelectedBook(it)
         }
         rvBook.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = searchBookAdapter
+            adapter = profileSearchBookAdapter
         }
     }
 
@@ -107,18 +106,22 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
     }
 
     private fun searchKeyword(book: String) = with(binding){
-        homeViewModel.getSearchBook(book)
+        homeViewModel.getProfileSearchBook(book)
     }
 
     private fun observeViewModel() = with(binding){
-        homeViewModel.searchBook.observe(viewLifecycleOwner){ response ->
+        homeViewModel.profileSearchBook.observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
                     response.data?.let {
-                        if(it.data.general_result?.size != 0){
+                        if(!it.data.general_result.isNullOrEmpty()){
                             txtEmpty.visibility = View.GONE
                             rvBook.visibility = View.VISIBLE
-                            searchBookAdapter.differ.submitList(it.data.general_result)
+                            profileSearchBookAdapter.differ.submitList(it.data.general_result)
+                        }else if(!it.data.popular_result.isNullOrEmpty()){
+                            txtEmpty.visibility = View.GONE
+                            rvBook.visibility = View.VISIBLE
+                            profileSearchBookAdapter.differ.submitList(it.data.popular_result)
                         }else {
                             txtEmpty.visibility = View.VISIBLE
                             rvBook.visibility = View.GONE

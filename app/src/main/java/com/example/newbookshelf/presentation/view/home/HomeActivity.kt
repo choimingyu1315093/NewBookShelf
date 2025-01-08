@@ -34,10 +34,12 @@ import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralDetailReviewAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.MemberAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.ReadingClassAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
+import com.example.newbookshelf.presentation.view.profile.adapter.ProfileSearchBookAdapter
 import com.example.newbookshelf.presentation.view.setting.adapter.ChargeLogAdapter
 import com.example.newbookshelf.presentation.viewmodel.chat.ChatViewModel
 import com.example.newbookshelf.presentation.viewmodel.chat.ChatViewModelFactory
@@ -111,6 +113,8 @@ class HomeActivity : AppCompatActivity() {
     lateinit var profileMemoAdapter: ProfileMemoAdapter
     @Inject
     lateinit var myBookListAdapter: MyBookListAdapter
+    @Inject
+    lateinit var profileSearchBookAdapter: ProfileSearchBookAdapter
 
     @Inject
     lateinit var mapViewModelFactory: MapViewModelFactory
@@ -137,6 +141,8 @@ class HomeActivity : AppCompatActivity() {
     lateinit var generalDetailReviewAdapter: GeneralDetailReviewAdapter
     @Inject
     lateinit var readingClassAdapter: ReadingClassAdapter
+    @Inject
+    lateinit var memberAdapter: MemberAdapter
 
     @Inject
     lateinit var settingViewModelFactory: SettingViewModelFactory

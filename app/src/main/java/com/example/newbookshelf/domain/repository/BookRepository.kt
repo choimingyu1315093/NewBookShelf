@@ -40,11 +40,15 @@ import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassMembersModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.profile.ReadingStatisticsModel
 import com.example.newbookshelf.data.model.profile.TopBookData
 import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
@@ -95,6 +99,7 @@ interface BookRepository {
     suspend fun updateBookMemo(accessToken: String, bookMemoIdx: Int, updateBookMemoData: UpdateBookMemoData): Resource<UpdateBookMemoModel>
     suspend fun deleteBookMemo(accessToken: String, bookMemoIdx: Int): Resource<DeleteBookMemoModel>
     fun myProfile(): Flow<Resource<MyProfileModel>>
+    fun readingStatistics(userIdx: Int): Flow<Resource<ReadingStatisticsModel>>
     fun profileActivity(userIdx: Int): Flow<Resource<ActivityModel>>
     fun profileMemo(): Flow<Resource<MemoModel>>
     suspend fun nicknameChange(nickname: String): Resource<OnlyResultModel>
@@ -109,6 +114,9 @@ interface BookRepository {
     suspend fun addScrap(addScrapData: AddScrapData): Resource<AddScrapModel>
     suspend fun readingClassList(searchWord: String, filterType: String, limit: Int, currentPage: Int): Resource<ReadingClassModel>
     suspend fun readingClassDetail(readingClassIdx: Int): Resource<ReadingClassDetailModel>
+    suspend fun readingClassDelete(readingClassIdx: Int): Resource<OnlyResultModel>
+    suspend fun readingClassMemberList(readingClassIdx: Int, limit: Int, currentPage: Int): Resource<ReadingClassMembersModel>
+    suspend fun readingClassJoin(readingClassJoinData: ReadingClassJoinData): Resource<ReadingClassJoinModel>
     fun wishBookHaveUser(): Flow<Resource<WishBookHaveUserModel>>
     suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Resource<ChatroomModel>
     suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Resource<DeleteChatroomModel>

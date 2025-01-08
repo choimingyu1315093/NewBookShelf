@@ -24,6 +24,7 @@ class ProfileStatisticsFragment : Fragment(), PhotoAdapter.OnClickItem {
         const val TAG = "ProfileStatistics"
     }
 
+    private var userIdx = BookShelfApp.prefs.getUserIdx("userIdx", 0)
     private lateinit var photoAdapter: PhotoAdapter
     private var bookImageArray = ArrayList<String>()
     
@@ -64,6 +65,8 @@ class ProfileStatisticsFragment : Fragment(), PhotoAdapter.OnClickItem {
                         }
 
                         if(bookImageArray.isNotEmpty()){
+                            tvName.visibility = View.VISIBLE
+                            rvTopBook.visibility = View.VISIBLE
                             tvName.text = "${it.data.user_name} 님의 인생 책"
                             photoAdapter = PhotoAdapter(bookImageArray, requireContext(), this@ProfileStatisticsFragment, 1)
                             rvTopBook.apply {
@@ -74,6 +77,19 @@ class ProfileStatisticsFragment : Fragment(), PhotoAdapter.OnClickItem {
                             tvName.visibility = View.GONE
                             rvTopBook.visibility = View.GONE
                         }
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
+
+        profileViewModel.readingStatistics(userIdx).observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    response.data?.let {
+                        tvCount.text = "${it.data.total_read_book_count.toString()}권"
+                        tvPage.text = "${it.data.total_read_page_count}페이지"
                     }
                 }
                 is Resource.Error -> Unit

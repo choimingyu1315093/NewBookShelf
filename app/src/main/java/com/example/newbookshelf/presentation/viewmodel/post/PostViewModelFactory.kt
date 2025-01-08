@@ -12,7 +12,10 @@ import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
 import com.example.newbookshelf.presentation.viewmodel.map.MapViewModel
 
@@ -27,12 +30,15 @@ class PostViewModelFactory(
     private val addScrapUseCase: AddScrapUseCase,
     private val postDeleteUseCase: PostDeleteUseCase,
     private val readingClassUseCase: ReadingClassUseCase,
-    private val readingClassDetailUseCase: ReadingClassDetailUseCase
+    private val readingClassDetailUseCase: ReadingClassDetailUseCase,
+    private val readingClassDeleteUseCase: ReadingClassDeleteUseCase,
+    private val readingClassMemberListUseCase: ReadingClassMemberListUseCase,
+    private val readingClassJoinUseCase: ReadingClassJoinUseCase
 ): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(PostViewModel::class.java)){
-            return PostViewModel(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, readingClassUseCase, readingClassDetailUseCase) as T
+            return PostViewModel(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, readingClassUseCase, readingClassDetailUseCase, readingClassDeleteUseCase, readingClassMemberListUseCase, readingClassJoinUseCase) as T
         }
         throw IllegalArgumentException("Unknown View Model Class")
     }

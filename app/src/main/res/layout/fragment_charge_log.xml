@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:text="구매 내역이 없습니다."
             android:fontFamily="@font/lato_regular"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textColor="#979797"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

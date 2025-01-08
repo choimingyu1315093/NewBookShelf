@@ -12,7 +12,10 @@ import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
 import com.example.newbookshelf.presentation.viewmodel.map.MapViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.post.PostViewModelFactory
@@ -39,8 +42,11 @@ object PostFactoryModule {
         addScrapUseCase: AddScrapUseCase,
         postDeleteUseCase: PostDeleteUseCase,
         readingClassUseCase: ReadingClassUseCase,
-        readingClassDetailUseCase: ReadingClassDetailUseCase
+        readingClassDetailUseCase: ReadingClassDetailUseCase,
+        readingClassDeleteUseCase: ReadingClassDeleteUseCase,
+        readingClassMemberListUseCase: ReadingClassMemberListUseCase,
+        readingClassJoinUseCase: ReadingClassJoinUseCase
     ): PostViewModelFactory {
-        return PostViewModelFactory(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, readingClassUseCase, readingClassDetailUseCase)
+        return PostViewModelFactory(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, readingClassUseCase, readingClassDetailUseCase, readingClassDeleteUseCase, readingClassMemberListUseCase, readingClassJoinUseCase)
     }
 }

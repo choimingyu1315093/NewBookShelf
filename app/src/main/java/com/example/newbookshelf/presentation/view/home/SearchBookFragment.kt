@@ -76,6 +76,7 @@ class SearchBookFragment : Fragment() {
     }
 
     private fun init() = with(binding){
+        (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
         homeViewModel = (activity as HomeActivity).homeViewModel
         searchBookTitleAdapter = (activity as HomeActivity).searchBookTitleAdapter
         searchBookTitleAdapter.setOnClickListener {

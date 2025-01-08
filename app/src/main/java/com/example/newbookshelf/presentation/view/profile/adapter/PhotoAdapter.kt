@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.ItemBestsellerBinding
+import com.example.newbookshelf.databinding.ItemTopBookBinding
 
 class PhotoAdapter(
     private val photoList: ArrayList<String>,
@@ -21,7 +22,7 @@ class PhotoAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(ItemBestsellerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ViewHolder(ItemTopBookBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -40,7 +41,7 @@ class PhotoAdapter(
         return photoList.size
     }
 
-    inner class ViewHolder(private val binding: ItemBestsellerBinding): RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: ItemTopBookBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(photo: String) = with(binding){
             Glide

@@ -64,6 +64,7 @@ class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListen
     }
 
     private fun init() = with(binding){
+        (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
         postViewModel = (activity as HomeActivity).postViewModel
         postViewModel.postDetail(postIdx)
         generalDetailReviewAdapter = (activity as HomeActivity).generalDetailReviewAdapter
@@ -193,11 +194,6 @@ class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListen
         binding.etReview.setText("")
     }
 
-    //게시글 삭제
-    override fun delete(b: Boolean) {
-        postViewModel.postDelete(postIdx)
-    }
-
     private fun showPopupMenu(anchor: View) {
         val popupMenu = PopupMenu(anchor.context, anchor)
         if(userIdx == writerIdx){
@@ -225,5 +221,10 @@ class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListen
         }
 
         popupMenu.show()
+    }
+
+    //게시글 삭제
+    override fun delete(b: Boolean) {
+        postViewModel.postDelete(postIdx)
     }
 }

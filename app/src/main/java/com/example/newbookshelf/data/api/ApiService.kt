@@ -40,11 +40,15 @@ import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.kakao.KakaoMapModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassMembersModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.profile.ReadingStatisticsModel
 import com.example.newbookshelf.data.model.profile.TopBookData
 import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
@@ -243,6 +247,12 @@ interface ApiService {
     suspend fun myProfile(
     ): Response<MyProfileModel>
 
+    //독서 통계
+    @GET("statistics/total")
+    suspend fun readingStatistics(
+        @Query("user_idx") userIdx: Int
+    ): Response<ReadingStatisticsModel>
+
     //활동 조회
     @GET("activities/list")
     suspend fun activitiesList(
@@ -329,6 +339,26 @@ interface ApiService {
     suspend fun readingClassDetail(
         @Path("club_post_idx") clubPostIdx: Int
     ): Response<ReadingClassDetailModel>
+
+    //독서 모임글 삭제
+    @DELETE("club-posts/{club_post_idx}")
+    suspend fun readingClassDelete(
+        @Path("club_post_idx") clubPostIdx: Int
+    ): Response<OnlyResultModel>
+
+    //독서 모임 참가자 목록 조회
+    @GET("club-members/list")
+    suspend fun readingClassMemberList(
+        @Query("club_post_idx") clubPostIdx: Int,
+        @Query("limit") limit: Int,
+        @Query("current_page") currentPage: Int
+    ): Response<ReadingClassMembersModel>
+
+    //독서 모임 참가
+    @POST("club-members/participate")
+    suspend fun readingClassJoin(
+        @Body readingClassJoinData: ReadingClassJoinData
+    ): Response<ReadingClassJoinModel>
 
     //내가 읽고 싶은 책을 보유 중인 유저 목록 조회
     @GET("users/list/wish-book")

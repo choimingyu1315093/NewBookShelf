@@ -40,11 +40,15 @@ import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassMembersModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModel
 import com.example.newbookshelf.data.model.profile.ActivityModel
 import com.example.newbookshelf.data.model.profile.MemoModel
 import com.example.newbookshelf.data.model.profile.MyBookModel
 import com.example.newbookshelf.data.model.profile.MyProfileModel
+import com.example.newbookshelf.data.model.profile.ReadingStatisticsModel
 import com.example.newbookshelf.data.model.profile.TopBookData
 import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.TicketData
@@ -219,6 +223,16 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
+    override fun readingStatistics(userIdx: Int): Flow<Resource<ReadingStatisticsModel>> {
+        return bookRemoteDataSource.readingStatistics(userIdx).map { response ->
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!)
+            }else {
+                Resource.Error(response.message())
+            }
+        }
+    }
+
     override fun profileActivity(userIdx: Int): Flow<Resource<ActivityModel>> {
         return bookRemoteDataSource.profileActivity(userIdx).map { response ->
             if(response.isSuccessful){
@@ -285,6 +299,18 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
 
     override suspend fun readingClassDetail(readingClassIdx: Int): Resource<ReadingClassDetailModel> {
         return responseToResource(bookRemoteDataSource.readingClassDetail(readingClassIdx))
+    }
+
+    override suspend fun readingClassDelete(readingClassIdx: Int): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.readingClassDelete(readingClassIdx))
+    }
+
+    override suspend fun readingClassMemberList(readingClassIdx: Int, limit: Int, currentPage: Int): Resource<ReadingClassMembersModel> {
+        return responseToResource(bookRemoteDataSource.readingClassMemberList(readingClassIdx, limit, currentPage))
+    }
+
+    override suspend fun readingClassJoin(readingClassJoinData: ReadingClassJoinData): Resource<ReadingClassJoinModel> {
+        return responseToResource(bookRemoteDataSource.readingClassJoin(readingClassJoinData))
     }
 
     override fun wishBookHaveUser(): Flow<Resource<WishBookHaveUserModel>> {

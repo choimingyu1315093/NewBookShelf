@@ -139,6 +139,20 @@
             app:layout_constraintTop_toBottomOf="@id/tvContent"
             app:layout_constraintStart_toStartOf="parent"/>
         <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            tools:background="@drawable/btn_main_no_10"
+            tools:text="예정"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:fontFamily="@font/lato_regular"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@id/txtSchedule"
+            app:layout_constraintBottom_toBottomOf="@id/txtSchedule"
+            app:layout_constraintStart_toEndOf="@id/txtSchedule"/>
+        <TextView
             android:id="@+id/tvSchedule"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -275,9 +289,8 @@
             android:id="@+id/btnJoin"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:enabled="false"
             android:background="@drawable/btn_main_no_10"
-            android:text="참가 신청"
+            tools:text="참가 신청"
             android:fontFamily="@font/lato_regular"
             android:textSize="18sp"
             android:textStyle="bold"

@@ -1,4 +1,4 @@
-package com.example.newbookshelf.presentation.view.home.adapter
+package com.example.newbookshelf.presentation.view.profile.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newbookshelf.R
-import kotlin.math.round
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookResult
 import com.example.newbookshelf.databinding.ItemSearchBookBinding
+import kotlin.math.round
 
-class SearchBookAdapter: RecyclerView.Adapter<SearchBookAdapter.ViewHolder>() {
+class ProfileSearchBookAdapter: RecyclerView.Adapter<ProfileSearchBookAdapter.ViewHolder>() {
 
     private val callback = object : DiffUtil.ItemCallback<SearchBookResult>() {
         override fun areItemsTheSame(oldItem: SearchBookResult, newItem: SearchBookResult): Boolean {
@@ -54,24 +54,12 @@ class SearchBookAdapter: RecyclerView.Adapter<SearchBookAdapter.ViewHolder>() {
             tvTitle.text = book.book_name
             tvWriter.text = "${book.book_author} ⎪ ${book.book_publisher}"
             rb.setIsIndicator(true)
-//            if(book.book_average_rate != null){
-//                rb.rating = book.book_average_rate.toFloat()
-//                val percent = book.book_average_rate
-//                val roundedPercent = round(percent).toInt()
-//                tvAverage.text = roundedPercent.toString()
-////                tvAverage.text = book.book_average_rate.toString()
-//            }
             if(book.book_average_rate != null){
-                val rate = book.book_average_rate!!.toFloat()
-                val roundedRate = if ((rate * 10) % 10 >= 5) {
-                    kotlin.math.floor(rate * 10 + 1) / 10
-                } else {
-                    kotlin.math.floor(rate * 10) / 10
-                }
                 rb.rating = book.book_average_rate.toFloat()
-                tvAverage.text = roundedRate.toString()
-            }else {
-                tvAverage.text = "0.0"
+                val percent = book.book_average_rate
+                val roundedPercent = round(percent).toInt()
+//            tvAverage.text = roundedPercent.toString()
+                tvAverage.text = book.book_average_rate.toString()
             }
 
             if(book.is_have_book != null && book.is_have_book){

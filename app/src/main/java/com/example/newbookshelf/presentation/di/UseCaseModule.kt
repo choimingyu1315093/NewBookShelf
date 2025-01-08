@@ -42,7 +42,10 @@ import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyBookListUseCase
@@ -50,6 +53,7 @@ import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
 import com.example.newbookshelf.domain.usecase.profile.NicknameChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileActivityUseCase
 import com.example.newbookshelf.domain.usecase.profile.ProfileMemoUseCase
+import com.example.newbookshelf.domain.usecase.profile.ReadingStatisticsUseCase
 import com.example.newbookshelf.domain.usecase.profile.TopBookChangeUseCase
 import com.example.newbookshelf.domain.usecase.setting.BuyTicketUseCase
 import com.example.newbookshelf.domain.usecase.setting.PasswordChangeUseCase
@@ -284,6 +288,12 @@ object UseCaseModule {
 
     @Singleton
     @Provides
+    fun provideReadingStatisticsUseCase(bookRepository: BookRepository): ReadingStatisticsUseCase {
+        return ReadingStatisticsUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
     fun provideProfileActivityUseCase(bookRepository: BookRepository): ProfileActivityUseCase {
         return ProfileActivityUseCase(bookRepository)
     }
@@ -364,6 +374,24 @@ object UseCaseModule {
     @Provides
     fun provideReadingClassDetailUseCase(bookRepository: BookRepository): ReadingClassDetailUseCase {
         return ReadingClassDetailUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideReadingClassDeleteUseCase(bookRepository: BookRepository): ReadingClassDeleteUseCase {
+        return ReadingClassDeleteUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideReadingClassMemberListUseCase(bookRepository: BookRepository): ReadingClassMemberListUseCase {
+        return ReadingClassMemberListUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideReadingClassJoinUseCase(bookRepository: BookRepository): ReadingClassJoinUseCase {
+        return ReadingClassJoinUseCase(bookRepository)
     }
 
     @Singleton

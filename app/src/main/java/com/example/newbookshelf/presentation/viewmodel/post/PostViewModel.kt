@@ -20,6 +20,9 @@ import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassMembersModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModel
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.post.AddPostUseCase
@@ -30,7 +33,10 @@ import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,7 +52,10 @@ class PostViewModel(
     private val addScrapUseCase: AddScrapUseCase,
     private val postDeleteUseCase: PostDeleteUseCase,
     private val readingClassUseCase: ReadingClassUseCase,
-    private val readingClassDetailUseCase: ReadingClassDetailUseCase
+    private val readingClassDetailUseCase: ReadingClassDetailUseCase,
+    private val readingClassDeleteUseCase: ReadingClassDeleteUseCase,
+    private val readingClassMemberListUseCase: ReadingClassMemberListUseCase,
+    private val readingClassJoinUseCase: ReadingClassJoinUseCase
 ): AndroidViewModel(app) {
 
     fun searchPlace(accessToken: String, q: String) = liveData {
@@ -196,6 +205,55 @@ class PostViewModel(
             }
         }catch (e: Exception){
             readingClassDetailResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val readingClassDeleteResult = MutableLiveData<Resource<OnlyResultModel>>()
+    fun readingClassDelete(readingClassIdx: Int) = viewModelScope.launch(Dispatchers.IO) {
+        readingClassDeleteResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                readingClassDeleteResult.postValue(Resource.Loading())
+                val result = readingClassDeleteUseCase.execute(readingClassIdx)
+                readingClassDeleteResult.postValue(result)
+            }else {
+                readingClassDeleteResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            readingClassDeleteResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val readingClassMemberListResult = MutableLiveData<Resource<ReadingClassMembersModel>>()
+    fun readingClassMemberList(readingClassIdx: Int, limit: Int, currentPage: Int) = viewModelScope.launch(Dispatchers.IO) {
+        readingClassMemberListResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                readingClassMemberListResult.postValue(Resource.Loading())
+                val result = readingClassMemberListUseCase.execute(readingClassIdx, limit, currentPage)
+                readingClassMemberListResult.postValue(result)
+            }else {
+                readingClassMemberListResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            readingClassMemberListResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val readingClassJoinResult = MutableLiveData<Resource<ReadingClassJoinModel>>()
+    fun readingClassJoin(readingClassJoinData: ReadingClassJoinData) = viewModelScope.launch(Dispatchers.IO) {
+        readingClassJoinResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                readingClassJoinResult.postValue(Resource.Loading())
+                val result = readingClassJoinUseCase.execute(readingClassJoinData)
+                Log.d("TAG", "readingClassJoin: result $result")
+                readingClassJoinResult.postValue(result)
+            }else {
+                readingClassJoinResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            readingClassJoinResult.postValue(Resource.Error(e.message.toString()))
         }
     }
 

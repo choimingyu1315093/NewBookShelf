@@ -20,10 +20,12 @@ import com.example.newbookshelf.presentation.view.map.adapter.NearBookAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralDetailReviewAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.MemberAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.ReadingClassAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileMemoAdapter
+import com.example.newbookshelf.presentation.view.profile.adapter.ProfileSearchBookAdapter
 import com.example.newbookshelf.presentation.view.setting.adapter.ChargeLogAdapter
 import dagger.Module
 import dagger.Provides
@@ -99,6 +101,12 @@ object AdapterModule {
     @Provides
     fun provideSearchBookAdapter(): SearchBookAdapter {
         return SearchBookAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideProfileSearchBookAdapter(): ProfileSearchBookAdapter {
+        return ProfileSearchBookAdapter()
     }
 
     @Singleton
@@ -183,5 +191,11 @@ object AdapterModule {
     @Provides
     fun provideReadingAdapter(): ReadingClassAdapter {
         return ReadingClassAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMemberAdapter(): MemberAdapter {
+        return MemberAdapter()
     }
 }

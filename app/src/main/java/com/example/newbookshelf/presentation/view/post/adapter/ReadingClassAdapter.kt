@@ -1,13 +1,17 @@
 package com.example.newbookshelf.presentation.view.post.adapter
 
+import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModelData
+import com.example.newbookshelf.data.util.Address
 import com.example.newbookshelf.data.util.DateFormat
 import com.example.newbookshelf.databinding.ItemReadingBinding
 import java.util.Date
@@ -48,6 +52,7 @@ class ReadingClassAdapter: RecyclerView.Adapter<ReadingClassAdapter.ViewHolder>(
             tvTitle.text = readingClass.book_name
             tvContent.text = readingClass.post_title
             tvDate.text = DateFormat.convertToCustomFormat(readingClass.club_meet_date)
+            tvPlace.text = Address.getAddressFromLatLng(itemView.context, readingClass.club_latitude.toDouble(), readingClass.club_longitude.toDouble())
 
             if(DateFormat.isDatePast(readingClass.club_meet_date)){
                 tvStatus.text = "종료"

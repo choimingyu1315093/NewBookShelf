@@ -12,8 +12,12 @@ import androidx.fragment.app.DialogFragment
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.FragmentReadingClassJoinDialogBinding
 
-class ReadingClassJoinDialog : DialogFragment() {
+class ReadingClassJoinDialog(private val onJoinClickListener: OnJoinClickListener) : DialogFragment() {
     private lateinit var binding: FragmentReadingClassJoinDialogBinding
+
+    interface OnJoinClickListener {
+        fun join(b: Boolean)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,5 +43,18 @@ class ReadingClassJoinDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentReadingClassJoinDialogBinding.bind(view)
+
+        bindViews()
+    }
+
+    private fun bindViews() = with(binding){
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+
+        btnOk.setOnClickListener {
+            onJoinClickListener.join(true)
+            dismiss()
+        }
     }
 }

@@ -59,6 +59,7 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
     }
 
     private fun init() = with(binding){
+        (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
         kakaoKey = BuildConfig.KAKAO_REST_API_KEY
         postViewModel = (activity as HomeActivity).postViewModel
         if(type == "general"){

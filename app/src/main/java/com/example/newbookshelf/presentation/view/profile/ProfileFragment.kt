@@ -48,14 +48,13 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentProfileBinding.bind(view)
 
-        (activity as HomeActivity).binding.cl.visibility = View.GONE
-
         init()
         bindViews()
         observeViewModel()
     }
 
     private fun init() = with(binding){
+        (activity as HomeActivity).binding.cl.visibility = View.GONE
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         profileViewModel = (activity as HomeActivity).profileViewModel
 

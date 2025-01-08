@@ -1,30 +1,21 @@
 package com.example.newbookshelf.presentation.view.post
 
-import android.content.Context
-import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
-import com.example.newbookshelf.data.model.login.UpdateLocationData
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentPostBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
-import com.example.newbookshelf.presentation.view.home.HomeFragmentDirections
-import com.example.newbookshelf.presentation.view.post.ReadingDetailFragment.Companion
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.ReadingClassAdapter
 import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
-import java.util.Locale
 
 class PostFragment : Fragment() {
     private lateinit var binding: FragmentPostBinding
@@ -64,31 +55,11 @@ class PostFragment : Fragment() {
 
     private fun init() = with(binding){
         (activity as HomeActivity).binding.cl.visibility = View.GONE
+        (activity as HomeActivity).binding.bottomNavigationView.visibility = View.VISIBLE
         postViewModel = (activity as HomeActivity).postViewModel
         postViewModel.postList(10, 1)
         generalAdapter = (activity as HomeActivity).generalAdapter
-        generalAdapter.setOnClickListener {
-            val bundle = Bundle().apply {
-                putInt("postIdx", it.post_idx)
-            }
-            findNavController().navigate(R.id.action_postFragment_to_generalDetailFragment, bundle)
-        }
-        rvGeneral.apply {
-            layoutManager = LinearLayoutManager(activity)
-            adapter = generalAdapter
-        }
-
         readingClassAdapter = (activity as HomeActivity).readingClassAdapter
-        readingClassAdapter.setOnItemClickListener {
-            val bundle = Bundle().apply {
-                putInt("readingClassIdx", it.club_post_idx)
-            }
-            findNavController().navigate(R.id.action_postFragment_to_readingDetailFragment, bundle)
-        }
-        rvReading.apply {
-            layoutManager = LinearLayoutManager(activity)
-            adapter = readingClassAdapter
-        }
 
         val spList = listOf("등록순", "거리순")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spList)
@@ -102,8 +73,6 @@ class PostFragment : Fragment() {
             isGeneral = "general"
             btnGeneral.setBackgroundResource(R.drawable.btn_main_no_10)
             btnReading.setBackgroundResource(R.drawable.btn_e9e9e9_no_10)
-            rvGeneral.visibility = View.VISIBLE
-            rvReading.visibility = View.GONE
             spFilter.visibility = View.GONE
         }
 
@@ -112,8 +81,6 @@ class PostFragment : Fragment() {
             isGeneral = "reading"
             btnGeneral.setBackgroundResource(R.drawable.btn_e9e9e9_no_10)
             btnReading.setBackgroundResource(R.drawable.btn_main_no_10)
-            rvGeneral.visibility = View.GONE
-            rvReading.visibility = View.VISIBLE
             spFilter.visibility = View.VISIBLE
         }
 
@@ -140,6 +107,17 @@ class PostFragment : Fragment() {
                 is Resource.Success -> {
                     if(response.data!!.result){
                         if(response.data.data.isNotEmpty()){
+                            generalAdapter.setOnClickListener {
+                                val bundle = Bundle().apply {
+                                    putInt("postIdx", it.post_idx)
+                                }
+                                findNavController().navigate(R.id.action_postFragment_to_generalDetailFragment, bundle)
+                            }
+                            rvGeneral.apply {
+                                layoutManager = LinearLayoutManager(activity)
+                                adapter = generalAdapter
+                            }
+
                             generalAdapter.differ.submitList(response.data.data)
                             clNo.visibility = View.GONE
                             rvGeneral.visibility = View.VISIBLE
@@ -153,6 +131,7 @@ class PostFragment : Fragment() {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> {
+                    rvGeneral.visibility = View.GONE
                     progressBar.visibility = View.VISIBLE
                 }
             }
@@ -163,12 +142,23 @@ class PostFragment : Fragment() {
                 is Resource.Success -> {
                     if(response.data!!.result){
                         if(response.data.data.isNotEmpty()){
+                            readingClassAdapter.setOnItemClickListener {
+                                val bundle = Bundle().apply {
+                                    putInt("readingClassIdx", it.club_post_idx)
+                                }
+                                findNavController().navigate(R.id.action_postFragment_to_readingDetailFragment, bundle)
+                            }
+                            rvGeneral.apply {
+                                layoutManager = LinearLayoutManager(activity)
+                                adapter = readingClassAdapter
+                            }
+
                             readingClassAdapter.differ.submitList(response.data.data)
                             clNo.visibility = View.GONE
-                            rvReading.visibility = View.VISIBLE
+                            rvGeneral.visibility = View.VISIBLE
                         }else {
                             clNo.visibility = View.VISIBLE
-                            rvReading.visibility = View.GONE
+                            rvGeneral.visibility = View.GONE
                             tvEmpty.text ="독서 모임을 만들어 보세요."
                         }
                     }
@@ -176,6 +166,7 @@ class PostFragment : Fragment() {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> {
+                    rvGeneral.visibility = View.GONE
                     progressBar.visibility = View.VISIBLE
                 }
             }

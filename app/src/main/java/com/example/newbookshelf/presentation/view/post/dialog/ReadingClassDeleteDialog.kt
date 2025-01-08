@@ -12,8 +12,12 @@ import androidx.fragment.app.DialogFragment
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.FragmentReadingClassDeleteDialogBinding
 
-class ReadingClassDeleteDialog : DialogFragment() {
+class ReadingClassDeleteDialog(private val onDeleteClickListener: OnDeleteClickListener) : DialogFragment() {
     private lateinit var binding: FragmentReadingClassDeleteDialogBinding
+
+    interface OnDeleteClickListener {
+        fun delete(b: Boolean)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,5 +42,18 @@ class ReadingClassDeleteDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentReadingClassDeleteDialogBinding.bind(view)
+
+        bindViews()
+    }
+
+    private fun bindViews() = with(binding){
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+
+        btnDelete.setOnClickListener {
+            onDeleteClickListener.delete(true)
+            dismiss()
+        }
     }
 }

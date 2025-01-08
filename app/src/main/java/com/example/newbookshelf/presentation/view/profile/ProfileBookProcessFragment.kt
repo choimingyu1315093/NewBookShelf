@@ -34,7 +34,6 @@ class ProfileBookProcessFragment(private val type: String) : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         val category = when (type) {
             "읽고 싶은 책" -> "wish"
             "읽고 있는 책" -> "reading"
@@ -64,6 +63,7 @@ class ProfileBookProcessFragment(private val type: String) : Fragment() {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> {
+                    binding.rvBook.visibility = View.GONE
                     binding.progressBar.visibility = View.VISIBLE
                 }
             }
