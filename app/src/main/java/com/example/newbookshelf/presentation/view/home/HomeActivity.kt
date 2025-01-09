@@ -35,6 +35,7 @@ import com.example.newbookshelf.presentation.view.post.adapter.GeneralAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralDetailReviewAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.MemberAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.PostSearchBookAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.ReadingClassAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.MyBookListAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileActiveAdapter
@@ -143,6 +144,8 @@ class HomeActivity : AppCompatActivity() {
     lateinit var readingClassAdapter: ReadingClassAdapter
     @Inject
     lateinit var memberAdapter: MemberAdapter
+    @Inject
+    lateinit var postSearchBookAdapter: PostSearchBookAdapter
 
     @Inject
     lateinit var settingViewModelFactory: SettingViewModelFactory

@@ -21,10 +21,11 @@ import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentSearchBookDialogBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
+import com.example.newbookshelf.presentation.view.post.adapter.PostSearchBookAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileSearchBookAdapter
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
 
-class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragment() {
+class SearchBookDialog(private val onSelectedBook: OnSelectedBook, private val type: String) : DialogFragment() {
     private lateinit var binding: FragmentSearchBookDialogBinding
     private lateinit var homeViewModel: HomeViewModel
 
@@ -37,6 +38,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
     }
 
     private lateinit var profileSearchBookAdapter: ProfileSearchBookAdapter
+    private lateinit var postSearchBookAdapter: PostSearchBookAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,13 +72,25 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
     private fun init() = with(binding){
         homeViewModel = (activity as HomeActivity).homeViewModel
         profileSearchBookAdapter = (activity as HomeActivity).profileSearchBookAdapter
-        profileSearchBookAdapter.setOnItemClickListener {
-            dismiss()
-            onSelectedBook.onSelectedBook(it)
-        }
-        rvBook.apply {
-            layoutManager = LinearLayoutManager(activity)
-            adapter = profileSearchBookAdapter
+        postSearchBookAdapter = (activity as HomeActivity).postSearchBookAdapter
+        if(type == "profile"){
+            profileSearchBookAdapter.setOnItemClickListener {
+                dismiss()
+                onSelectedBook.onSelectedBook(it)
+            }
+            rvBook.apply {
+                layoutManager = LinearLayoutManager(activity)
+                adapter = profileSearchBookAdapter
+            }
+        }else {
+            postSearchBookAdapter.setOnItemClickListener {
+                dismiss()
+                onSelectedBook.onSelectedBook(it)
+            }
+            rvBook.apply {
+                layoutManager = LinearLayoutManager(activity)
+                adapter = postSearchBookAdapter
+            }
         }
     }
 
@@ -106,7 +120,11 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
     }
 
     private fun searchKeyword(book: String) = with(binding){
-        homeViewModel.getProfileSearchBook(book)
+        if(type == "profile"){
+            homeViewModel.getProfileSearchBook(book)
+        }else {
+            homeViewModel.getPostSearchBook(book)
+        }
     }
 
     private fun observeViewModel() = with(binding){
@@ -122,6 +140,29 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook) : DialogFragm
                             txtEmpty.visibility = View.GONE
                             rvBook.visibility = View.VISIBLE
                             profileSearchBookAdapter.differ.submitList(it.data.popular_result)
+                        }else {
+                            txtEmpty.visibility = View.VISIBLE
+                            rvBook.visibility = View.GONE
+                        }
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
+
+        homeViewModel.postSearchBook.observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    response.data?.let {
+                        if(!it.data.general_result.isNullOrEmpty()){
+                            txtEmpty.visibility = View.GONE
+                            rvBook.visibility = View.VISIBLE
+                            postSearchBookAdapter.differ.submitList(it.data.general_result)
+                        }else if(!it.data.popular_result.isNullOrEmpty()){
+                            txtEmpty.visibility = View.GONE
+                            rvBook.visibility = View.VISIBLE
+                            postSearchBookAdapter.differ.submitList(it.data.popular_result)
                         }else {
                             txtEmpty.visibility = View.VISIBLE
                             rvBook.visibility = View.GONE

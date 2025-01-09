@@ -170,6 +170,22 @@ class HomeViewModel(
         }
     }
 
+    val postSearchBook = MutableLiveData<Resource<SearchBookModel>>()
+    fun getPostSearchBook(bookName: String) = viewModelScope.launch(Dispatchers.IO) {
+        postSearchBook.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                postSearchBook.postValue(Resource.Loading())
+                val result = searchBookUseCase.execute(bookName)
+                postSearchBook.postValue(result)
+            }else {
+                postSearchBook.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            postSearchBook.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
     fun getSearchedBook() = liveData {
         searchedBookUseCase.execute().collect {
             emit(it)

@@ -39,6 +39,8 @@ import com.example.newbookshelf.data.model.post.general.PostCommentData
 import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
@@ -112,6 +114,7 @@ interface BookRepository {
     suspend fun postCommentDelete(postCommentIdx: Int): Resource<OnlyResultModel>
     suspend fun postDelete(postIdx: Int): Resource<OnlyResultModel>
     suspend fun addScrap(addScrapData: AddScrapData): Resource<AddScrapModel>
+    suspend fun addReadingClass(addReadingClassData: AddReadingClassData): Resource<AddReadingClassModel>
     suspend fun readingClassList(searchWord: String, filterType: String, limit: Int, currentPage: Int): Resource<ReadingClassModel>
     suspend fun readingClassDetail(readingClassIdx: Int): Resource<ReadingClassDetailModel>
     suspend fun readingClassDelete(readingClassIdx: Int): Resource<OnlyResultModel>

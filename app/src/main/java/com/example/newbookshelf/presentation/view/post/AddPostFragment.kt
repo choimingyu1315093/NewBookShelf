@@ -3,6 +3,7 @@ package com.example.newbookshelf.presentation.view.post
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.provider.Telephony.Mms.Addr
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,17 +16,19 @@ import com.example.newbookshelf.BuildConfig
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookResult
 import com.example.newbookshelf.data.model.post.general.AddPostData
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
+import com.example.newbookshelf.data.util.Address
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentAddPostBinding
-import com.example.newbookshelf.presentation.view.chat.ChatroomFragmentArgs
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.view.post.dialog.KakaoSearchDialog
+import com.example.newbookshelf.presentation.view.post.dialog.ReadingClassAddDialog
 import com.example.newbookshelf.presentation.view.post.dialog.SearchBookDialog
-import com.example.newbookshelf.presentation.view.profile.dialog.NicknameChangeDialog
 import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
+import java.net.URLEncoder
 import java.util.Calendar
 
-class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBookDialog.OnSelectedBook {
+class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBookDialog.OnSelectedBook, ReadingClassAddDialog.OnClickListener {
     private lateinit var binding: FragmentAddPostBinding
     private lateinit var postViewModel: PostViewModel
 
@@ -35,6 +38,7 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
 
     private lateinit var type: String
     private lateinit var kakaoKey: String
+    private var bookIsbn = ""
     private var isClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +76,7 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
             findNavController().popBackStack()
         }
 
-        ivPlace.setOnClickListener {
+        btnPlace.setOnClickListener {
             val dialog = KakaoSearchDialog(this@AddPostFragment)
             dialog.show(requireActivity().supportFragmentManager, "KakaoSearchDialog")
         }
@@ -102,6 +106,11 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
             ).show()
         }
 
+        btnBook.setOnClickListener {
+            val dialog = SearchBookDialog(this@AddPostFragment, "post")
+            dialog.show(requireActivity().supportFragmentManager, "SearchBookDialog")
+        }
+
         btnAdd.setOnClickListener {
             isClicked = true
             if(type == "general"){
@@ -111,12 +120,16 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
                     val addPostData = AddPostData(etTitle.text.toString().trim(), etContent.text.toString().trim())
                     postViewModel.addPost(addPostData)
                 }
+            }else {
+                if(etTitle.text.toString() == "" || etContent.text.toString() == "" ||
+                    etPlace.text.toString() == "" || etDate.text.toString() == "" ||
+                    etTime.text.toString() == "" || etBook.text.toString() == ""){
+                    Toast.makeText(activity, "모든 항목을 입력해주세요", Toast.LENGTH_SHORT).show()
+                }else {
+                    val dialog = ReadingClassAddDialog(this@AddPostFragment)
+                    dialog.show(requireActivity().supportFragmentManager, "ReadingClassAddDialog")
+                }
             }
-        }
-
-        ivBook.setOnClickListener {
-            val dialog = SearchBookDialog(this@AddPostFragment)
-            dialog.show(requireActivity().supportFragmentManager, "SearchBookDialog")
         }
     }
 
@@ -135,15 +148,34 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
                 is Resource.Loading -> Unit
             }
         }
+        
+        postViewModel.googleMapLatLngResult.observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    Log.d(TAG, "observeViewModel: ${response.data}")
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
     }
 
     //장소 선택
-    override fun onSelectedPlace(place: String) = with(binding) {
+    override fun onSelectedPlace(place: String, address: String): Unit = with(binding) {
         etPlace.setText(place)
+        postViewModel.getCoordinatesForAddress(address, requireContext().getString(R.string.GOOGLE_MAP_KEY))
     }
 
     //책 선택
     override fun onSelectedBook(book: SearchBookResult) = with(binding) {
         etBook.setText(book.book_name)
+        bookIsbn = book.book_isbn!!
+    }
+
+    //독서 모임 등록
+    override fun addReadingClass(b: Boolean) {
+        //TODO(등록할 때 위도, 경도 말고 장소명으로 수정 요청)
+//        val addReadingClassDate = AddReadingClassData(bookIsbn, )
+//        postViewModel.addReadingClass(addReadingClassDate)
     }
 }

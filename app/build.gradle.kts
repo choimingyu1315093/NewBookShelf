@@ -25,6 +25,7 @@ android {
         buildConfigField("String", "ALADIN_BASE_URL", project.properties["ALADIN_BASE_URL"].toString())
         buildConfigField("String", "TTB_KEY", project.properties["TTB_KEY"].toString())
         buildConfigField("String", "GOOGLE_CLIENT_ID", project.properties["GOOGLE_CLIENT_ID"].toString())
+        buildConfigField("String", "GOOGLE_BASE_URL", project.properties["GOOGLE_BASE_URL"].toString())
         buildConfigField("String", "NAVER_CLIENT_ID", project.properties["NAVER_CLIENT_ID"].toString())
         buildConfigField("String", "NAVER_CLIENT_SECRET", project.properties["NAVER_CLIENT_SECRET"].toString())
         buildConfigField("String", "KAKAO_NATIVE_KEY", project.properties["KAKAO_NATIVE_KEY"].toString())

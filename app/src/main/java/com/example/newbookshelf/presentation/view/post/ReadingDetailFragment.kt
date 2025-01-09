@@ -48,6 +48,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
     private var writerIdx = 0
     private var isScrap = false
     private var readingClassIdx = 0
+    private var userIdxList = arrayListOf<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +75,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
         (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
         postViewModel = (activity as HomeActivity).postViewModel
         postViewModel.readingClassDetail(readingClassIdx)
+        postViewModel.readingClassMemberList(readingClassIdx, 30, 1)
     }
 
     private fun bindViews() = with(binding){
@@ -197,6 +199,19 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                     is Resource.Error -> Unit
                     is Resource.Loading -> Unit
                 }
+            }
+        }
+        
+        postViewModel.readingClassMemberListResult.observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    for(i in 0 until response.data!!.data.size){
+                        userIdxList.add(response.data.data[i].users.user_idx)
+                    }
+                    Log.d(TAG, "observeViewModel: userIdxList $userIdxList")
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
             }
         }
     }

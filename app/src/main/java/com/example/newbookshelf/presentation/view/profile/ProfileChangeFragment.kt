@@ -138,7 +138,7 @@ class ProfileChangeFragment : Fragment(), NicknameChangeDialog.OnClickListener, 
     }
 
     override fun selectBook(isPhoto: Boolean) {
-        val dialog = SearchBookDialog(this@ProfileChangeFragment)
+        val dialog = SearchBookDialog(this@ProfileChangeFragment, "profile")
         dialog.show(requireActivity().supportFragmentManager, "SearchBookDialog")
     }
 

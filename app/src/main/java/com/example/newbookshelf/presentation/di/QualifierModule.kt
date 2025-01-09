@@ -16,3 +16,7 @@ annotation class AladinRetrofit
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class KakaoRetrofit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class GoogleRetrofit

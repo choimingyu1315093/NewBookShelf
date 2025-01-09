@@ -5,7 +5,9 @@ import com.example.newbookshelf.data.model.post.general.PostDetailModelUsers
 import com.example.newbookshelf.domain.usecase.chat.CreateChatroomUseCase
 import com.example.newbookshelf.domain.usecase.map.WishBookHaveUserUseCase
 import com.example.newbookshelf.domain.usecase.post.AddPostUseCase
+import com.example.newbookshelf.domain.usecase.post.AddReadingClassUseCase
 import com.example.newbookshelf.domain.usecase.post.AddScrapUseCase
+import com.example.newbookshelf.domain.usecase.post.GoogleMapSearchLatLngUseCase
 import com.example.newbookshelf.domain.usecase.post.KakaoSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
@@ -41,12 +43,14 @@ object PostFactoryModule {
         postCommentDeleteUseCase: PostCommentDeleteUseCase,
         addScrapUseCase: AddScrapUseCase,
         postDeleteUseCase: PostDeleteUseCase,
+        addReadingClassUseCase: AddReadingClassUseCase,
+        googleMapSearchLatLngUseCase: GoogleMapSearchLatLngUseCase,
         readingClassUseCase: ReadingClassUseCase,
         readingClassDetailUseCase: ReadingClassDetailUseCase,
         readingClassDeleteUseCase: ReadingClassDeleteUseCase,
         readingClassMemberListUseCase: ReadingClassMemberListUseCase,
         readingClassJoinUseCase: ReadingClassJoinUseCase
     ): PostViewModelFactory {
-        return PostViewModelFactory(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, readingClassUseCase, readingClassDetailUseCase, readingClassDeleteUseCase, readingClassMemberListUseCase, readingClassJoinUseCase)
+        return PostViewModelFactory(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, addReadingClassUseCase, googleMapSearchLatLngUseCase, readingClassUseCase, readingClassDetailUseCase, readingClassDeleteUseCase, readingClassMemberListUseCase, readingClassJoinUseCase)
     }
 }

@@ -79,9 +79,11 @@ class ReadingClassMemberDialog(private val readingClassIdx: Int) : DialogFragmen
             when(response){
                 is Resource.Success -> {
                     if(response.data!!.result){
-                        memberAdapter.differ.submitList(response.data.data)
-                    }else {
-                        txtEmpty.visibility = View.VISIBLE
+                        if(response.data.data.isNotEmpty()){
+                            memberAdapter.differ.submitList(response.data.data)
+                        }else {
+                            txtEmpty.visibility = View.VISIBLE
+                        }
                     }
                 }
                 is Resource.Error -> Unit

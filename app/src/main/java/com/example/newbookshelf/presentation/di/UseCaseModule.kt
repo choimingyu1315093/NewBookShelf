@@ -2,6 +2,7 @@ package com.example.newbookshelf.presentation.di
 
 import com.example.newbookshelf.domain.repository.AladinBookRepository
 import com.example.newbookshelf.domain.repository.BookRepository
+import com.example.newbookshelf.domain.repository.GoogleMapRepository
 import com.example.newbookshelf.domain.repository.KakaoRepository
 import com.example.newbookshelf.domain.usecase.chat.CreateChatroomUseCase
 import com.example.newbookshelf.domain.usecase.chat.DeleteChatroomUseCase
@@ -35,7 +36,9 @@ import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
 import com.example.newbookshelf.domain.usecase.post.AddPostUseCase
+import com.example.newbookshelf.domain.usecase.post.AddReadingClassUseCase
 import com.example.newbookshelf.domain.usecase.post.AddScrapUseCase
+import com.example.newbookshelf.domain.usecase.post.GoogleMapSearchLatLngUseCase
 import com.example.newbookshelf.domain.usecase.post.KakaoSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
@@ -362,6 +365,18 @@ object UseCaseModule {
     @Provides
     fun provideAddScrapUseCase(bookRepository: BookRepository): AddScrapUseCase {
         return AddScrapUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddReadingClassUseCase(bookRepository: BookRepository): AddReadingClassUseCase {
+        return AddReadingClassUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGoogleMapSearchLatLngUseCase(googleMapRepository: GoogleMapRepository): GoogleMapSearchLatLngUseCase {
+        return GoogleMapSearchLatLngUseCase(googleMapRepository)
     }
 
     @Singleton

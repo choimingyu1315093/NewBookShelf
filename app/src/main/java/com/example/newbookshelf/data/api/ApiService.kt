@@ -39,6 +39,8 @@ import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.kakao.KakaoMapModel
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
@@ -325,7 +327,13 @@ interface ApiService {
         @Body addScrapData: AddScrapData
     ): Response<AddScrapModel>
 
-    //독서 모임글 목록 조회
+    //독서 모임 등록
+    @POST("club-posts")
+    suspend fun addReadingClass(
+        @Body addReadingClassData: AddReadingClassData
+    ): Response<AddReadingClassModel>
+
+    //독서 모임 목록 조회
     @GET("club-posts/list")
     suspend fun readingClassList(
         @Query("search_word") searchWord: String,
@@ -334,13 +342,13 @@ interface ApiService {
         @Query("current_page") currentPage: Int
     ): Response<ReadingClassModel>
 
-    //독서 모임글 상세 조회
+    //독서 모임 상세 조회
     @GET("club-posts/{club_post_idx}")
     suspend fun readingClassDetail(
         @Path("club_post_idx") clubPostIdx: Int
     ): Response<ReadingClassDetailModel>
 
-    //독서 모임글 삭제
+    //독서 모임 삭제
     @DELETE("club-posts/{club_post_idx}")
     suspend fun readingClassDelete(
         @Path("club_post_idx") clubPostIdx: Int

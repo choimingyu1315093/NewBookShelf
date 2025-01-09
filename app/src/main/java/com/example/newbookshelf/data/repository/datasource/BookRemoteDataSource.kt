@@ -38,6 +38,8 @@ import com.example.newbookshelf.data.model.post.general.PostCommentData
 import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
@@ -106,6 +108,7 @@ interface BookRemoteDataSource {
     suspend fun postCommentDelete(postCommentIdx: Int): Response<OnlyResultModel>
     suspend fun postDelete(postIdx: Int): Response<OnlyResultModel>
     suspend fun addScrap(addScrapData: AddScrapData): Response<AddScrapModel>
+    suspend fun addReadingClass(addReadingClassData: AddReadingClassData): Response<AddReadingClassModel>
     suspend fun readingClassList(searchWord: String, filterType: String, limit: Int, currentPage: Int): Response<ReadingClassModel>
     suspend fun readingClassDetail(readingClassIdx: Int): Response<ReadingClassDetailModel>
     suspend fun readingClassDelete(readingClassIdx: Int): Response<OnlyResultModel>

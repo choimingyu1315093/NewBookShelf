@@ -55,8 +55,8 @@ class ReadingClassAdapter: RecyclerView.Adapter<ReadingClassAdapter.ViewHolder>(
             tvPlace.text = Address.getAddressFromLatLng(itemView.context, readingClass.club_latitude.toDouble(), readingClass.club_longitude.toDouble())
 
             if(DateFormat.isDatePast(readingClass.club_meet_date)){
-                tvStatus.text = "종료"
-                tvStatus.setBackgroundResource(R.drawable.btn_e9e9e9_no_10)
+                tvStatus.text = "진행중"
+                tvStatus.setBackgroundResource(R.drawable.btn_main_no_10)
             }else {
                 tvStatus.text = "예정"
                 tvStatus.setBackgroundResource(R.drawable.btn_main_no_10)

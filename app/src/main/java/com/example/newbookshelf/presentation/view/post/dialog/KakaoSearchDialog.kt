@@ -32,7 +32,7 @@ class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFr
     private lateinit var postViewModel: PostViewModel
 
     interface OnSelectedPlace {
-        fun onSelectedPlace(place: String)
+        fun onSelectedPlace(place: String, address: String)
     }
 
     companion object {
@@ -77,7 +77,7 @@ class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFr
         kakaoAdapter = (activity as HomeActivity).kakaoAdapter
         kakaoAdapter.setOnClickListener {
             isClicked = true
-            onSelectedPlace.onSelectedPlace(it.place_name)
+            onSelectedPlace.onSelectedPlace(it.place_name, etSearch.text.toString().trim())
             dismiss()
         }
         rvPlace.apply {

@@ -11,8 +11,12 @@ import androidx.fragment.app.DialogFragment
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.FragmentReadingClassAddDialogBinding
 
-class ReadingClassAddDialog : DialogFragment() {
+class ReadingClassAddDialog(private val onClickListener: OnClickListener) : DialogFragment() {
     private lateinit var binding: FragmentReadingClassAddDialogBinding
+
+    interface OnClickListener {
+        fun addReadingClass(b: Boolean)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,5 +37,18 @@ class ReadingClassAddDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentReadingClassAddDialogBinding.bind(view)
+
+        bindViews()
+    }
+
+    private fun bindViews() = with(binding){
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+
+        btnOk.setOnClickListener {
+            dismiss()
+            onClickListener.addReadingClass(true)
+        }
     }
 }

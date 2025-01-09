@@ -39,6 +39,8 @@ import com.example.newbookshelf.data.model.post.general.PostCommentData
 import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
@@ -291,6 +293,10 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
 
     override suspend fun addScrap(addScrapData: AddScrapData): Resource<AddScrapModel> {
         return responseToResource(bookRemoteDataSource.addScrap(addScrapData))
+    }
+
+    override suspend fun addReadingClass(addReadingClassData: AddReadingClassData): Resource<AddReadingClassModel> {
+        return responseToResource(bookRemoteDataSource.addReadingClass(addReadingClassData))
     }
 
     override suspend fun readingClassList(searchWord: String, filterType: String, limit: Int, currentPage: Int): Resource<ReadingClassModel> {

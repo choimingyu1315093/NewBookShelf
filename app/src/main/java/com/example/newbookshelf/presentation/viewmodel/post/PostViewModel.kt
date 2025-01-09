@@ -19,6 +19,9 @@ import com.example.newbookshelf.data.model.post.general.PostCommentData
 import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
+import com.example.newbookshelf.data.model.post.google.GeocodingModel
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
+import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
@@ -26,7 +29,9 @@ import com.example.newbookshelf.data.model.post.readingclass.ReadingClassMembers
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModel
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.post.AddPostUseCase
+import com.example.newbookshelf.domain.usecase.post.AddReadingClassUseCase
 import com.example.newbookshelf.domain.usecase.post.AddScrapUseCase
+import com.example.newbookshelf.domain.usecase.post.GoogleMapSearchLatLngUseCase
 import com.example.newbookshelf.domain.usecase.post.KakaoSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
@@ -51,6 +56,8 @@ class PostViewModel(
     private val postCommentDeleteUseCase: PostCommentDeleteUseCase,
     private val addScrapUseCase: AddScrapUseCase,
     private val postDeleteUseCase: PostDeleteUseCase,
+    private val addReadingClassUseCase: AddReadingClassUseCase,
+    private val googleMapSearchLatLngUseCase: GoogleMapSearchLatLngUseCase,
     private val readingClassUseCase: ReadingClassUseCase,
     private val readingClassDetailUseCase: ReadingClassDetailUseCase,
     private val readingClassDeleteUseCase: ReadingClassDeleteUseCase,
@@ -176,6 +183,22 @@ class PostViewModel(
         }
     }
 
+    val addReadingClassResult = MutableLiveData<Resource<AddReadingClassModel>>()
+    fun addReadingClass(addReadingClassData: AddReadingClassData) = viewModelScope.launch(Dispatchers.IO) {
+        addReadingClassResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                addReadingClassResult.postValue(Resource.Loading())
+                val result = addReadingClassUseCase.execute(addReadingClassData)
+                addReadingClassResult.postValue(result)
+            }else {
+                addReadingClassResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            addReadingClassResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
     val readingClassListResult = MutableLiveData<Resource<ReadingClassModel>>()
     fun readingClassList(searchWord: String, filterType: String, limit: Int, currentPage: Int) = viewModelScope.launch(Dispatchers.IO) {
         readingClassListResult.postValue(Resource.Loading())
@@ -254,6 +277,23 @@ class PostViewModel(
             }
         }catch (e: Exception){
             readingClassJoinResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val googleMapLatLngResult = MutableLiveData<Resource<GeocodingModel>>()
+    fun getCoordinatesForAddress(address: String, apiKey: String) = viewModelScope.launch(Dispatchers.IO) {
+        googleMapLatLngResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                googleMapLatLngResult.postValue(Resource.Loading())
+                val result = googleMapSearchLatLngUseCase.execute(address, apiKey)
+                Log.d("TAG", "getCoordinatesForAddress: address $address, result ${result.data}")
+                googleMapLatLngResult.postValue(result)
+            }else {
+                googleMapLatLngResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            googleMapLatLngResult.postValue(Resource.Error(e.message.toString()))
         }
     }
 
