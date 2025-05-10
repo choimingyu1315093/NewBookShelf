@@ -60,8 +60,8 @@ class ProfileChangeFragment : Fragment(), NicknameChangeDialog.OnClickListener, 
 
     private fun init() = with(binding){
         profileViewModel = (activity as HomeActivity).profileViewModel
-        bookImageArray = profileViewModel.userImageList.value!!
-        bookIsbnArray = profileViewModel.userIsbnList.value!!
+        bookImageArray = profileViewModel.userBestSellerList.value!!
+        bookIsbnArray = profileViewModel.userBestSellerIsbnList.value!!
 
         photoAdapter = PhotoAdapter(bookImageArray, requireContext(), this@ProfileChangeFragment, 2)
         rvTopBook.apply {

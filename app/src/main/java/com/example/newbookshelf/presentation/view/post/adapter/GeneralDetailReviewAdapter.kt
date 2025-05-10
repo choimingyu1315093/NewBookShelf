@@ -1,5 +1,6 @@
 package com.example.newbookshelf.presentation.view.post.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +55,7 @@ class GeneralDetailReviewAdapter: RecyclerView.Adapter<GeneralDetailReviewAdapte
         fun bind(postComment: PostDetailComment) = with(binding){
             tvName.text = postComment.users.user_name
             tvContent.text = postComment.comment_content
-            if(userIdx == postComment.users.user_idx){
+            if(BookShelfApp.prefs.getUserIdx("userIdx", 0) == postComment.users.user_idx){
                 ivMore.visibility = View.VISIBLE
                 ivMore.setOnClickListener {
                     showPopupMenu(it)

@@ -12,6 +12,7 @@ import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.ChatStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
+import com.example.newbookshelf.domain.usecase.home.SearchMoreBookUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookInsertUseCase
@@ -31,6 +32,7 @@ class HomeViewModelFactory(
     private val alarmAllDeleteUseCase: AlarmAllDeleteUseCase,
     private val alarmOneDeleteUseCase: AlarmOneDeleteUseCase,
     private val searchBookUseCase: SearchBookUseCase,
+    private val searchMoreBookUseCase: SearchMoreBookUseCase,
     private val searchedBookUseCase: SearchedBookUseCase,
     private val searchedBookInsertUseCase: SearchedBookInsertUseCase,
     private val searchedBookDeleteUseCase: SearchedBookDeleteUseCase,
@@ -39,7 +41,7 @@ class HomeViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(HomeViewModel::class.java)){
-            return HomeViewModel(app, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, chatStatusUseCase, alarmCountUseCase, alarmStatusUseCase, alarmListUseCase, alarmAllDeleteUseCase, alarmOneDeleteUseCase, searchBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase) as T
+            return HomeViewModel(app, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, chatStatusUseCase, alarmCountUseCase, alarmStatusUseCase, alarmListUseCase, alarmAllDeleteUseCase, alarmOneDeleteUseCase, searchBookUseCase, searchMoreBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase) as T
         }
         throw IllegalArgumentException("Unknown View Model Class")
     }

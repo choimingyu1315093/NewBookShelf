@@ -60,6 +60,7 @@ class PostFragment : Fragment() {
         postViewModel.postList(10, 1)
         generalAdapter = (activity as HomeActivity).generalAdapter
         readingClassAdapter = (activity as HomeActivity).readingClassAdapter
+        readingClassAdapter.postViewModel = postViewModel
 
         val spList = listOf("등록순", "거리순")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spList)
@@ -77,7 +78,7 @@ class PostFragment : Fragment() {
         }
 
         btnReading.setOnClickListener {
-            postViewModel.readingClassList("", "latest", 10, 1)
+            postViewModel.readingClassList("", "distance", 10, 1)
             isGeneral = "reading"
             btnGeneral.setBackgroundResource(R.drawable.btn_e9e9e9_no_10)
             btnReading.setBackgroundResource(R.drawable.btn_main_no_10)

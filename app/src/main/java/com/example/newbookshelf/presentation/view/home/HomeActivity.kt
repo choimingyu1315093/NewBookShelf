@@ -56,15 +56,8 @@ import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModelFactory
 import com.example.newbookshelf.presentation.viewmodel.setting.SettingViewModel
 import com.example.newbookshelf.presentation.viewmodel.setting.SettingViewModelFactory
-import com.launchdarkly.eventsource.ConnectStrategy
-import com.launchdarkly.eventsource.EventSource
-import com.launchdarkly.eventsource.background.BackgroundEventSource
 import dagger.hilt.android.AndroidEntryPoint
-import java.net.CookieManager
-import java.net.CookiePolicy
 import javax.inject.Inject
-import java.net.URL
-import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {

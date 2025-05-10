@@ -25,6 +25,8 @@ import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookData
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
@@ -182,6 +184,12 @@ interface ApiService {
     suspend fun searchBook(
         @Query("book_name") bookName: String
     ): Response<SearchBookModel>
+
+    //책 목록 더보기
+    @POST("books/list/more")
+    suspend fun searchMoreBook(
+        @Body searchMoreBookData: SearchMoreBookData
+    ): Response<SearchMoreBookModel>
 
     //책 상세 검색
     @GET("books/{book_isbn}")

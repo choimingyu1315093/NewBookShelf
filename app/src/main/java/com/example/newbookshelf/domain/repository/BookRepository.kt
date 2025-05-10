@@ -25,6 +25,8 @@ import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookData
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
@@ -87,6 +89,7 @@ interface BookRepository {
     suspend fun alarmAllDelete(): Resource<OnlyResultModel>
     suspend fun alarmOneDelete(alarmIdx: Int): Resource<OnlyResultModel>
     suspend fun searchBook(bookName: String): Resource<SearchBookModel>
+    suspend fun searchMoreBook(searchMoreBookData: SearchMoreBookData): Resource<SearchMoreBookModel>
     fun searchedBook(): Flow<List<SearchedBook>>
     suspend fun insert(searchedBook: SearchedBook)
     suspend fun delete(searchedBook: SearchedBook)
@@ -100,7 +103,7 @@ interface BookRepository {
     suspend fun addBookMemo(accessToken: String, addBookMemoData: AddBookMemoData): Resource<AddBookMemoModel>
     suspend fun updateBookMemo(accessToken: String, bookMemoIdx: Int, updateBookMemoData: UpdateBookMemoData): Resource<UpdateBookMemoModel>
     suspend fun deleteBookMemo(accessToken: String, bookMemoIdx: Int): Resource<DeleteBookMemoModel>
-    fun myProfile(): Flow<Resource<MyProfileModel>>
+    suspend fun myProfile(): Resource<MyProfileModel>
     fun readingStatistics(userIdx: Int): Flow<Resource<ReadingStatisticsModel>>
     fun profileActivity(userIdx: Int): Flow<Resource<ActivityModel>>
     fun profileMemo(): Flow<Resource<MemoModel>>

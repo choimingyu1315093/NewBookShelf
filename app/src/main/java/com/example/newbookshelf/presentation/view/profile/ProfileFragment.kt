@@ -32,12 +32,19 @@ class ProfileFragment : Fragment() {
 
     private lateinit var accessToken: String
     private lateinit var profileAdapter: ProfileAdapter
+    private var topBook: ArrayList<String> = arrayListOf()
     private var topBookImageList: ArrayList<String> = arrayListOf()
     private var topBookIsbnList: ArrayList<String> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        profileViewModel.myProfile()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -57,7 +64,75 @@ class ProfileFragment : Fragment() {
         (activity as HomeActivity).binding.cl.visibility = View.GONE
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         profileViewModel = (activity as HomeActivity).profileViewModel
+    }
 
+    private fun bindViews() = with(binding){
+        btnBook.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_profileBookFragment)
+        }
+
+        btnProfile.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_profileChangeFragment)
+        }
+    }
+
+    private fun observeViewModel() = with(binding){
+        profileViewModel.myProfileInfo.observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    progressBar.visibility = View.GONE
+                    response.data?.let {
+                        tvName.text = it.data.user_name
+                        BookShelfApp.prefs.setNickname("nickname", it.data.user_name)
+
+                        if(it.data.user_description == ""){
+                            tvOneLine.text = "한 줄 메시지를 입력해주세요."
+                        }else {
+                            tvOneLine.text = it.data.user_description
+                        }
+
+                        setColoredText(tvFriend, it.data.relation_count)
+                        setColoredText(tvRequest, it.data.relation_request_count)
+
+                        topBook.clear()
+                        topBookImageList.clear()
+                        topBookImageList.add("")
+                        topBookIsbnList.clear()
+                        topBookIsbnList.add("")
+                        if(it.data.top1_book != null){
+                            topBook.add(it.data.top1_book.book_image)
+                            topBookImageList.add(it.data.top1_book.book_image)
+                            topBookIsbnList.add(it.data.top1_book.book_isbn)
+                        }
+                        if(it.data.top2_book != null){
+                            topBook.add(it.data.top2_book.book_image)
+                            topBookImageList.add(it.data.top2_book.book_image)
+                            topBookIsbnList.add(it.data.top2_book.book_isbn)
+                        }
+                        if(it.data.top3_book != null){
+                            topBook.add(it.data.top3_book.book_image)
+                            topBookImageList.add(it.data.top3_book.book_image)
+                            topBookIsbnList.add(it.data.top3_book.book_isbn)
+                        }
+
+                        profileViewModel.userName.value = it.data.user_name
+                        profileViewModel.userDescription.value = it.data.user_description
+                        profileViewModel.userBestSeller.value = topBook
+                        profileViewModel.userBestSellerList.value = topBookImageList
+                        profileViewModel.userBestSellerIsbnList.value = topBookIsbnList
+
+                        viewPagerSetting()
+                    }
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    private fun viewPagerSetting() = with(binding){
         profileAdapter = ProfileAdapter(requireParentFragment())
         vpType.adapter = profileAdapter
         vpType.offscreenPageLimit = 1
@@ -77,65 +152,6 @@ class ProfileFragment : Fragment() {
                 }
             }
         }.attach()
-    }
-
-    private fun bindViews() = with(binding){
-        btnBook.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_profileBookFragment)
-        }
-
-        btnProfile.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_profileChangeFragment)
-        }
-    }
-
-    private fun observeViewModel() = with(binding){
-        profileViewModel.myProfile().observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    response.data?.let {
-                        tvName.text = it.data.user_name
-                        BookShelfApp.prefs.setNickname("nickname", it.data.user_name)
-
-                        if(it.data.user_description == ""){
-                            tvOneLine.text = "한 줄 메시지를 입력해주세요."
-                        }else {
-                            tvOneLine.text = it.data.user_description
-                        }
-
-                        setColoredText(tvFriend, it.data.relation_count)
-                        setColoredText(tvRequest, it.data.relation_request_count)
-
-                        topBookImageList.clear()
-                        topBookImageList.add("")
-                        topBookIsbnList.clear()
-                        topBookIsbnList.add("")
-                        if(it.data.top1_book != null){
-                            topBookImageList.add(it.data.top1_book.book_image)
-                            topBookIsbnList.add(it.data.top1_book.book_isbn)
-                        }
-                        if(it.data.top2_book != null){
-                            topBookImageList.add(it.data.top2_book.book_image)
-                            topBookIsbnList.add(it.data.top2_book.book_isbn)
-                        }
-                        if(it.data.top3_book != null){
-                            topBookImageList.add(it.data.top3_book.book_image)
-                            topBookIsbnList.add(it.data.top3_book.book_isbn)
-                        }
-
-                        profileViewModel.userName.value = it.data.user_name
-                        profileViewModel.userDescription.value = it.data.user_description
-                        profileViewModel.userImageList.value = topBookImageList
-                        profileViewModel.userIsbnList.value = topBookIsbnList
-                    }
-                    progressBar.visibility = View.GONE
-                }
-                is Resource.Error -> Unit
-                is Resource.Loading -> {
-                    progressBar.visibility = View.VISIBLE
-                }
-            }
-        }
     }
 
     private fun setColoredText(tvFriend: TextView, relationCount: Int) {

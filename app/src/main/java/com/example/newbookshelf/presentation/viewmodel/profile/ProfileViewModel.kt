@@ -5,16 +5,14 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.newbookshelf.data.model.common.OnlyResultModel
-import com.example.newbookshelf.data.model.profile.MyBookModel
+import com.example.newbookshelf.data.model.profile.MyProfileModel
 import com.example.newbookshelf.data.model.profile.TopBookData
 import com.example.newbookshelf.data.util.Resource
-import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
 import com.example.newbookshelf.domain.usecase.profile.DescriptionChangeUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyBookListUseCase
 import com.example.newbookshelf.domain.usecase.profile.MyProfileUseCase
@@ -40,12 +38,21 @@ class ProfileViewModel(
 
     var userName = MutableLiveData<String>()
     var userDescription = MutableLiveData<String>()
-    var userImageList = MutableLiveData<ArrayList<String>>()
-    var userIsbnList = MutableLiveData<ArrayList<String>>()
+    var userBestSeller = MutableLiveData<ArrayList<String>>()
+    var userBestSellerList = MutableLiveData<ArrayList<String>>()
+    var userBestSellerIsbnList = MutableLiveData<ArrayList<String>>()
 
-    fun myProfile() = liveData {
-        myProfileUseCase.execute().collect {
-            emit(it)
+    val myProfileInfo = MutableLiveData<Resource<MyProfileModel>>()
+    fun myProfile() = viewModelScope.launch(Dispatchers.IO) {
+        myProfileInfo.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                myProfileInfo.postValue(Resource.Loading())
+                val result = myProfileUseCase.execute()
+                myProfileInfo.postValue(result)
+            }
+        }catch (e: Exception){
+            myProfileInfo.postValue(Resource.Error(e.message.toString()))
         }
     }
 
@@ -96,7 +103,6 @@ class ProfileViewModel(
             if(isNetworkAvailable(app)){
                 topBookChangeResult.postValue(Resource.Loading())
                 val result = topBookChangeUseCase.execute(topBookData)
-                Log.d("TAG", "topBookChange: result $result")
                 topBookChangeResult.postValue(result)
             }
         }catch (e: Exception){

@@ -27,6 +27,7 @@ import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.ChatStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
+import com.example.newbookshelf.domain.usecase.home.SearchMoreBookUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookInsertUseCase
@@ -39,6 +40,7 @@ import com.example.newbookshelf.domain.usecase.post.AddPostUseCase
 import com.example.newbookshelf.domain.usecase.post.AddReadingClassUseCase
 import com.example.newbookshelf.domain.usecase.post.AddScrapUseCase
 import com.example.newbookshelf.domain.usecase.post.GoogleMapSearchLatLngUseCase
+import com.example.newbookshelf.domain.usecase.post.GoogleMapSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.post.KakaoSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
@@ -203,6 +205,12 @@ object UseCaseModule {
     @Provides
     fun provideSearchBookUseCase(bookRepository: BookRepository): SearchBookUseCase {
         return SearchBookUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchMoreBookUseCase(bookRepository: BookRepository): SearchMoreBookUseCase {
+        return SearchMoreBookUseCase(bookRepository)
     }
 
     @Singleton
@@ -377,6 +385,12 @@ object UseCaseModule {
     @Provides
     fun provideGoogleMapSearchLatLngUseCase(googleMapRepository: GoogleMapRepository): GoogleMapSearchLatLngUseCase {
         return GoogleMapSearchLatLngUseCase(googleMapRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGoogleMapSearchPlaceUseCase(googleMapRepository: GoogleMapRepository): GoogleMapSearchPlaceUseCase {
+        return GoogleMapSearchPlaceUseCase(googleMapRepository)
     }
 
     @Singleton

@@ -25,6 +25,8 @@ import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookData
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
@@ -85,6 +87,7 @@ interface BookRemoteDataSource {
     suspend fun alarmAllDelete(): Response<OnlyResultModel>
     suspend fun alarmOneDelete(alarmIdx: Int): Response<OnlyResultModel>
     suspend fun searchBook(bookName: String): Response<SearchBookModel>
+    suspend fun searchMoreBook(searchMoreBookData: SearchMoreBookData): Response<SearchMoreBookModel>
     suspend fun detailBook(bookIsbn: String): Response<DetailBookModel>
     suspend fun addMyBook(addMyBookData: AddMyBookData): Response<AddMyBookModel>
     suspend fun addBookReview(addBookReviewData: AddBookReviewData): Response<AddBookReviewModel>
@@ -94,7 +97,7 @@ interface BookRemoteDataSource {
     suspend fun addBookMemo(accessToken: String, addBookMemoData: AddBookMemoData): Response<AddBookMemoModel>
     suspend fun updateBookMemo(accessToken: String, memoIdx: Int, updateBookMemoData: UpdateBookMemoData): Response<UpdateBookMemoModel>
     suspend fun deleteBookMemo(accessToken: String, memoIdx: Int): Response<DeleteBookMemoModel>
-    fun myProfile(): Flow<Response<MyProfileModel>>
+    suspend fun myProfile(): Response<MyProfileModel>
     fun readingStatistics(userIdx: Int): Flow<Response<ReadingStatisticsModel>>
     fun profileActivity(userIdx: Int): Flow<Response<ActivityModel>>
     fun profileMemo(): Flow<Response<MemoModel>>

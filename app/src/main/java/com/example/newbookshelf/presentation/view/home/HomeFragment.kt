@@ -81,6 +81,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
         homeViewModel = (activity as HomeActivity).homeViewModel
         detailViewModel = (activity as HomeActivity).detailViewModel
         profileViewModel = (activity as HomeActivity).profileViewModel
+        profileViewModel.myProfile()
 
         weekBestsellerAdapter = (activity as HomeActivity).weekBestsellerAdapter
         weekBestsellerAdapter.setOnClickListener {
@@ -228,7 +229,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
             }
         }
 
-        profileViewModel.myProfile().observe(viewLifecycleOwner){ response ->
+        profileViewModel.myProfileInfo.observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
                     response.data?.let {

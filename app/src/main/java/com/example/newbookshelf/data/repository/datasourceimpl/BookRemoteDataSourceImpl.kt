@@ -26,6 +26,8 @@ import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookData
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookModel
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.login.SnsLoginData
@@ -149,6 +151,10 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         return apiService.searchBook(bookName)
     }
 
+    override suspend fun searchMoreBook(searchMoreBookData: SearchMoreBookData): Response<SearchMoreBookModel> {
+        return apiService.searchMoreBook(searchMoreBookData)
+    }
+
     override suspend fun detailBook(bookIsbn: String): Response<DetailBookModel> {
         return apiService.detailBook(bookIsbn)
     }
@@ -185,10 +191,8 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
        return apiService.deleteMemo(accessToken, memoIdx)
     }
 
-    override fun myProfile(): Flow<Response<MyProfileModel>> {
-        return flow {
-            emit(apiService.myProfile())
-        }
+    override suspend fun myProfile(): Response<MyProfileModel> {
+        return apiService.myProfile()
     }
 
     override fun readingStatistics(userIdx: Int): Flow<Response<ReadingStatisticsModel>> {

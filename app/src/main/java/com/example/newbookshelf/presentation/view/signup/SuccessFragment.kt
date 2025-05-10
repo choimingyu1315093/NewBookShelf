@@ -55,7 +55,6 @@ class SuccessFragment : DialogFragment() {
         binding = FragmentSuccessBinding.bind(view)
 
         init()
-        observeViewModel()
     }
 
     private fun init() = with(binding){
@@ -63,26 +62,8 @@ class SuccessFragment : DialogFragment() {
         (activity as SignUpActivity).binding.tvTitle.text = "회원 가입 완료"
         (activity as SignUpActivity).binding.ivBack.visibility = View.GONE
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
-        val ticketData = TicketData(1)
-        Log.d(TAG, "init: accessToken $accessToken")
-        signupViewModel.buyTicket(accessToken, ticketData)
-    }
-
-    private fun observeViewModel() = with(binding){
-        signupViewModel.buyTicketResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    lifecycleScope.launch {
-                        finish()
-                    }
-                }
-                is Resource.Error -> {
-
-                }
-                is Resource.Loading -> {
-
-                }
-            }
+        lifecycleScope.launch {
+            finish()
         }
     }
 

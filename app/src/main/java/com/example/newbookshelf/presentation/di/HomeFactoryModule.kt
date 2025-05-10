@@ -12,6 +12,7 @@ import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.ChatStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
+import com.example.newbookshelf.domain.usecase.home.SearchMoreBookUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookInsertUseCase
@@ -43,11 +44,12 @@ object HomeFactoryModule {
         alarmAllDeleteUseCase: AlarmAllDeleteUseCase,
         alarmOneDeleteUseCase: AlarmOneDeleteUseCase,
         searchBookUseCase: SearchBookUseCase,
+        searchMoreBookUseCase: SearchMoreBookUseCase,
         searchedBookUseCase: SearchedBookUseCase,
         searchedBookInsertUseCase: SearchedBookInsertUseCase,
         searchedBookDeleteUseCase: SearchedBookDeleteUseCase,
         searchedBookAllDeleteUseCase: SearchedBookAllDeleteUseCase
     ): HomeViewModelFactory{
-        return HomeViewModelFactory(application, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, chatStatusUseCase, alarmCountUseCase, alarmStatusUseCase, alarmListUseCase, alarmAllDeleteUseCase, alarmOneDeleteUseCase, searchBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase)
+        return HomeViewModelFactory(application, weekBestsellerUseCase, newBestsellerUseCase, attentionBestsellerUseCase, chatStatusUseCase, alarmCountUseCase, alarmStatusUseCase, alarmListUseCase, alarmAllDeleteUseCase, alarmOneDeleteUseCase, searchBookUseCase, searchMoreBookUseCase, searchedBookUseCase, searchedBookInsertUseCase, searchedBookDeleteUseCase, searchedBookAllDeleteUseCase)
     }
 }

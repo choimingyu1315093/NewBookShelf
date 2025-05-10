@@ -98,7 +98,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                     dialog.show(requireActivity().supportFragmentManager, "ReadingClassMemberDialog")
                 }
                 "독서 모임 종료" -> {
-
+                    Log.d(TAG, "bindViews: userIdxList $userIdxList")
                 }
             }
         }
@@ -208,7 +208,6 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                     for(i in 0 until response.data!!.data.size){
                         userIdxList.add(response.data.data[i].users.user_idx)
                     }
-                    Log.d(TAG, "observeViewModel: userIdxList $userIdxList")
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit

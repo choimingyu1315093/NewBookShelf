@@ -13,7 +13,6 @@ import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentProfileStatisticsBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.view.profile.adapter.PhotoAdapter
-import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 
 class ProfileStatisticsFragment : Fragment(), PhotoAdapter.OnClickItem {
@@ -47,23 +46,15 @@ class ProfileStatisticsFragment : Fragment(), PhotoAdapter.OnClickItem {
     
     private fun init() = with(binding){
         profileViewModel = (activity as HomeActivity).profileViewModel
+
+        bookImageArray = profileViewModel.userBestSeller.value!!
     }
 
     private fun observeViewModel() = with(binding){
-        profileViewModel.myProfile().observe(viewLifecycleOwner){ response ->
+        profileViewModel.myProfileInfo.observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
                     response.data?.let {
-                        if(it.data.top1_book != null){
-                            bookImageArray.add(it.data.top1_book.book_image)
-                        }
-                        if(it.data.top2_book != null){
-                            bookImageArray.add(it.data.top2_book.book_image)
-                        }
-                        if(it.data.top3_book != null){
-                            bookImageArray.add(it.data.top3_book.book_image)
-                        }
-
                         if(bookImageArray.isNotEmpty()){
                             tvName.visibility = View.VISIBLE
                             rvTopBook.visibility = View.VISIBLE

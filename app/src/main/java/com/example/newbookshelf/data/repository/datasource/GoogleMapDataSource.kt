@@ -8,4 +8,5 @@ import retrofit2.Response
 interface GoogleMapDataSource {
 
     suspend fun searchLatLng(address: String, key: String): Response<GeocodingModel>
+    suspend fun searchPlace(latLng: String, key: String): Response<GeocodingModel>
 }

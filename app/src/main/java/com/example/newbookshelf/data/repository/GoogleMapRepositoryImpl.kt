@@ -17,6 +17,10 @@ class GoogleMapRepositoryImpl(private val googleMapDataSource: GoogleMapDataSour
         return responseToResource(googleMapDataSource.searchLatLng(address, key))
     }
 
+    override suspend fun searchPlace(latLng: String, key: String): Resource<GeocodingModel> {
+        return responseToResource(googleMapDataSource.searchPlace(latLng, key))
+    }
+
     private fun <T> responseToResource(response: Response<T>): Resource<T> {
         return if (response.isSuccessful) {
             response.body()?.let { result ->

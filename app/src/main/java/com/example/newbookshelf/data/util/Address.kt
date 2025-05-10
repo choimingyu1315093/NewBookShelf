@@ -21,23 +21,8 @@ object Address {
             val geocoder = Geocoder(context, Locale.getDefault())
             val addresses = geocoder.getFromLocation(latitude, longitude, 1)
             if (addresses != null && addresses.isNotEmpty()) {
+                Log.d(TAG, "getAddressFromLatLng: address ${addresses}")
                 addresses[0].getAddressLine(0)
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    fun getLatLngFromAddress(context: Context, address: String): Pair<Double, Double>? {
-        return try {
-            val geocoder = Geocoder(context, Locale.getDefault())
-            val addresses: MutableList<Address> = geocoder.getFromLocationName(address, 1) ?: return null
-            if (addresses.isNotEmpty()) {
-                val location = addresses[0]
-                Pair(location.latitude, location.longitude)
             } else {
                 null
             }

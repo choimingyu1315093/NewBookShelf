@@ -13,5 +13,12 @@ interface GoogleMapApiService {
         @Query("address") address: String,
         @Query("key") apiKey: String
     ): Response<GeocodingModel>
+
+    //주소 조회
+    @GET("geocode/json")
+    suspend fun getPlace(
+        @Query("latlng") latLng: String,
+        @Query("key") apiKey: String
+    ): Response<GeocodingModel>
 }
 

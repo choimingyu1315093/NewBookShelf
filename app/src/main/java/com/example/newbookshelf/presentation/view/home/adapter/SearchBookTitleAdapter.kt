@@ -43,7 +43,7 @@ class SearchBookTitleAdapter: RecyclerView.Adapter<SearchBookTitleAdapter.ViewHo
         fun bind(searchedBook: SearchedBook) = with(binding){
             tvTitle.text = searchedBook.title
 
-            root.setOnClickListener {
+            ivDelete.setOnClickListener {
                 onClickListener?.let {
                     it(searchedBook)
                 }

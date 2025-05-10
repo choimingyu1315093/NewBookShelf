@@ -9,14 +9,18 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.newbookshelf.BuildConfig
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassModelData
 import com.example.newbookshelf.data.util.Address
 import com.example.newbookshelf.data.util.DateFormat
 import com.example.newbookshelf.databinding.ItemReadingBinding
+import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
 import java.util.Date
 
 class ReadingClassAdapter: RecyclerView.Adapter<ReadingClassAdapter.ViewHolder>() {
+
+    lateinit var postViewModel: PostViewModel
 
     private val callback = object : DiffUtil.ItemCallback<ReadingClassModelData>() {
         override fun areItemsTheSame(oldItem: ReadingClassModelData, newItem: ReadingClassModelData): Boolean {

@@ -53,14 +53,13 @@ class SearchBookAdapter: RecyclerView.Adapter<SearchBookAdapter.ViewHolder>() {
 
             tvTitle.text = book.book_name
             tvWriter.text = "${book.book_author} ⎪ ${book.book_publisher}"
+            if(book.book_author == ""){
+                tvWriter.text = "${book.book_publisher}"
+            }else {
+                tvWriter.text = "${book.book_author} ⎪ ${book.book_publisher}"
+            }
+
             rb.setIsIndicator(true)
-//            if(book.book_average_rate != null){
-//                rb.rating = book.book_average_rate.toFloat()
-//                val percent = book.book_average_rate
-//                val roundedPercent = round(percent).toInt()
-//                tvAverage.text = roundedPercent.toString()
-////                tvAverage.text = book.book_average_rate.toString()
-//            }
             if(book.book_average_rate != null){
                 val rate = book.book_average_rate!!.toFloat()
                 val roundedRate = if ((rate * 10) % 10 >= 5) {

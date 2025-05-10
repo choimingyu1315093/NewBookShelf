@@ -17,4 +17,8 @@ class GoogleMapDataSourceImpl(@GoogleRetrofit private val apiService: GoogleMapA
     override suspend fun searchLatLng(address: String, key: String): Response<GeocodingModel> {
         return apiService.getCoordinates(address, key)
     }
+
+    override suspend fun searchPlace(latLng: String, key: String): Response<GeocodingModel> {
+        return apiService.getPlace(latLng, key)
+    }
 }

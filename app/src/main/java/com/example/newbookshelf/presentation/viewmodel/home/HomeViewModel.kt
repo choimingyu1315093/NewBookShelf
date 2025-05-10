@@ -15,6 +15,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookData
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.home.AlarmAllDeleteUseCase
@@ -26,6 +28,7 @@ import com.example.newbookshelf.domain.usecase.home.AttentionBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.ChatStatusUseCase
 import com.example.newbookshelf.domain.usecase.home.NewBestsellerUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchBookUseCase
+import com.example.newbookshelf.domain.usecase.home.SearchMoreBookUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookInsertUseCase
@@ -48,6 +51,7 @@ class HomeViewModel(
     private val alarmAllDeleteUseCase: AlarmAllDeleteUseCase,
     private val alarmOneDeleteUseCase: AlarmOneDeleteUseCase,
     private val searchBookUseCase: SearchBookUseCase,
+    private val searchMoreBookUseCase: SearchMoreBookUseCase,
     private val searchedBookUseCase: SearchedBookUseCase,
     private val searchedBookInsertUseCase: SearchedBookInsertUseCase,
     private val searchedBookDeleteUseCase: SearchedBookDeleteUseCase,
@@ -138,7 +142,26 @@ class HomeViewModel(
         }
     }
 
+    fun getSearchedBook() = liveData {
+        searchedBookUseCase.execute().collect {
+            emit(it)
+        }
+    }
+
+    fun insertSearchedBook(searchedBook: SearchedBook) = viewModelScope.launch {
+        searchedBookInsertUseCase.execute(searchedBook)
+    }
+
+    fun deleteSearchedBook(searchedBook: SearchedBook) = viewModelScope.launch {
+        searchedBookDeleteUseCase.execute(searchedBook)
+    }
+
+    fun allDeleteSearchedBook() = viewModelScope.launch {
+        searchedBookAllDeleteUseCase.execute()
+    }
+
     val searchBook = MutableLiveData<Resource<SearchBookModel>>()
+    val isEnd = MutableLiveData<Boolean>()
     fun getSearchBook(bookName: String) = viewModelScope.launch(Dispatchers.IO) {
         searchBook.postValue(Resource.Loading())
         try {
@@ -146,11 +169,29 @@ class HomeViewModel(
                 searchBook.postValue(Resource.Loading())
                 val result = searchBookUseCase.execute(bookName)
                 searchBook.postValue(result)
+                isEnd.postValue(result.data!!.data.is_end)
             }else {
                 searchBook.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
             }
         }catch (e: Exception){
             searchBook.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val searchMoreBook = MutableLiveData<Resource<SearchMoreBookModel>>()
+    fun getSearchMoreBook(searchMoreBookData: SearchMoreBookData) = viewModelScope.launch(Dispatchers.IO) {
+        searchMoreBook.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                searchMoreBook.postValue(Resource.Loading())
+                val result = searchMoreBookUseCase.execute(searchMoreBookData)
+                searchMoreBook.postValue(result)
+                isEnd.postValue(result.data!!.is_end)
+            }else {
+                searchMoreBook.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            searchMoreBook.postValue(Resource.Error(e.message.toString()))
         }
     }
 
@@ -184,24 +225,6 @@ class HomeViewModel(
         }catch (e: Exception){
             postSearchBook.postValue(Resource.Error(e.message.toString()))
         }
-    }
-
-    fun getSearchedBook() = liveData {
-        searchedBookUseCase.execute().collect {
-            emit(it)
-        }
-    }
-
-    fun insertSearchedBook(searchedBook: SearchedBook) = viewModelScope.launch {
-        searchedBookInsertUseCase.execute(searchedBook)
-    }
-
-    fun deleteSearchedBook(searchedBook: SearchedBook) = viewModelScope.launch {
-        searchedBookDeleteUseCase.execute(searchedBook)
-    }
-
-    fun allDeleteSearchedBook() = viewModelScope.launch {
-        searchedBookAllDeleteUseCase.execute()
     }
 
     private var _isDetail = MutableLiveData<Boolean>(false)

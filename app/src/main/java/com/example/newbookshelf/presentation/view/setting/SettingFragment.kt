@@ -2,6 +2,7 @@ package com.example.newbookshelf.presentation.view.setting
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -99,6 +100,7 @@ class SettingFragment : Fragment() {
             when(response){
                 is Resource.Success -> {
                     response.data?.let {
+                        Log.d(TAG, "observeViewModel: asdfadsf ${it.data.ticket_count}")
                         ticket = it.data.ticket_count
                         tvWelcome.text = "${it.data.user_name} 님, 환영합니다."
                         btnMoney.text = "${it.data.ticket_count}장"

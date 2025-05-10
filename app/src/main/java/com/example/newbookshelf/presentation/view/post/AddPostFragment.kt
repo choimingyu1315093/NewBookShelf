@@ -39,6 +39,8 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
     private lateinit var type: String
     private lateinit var kakaoKey: String
     private var bookIsbn = ""
+    private var latitude = 0.0
+    private var longitude = 0.0
     private var isClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,7 +154,23 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
         postViewModel.googleMapLatLngResult.observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
-                    Log.d(TAG, "observeViewModel: ${response.data}")
+                    latitude = response.data!!.results[0].geometry.location.lat
+                    longitude = response.data.results[0].geometry.location.lng
+                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
+            }
+        }
+
+        postViewModel.addReadingClassResult.observe(viewLifecycleOwner){ response ->
+            when(response){
+                is Resource.Success -> {
+                    if(response.data!!.result){
+                        if(isClicked){
+                            findNavController().popBackStack()
+                            isClicked = false
+                        }
+                    }
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
@@ -173,9 +191,11 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
     }
 
     //독서 모임 등록
-    override fun addReadingClass(b: Boolean) {
-        //TODO(등록할 때 위도, 경도 말고 장소명으로 수정 요청)
-//        val addReadingClassDate = AddReadingClassData(bookIsbn, )
-//        postViewModel.addReadingClass(addReadingClassDate)
+    override fun addReadingClass(b: Boolean): Unit = with(binding){
+        val title = "${etTitle.text.toString()}"
+        val content = "${etContent.text.toString()}"
+        val date = "${etDate.text.toString()} ${etTime.text.toString().split(" ")[1]}"
+        val addReadingClassDate = AddReadingClassData(bookIsbn, latitude, longitude, date, content, title)
+        postViewModel.addReadingClass(addReadingClassDate)
     }
 }

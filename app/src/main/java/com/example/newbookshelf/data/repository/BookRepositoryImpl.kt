@@ -25,6 +25,8 @@ import com.example.newbookshelf.data.model.home.notify.AlarmCountModel
 import com.example.newbookshelf.data.model.home.notify.AlarmListModel
 import com.example.newbookshelf.data.model.home.notify.StatusModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookData
+import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
 import com.example.newbookshelf.data.model.login.LoginData
 import com.example.newbookshelf.data.model.login.LoginModel
@@ -163,6 +165,10 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.searchBook(bookName))
     }
 
+    override suspend fun searchMoreBook(searchMoreBookData: SearchMoreBookData): Resource<SearchMoreBookModel> {
+        return responseToResource(bookRemoteDataSource.searchMoreBook(searchMoreBookData))
+    }
+
     override fun searchedBook(): Flow<List<SearchedBook>> {
         return bookLocalDataSource.getSearchedBook()
     }
@@ -215,14 +221,8 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         return responseToResource(bookRemoteDataSource.deleteBookMemo(accessToken, bookMemoIdx))
     }
 
-    override fun myProfile(): Flow<Resource<MyProfileModel>> {
-        return bookRemoteDataSource.myProfile().map { response ->
-            if(response.isSuccessful){
-                Resource.Success(response.body()!!)
-            }else {
-                Resource.Error(response.message())
-            }
-        }
+    override suspend fun myProfile(): Resource<MyProfileModel> {
+        return responseToResource(bookRemoteDataSource.myProfile())
     }
 
     override fun readingStatistics(userIdx: Int): Flow<Resource<ReadingStatisticsModel>> {

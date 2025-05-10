@@ -41,6 +41,7 @@ class SearchMoreBookAdapter: RecyclerView.Adapter<SearchMoreBookAdapter.ViewHold
     }
 
     override fun getItemCount(): Int {
+        Log.d("TAG", "getItemCount: ${differ.currentList.size}")
         return differ.currentList.size
     }
 

@@ -32,6 +32,7 @@ import com.example.newbookshelf.domain.usecase.post.AddPostUseCase
 import com.example.newbookshelf.domain.usecase.post.AddReadingClassUseCase
 import com.example.newbookshelf.domain.usecase.post.AddScrapUseCase
 import com.example.newbookshelf.domain.usecase.post.GoogleMapSearchLatLngUseCase
+import com.example.newbookshelf.domain.usecase.post.GoogleMapSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.post.KakaoSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
@@ -58,6 +59,7 @@ class PostViewModel(
     private val postDeleteUseCase: PostDeleteUseCase,
     private val addReadingClassUseCase: AddReadingClassUseCase,
     private val googleMapSearchLatLngUseCase: GoogleMapSearchLatLngUseCase,
+    private val googleMapSearchPlaceUseCase: GoogleMapSearchPlaceUseCase,
     private val readingClassUseCase: ReadingClassUseCase,
     private val readingClassDetailUseCase: ReadingClassDetailUseCase,
     private val readingClassDeleteUseCase: ReadingClassDeleteUseCase,
@@ -294,6 +296,22 @@ class PostViewModel(
             }
         }catch (e: Exception){
             googleMapLatLngResult.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val googleMapPlaceResult = MutableLiveData<Resource<GeocodingModel>>()
+    fun getAddressForCoordinates(latLng: String, apiKey: String) = viewModelScope.launch(Dispatchers.IO) {
+        googleMapPlaceResult.postValue(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                googleMapPlaceResult.postValue(Resource.Loading())
+                val result = googleMapSearchPlaceUseCase.execute(latLng, apiKey)
+                googleMapPlaceResult.postValue(result)
+            }else {
+                googleMapPlaceResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            googleMapPlaceResult.postValue(Resource.Error(e.message.toString()))
         }
     }
 

@@ -8,6 +8,7 @@ import com.example.newbookshelf.domain.usecase.post.AddPostUseCase
 import com.example.newbookshelf.domain.usecase.post.AddReadingClassUseCase
 import com.example.newbookshelf.domain.usecase.post.AddScrapUseCase
 import com.example.newbookshelf.domain.usecase.post.GoogleMapSearchLatLngUseCase
+import com.example.newbookshelf.domain.usecase.post.GoogleMapSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.post.KakaoSearchPlaceUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.PostCommentUseCase
@@ -45,12 +46,13 @@ object PostFactoryModule {
         postDeleteUseCase: PostDeleteUseCase,
         addReadingClassUseCase: AddReadingClassUseCase,
         googleMapSearchLatLngUseCase: GoogleMapSearchLatLngUseCase,
+        googleMapSearchPlaceUseCase: GoogleMapSearchPlaceUseCase,
         readingClassUseCase: ReadingClassUseCase,
         readingClassDetailUseCase: ReadingClassDetailUseCase,
         readingClassDeleteUseCase: ReadingClassDeleteUseCase,
         readingClassMemberListUseCase: ReadingClassMemberListUseCase,
         readingClassJoinUseCase: ReadingClassJoinUseCase
     ): PostViewModelFactory {
-        return PostViewModelFactory(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, addReadingClassUseCase, googleMapSearchLatLngUseCase, readingClassUseCase, readingClassDetailUseCase, readingClassDeleteUseCase, readingClassMemberListUseCase, readingClassJoinUseCase)
+        return PostViewModelFactory(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, addReadingClassUseCase, googleMapSearchLatLngUseCase, googleMapSearchPlaceUseCase, readingClassUseCase, readingClassDetailUseCase, readingClassDeleteUseCase, readingClassMemberListUseCase, readingClassJoinUseCase)
     }
 }
