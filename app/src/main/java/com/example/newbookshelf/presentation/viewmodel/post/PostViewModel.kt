@@ -45,6 +45,7 @@ import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class PostViewModel(
@@ -233,19 +234,20 @@ class PostViewModel(
         }
     }
 
-    val readingClassDeleteResult = MutableLiveData<Resource<OnlyResultModel>>()
+    val readingClassDeleteResult = MutableSharedFlow<Resource<OnlyResultModel>>()
     fun readingClassDelete(readingClassIdx: Int) = viewModelScope.launch(Dispatchers.IO) {
-        readingClassDeleteResult.postValue(Resource.Loading())
+        readingClassDeleteResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                readingClassDeleteResult.postValue(Resource.Loading())
+                readingClassDeleteResult.emit(Resource.Loading())
                 val result = readingClassDeleteUseCase.execute(readingClassIdx)
-                readingClassDeleteResult.postValue(result)
+                Log.d("TAG", "readingClassDelete: $result ")
+                readingClassDeleteResult.emit(result)
             }else {
-                readingClassDeleteResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+                readingClassDeleteResult.emit(Resource.Error("인터넷이 연결되지 않았습니다."))
             }
         }catch (e: Exception){
-            readingClassDeleteResult.postValue(Resource.Error(e.message.toString()))
+            readingClassDeleteResult.emit(Resource.Error(e.message.toString()))
         }
     }
 

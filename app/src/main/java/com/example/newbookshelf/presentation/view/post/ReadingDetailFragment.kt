@@ -13,7 +13,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -201,7 +203,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                 }
             }
         }
-        
+
         postViewModel.readingClassMemberListResult.observe(viewLifecycleOwner){ response ->
             when(response){
                 is Resource.Success -> {
@@ -211,6 +213,20 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                postViewModel.readingClassDeleteResult.collect { result ->
+                    when (result) {
+                        is Resource.Success -> Unit
+                        is Resource.Error -> {
+                            Toast.makeText(requireContext(), "기한이 지난 모임은 삭제가 불가합니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        is Resource.Loading -> Unit
+                    }
+                }
             }
         }
     }
