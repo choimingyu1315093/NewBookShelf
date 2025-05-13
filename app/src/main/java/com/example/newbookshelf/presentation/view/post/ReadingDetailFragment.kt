@@ -30,6 +30,7 @@ import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentReadingDetailBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.view.post.dialog.ReadingClassDeleteDialog
+import com.example.newbookshelf.presentation.view.post.dialog.ReadingClassFinishDialog
 import com.example.newbookshelf.presentation.view.post.dialog.ReadingClassJoinDialog
 import com.example.newbookshelf.presentation.view.post.dialog.ReadingClassMemberDialog
 import com.example.newbookshelf.presentation.view.post.dialog.ReviewDeleteDialog
@@ -38,7 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClickListener, ReadingClassJoinDialog.OnJoinClickListener {
+class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClickListener, ReadingClassJoinDialog.OnJoinClickListener, ReadingClassFinishDialog.OnFinishClickListener {
     private lateinit var binding: FragmentReadingDetailBinding
     private lateinit var postViewModel: PostViewModel
 
@@ -100,7 +101,10 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                     dialog.show(requireActivity().supportFragmentManager, "ReadingClassMemberDialog")
                 }
                 "독서 모임 종료" -> {
-                    Log.d(TAG, "bindViews: userIdxList $userIdxList")
+                    //독서 모임 종료 api 에러 뜸
+                    Log.d(TAG, "bindViews: readingClassIdx $readingClassIdx, userIdxList $userIdxList")
+                    val dialog = ReadingClassFinishDialog(this@ReadingDetailFragment)
+                    dialog.show(requireActivity().supportFragmentManager, "ReadingClassFinishDialog")
                 }
             }
         }
@@ -161,18 +165,18 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
             }
         }
 
-        postViewModel.addScrapResult.observe(viewLifecycleOwner){ response ->
-            if(isScrap){
-                when(response){
-                    is Resource.Success -> {
-                        Toast.makeText(activity, "스크랩 등록", Toast.LENGTH_SHORT).show()
-                        isScrap = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                postViewModel.addScrapResult.collect { result ->
+                    when(result){
+                        is Resource.Success -> {
+                            Toast.makeText(activity, "스크랩 등록", Toast.LENGTH_SHORT).show()
+                        }
+                        is Resource.Error -> {
+                            Toast.makeText(activity, "이미 스크랩에 등록한 글입니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        is Resource.Loading -> Unit
                     }
-                    is Resource.Error -> {
-                        Toast.makeText(activity, "이미 스크랩에 등록한 글입니다.", Toast.LENGTH_SHORT).show()
-                        isScrap = false
-                    }
-                    is Resource.Loading -> Unit
                 }
             }
         }
@@ -190,16 +194,17 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
             }
         }
 
-        postViewModel.readingClassJoinResult.observe(viewLifecycleOwner){ response ->
-            if(isScrap){
-                when(response){
-                    is Resource.Success -> {
-                        Toast.makeText(requireContext(), "참가 신청이 완료되었습니다.", Toast.LENGTH_SHORT).show()
-                        btnJoin.text = "참가자 조회"
-                        isScrap = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                postViewModel.readingClassJoinResult.collect { result ->
+                    when(result){
+                        is Resource.Success -> {
+                            Toast.makeText(requireContext(), "참가 신청이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                            btnJoin.text = "참가자 조회"
+                        }
+                        is Resource.Error -> Unit
+                        is Resource.Loading -> Unit
                     }
-                    is Resource.Error -> Unit
-                    is Resource.Loading -> Unit
                 }
             }
         }
@@ -220,7 +225,9 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 postViewModel.readingClassDeleteResult.collect { result ->
                     when (result) {
-                        is Resource.Success -> Unit
+                        is Resource.Success -> {
+                            findNavController().popBackStack()
+                        }
                         is Resource.Error -> {
                             Toast.makeText(requireContext(), "기한이 지난 모임은 삭제가 불가합니다.", Toast.LENGTH_SHORT).show()
                         }
@@ -270,5 +277,10 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
         isScrap = true
         val readingClassJoinData = ReadingClassJoinData(readingClassIdx)
         postViewModel.readingClassJoin(readingClassJoinData)
+    }
+
+    //독서 모임 종료
+    override fun finish(b: Boolean) {
+        TODO("Not yet implemented")
     }
 }

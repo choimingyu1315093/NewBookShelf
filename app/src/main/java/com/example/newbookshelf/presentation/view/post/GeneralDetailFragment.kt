@@ -11,6 +11,9 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +30,7 @@ import com.example.newbookshelf.presentation.view.post.adapter.GeneralAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.GeneralDetailReviewAdapter
 import com.example.newbookshelf.presentation.view.post.dialog.ReviewDeleteDialog
 import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
+import kotlinx.coroutines.launch
 
 class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListener {
     private lateinit var binding: FragmentGeneralDetailBinding
@@ -156,19 +160,19 @@ class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListen
                 is Resource.Loading -> Unit
             }
         }
-        
-        postViewModel.addScrapResult.observe(viewLifecycleOwner){ response ->
-            if(isScrap){
-                when(response){
-                    is Resource.Success -> {
-                        Toast.makeText(activity, "스크랩 등록", Toast.LENGTH_SHORT).show()
-                        isScrap = false
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                postViewModel.addScrapResult.collect { result ->
+                    when(result){
+                        is Resource.Success -> {
+                            Toast.makeText(activity, "스크랩 등록", Toast.LENGTH_SHORT).show()
+                        }
+                        is Resource.Error -> {
+                            Toast.makeText(activity, "이미 스크랩에 등록한 글입니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        is Resource.Loading -> Unit
                     }
-                    is Resource.Error -> {
-                        Toast.makeText(activity, "이미 스크랩에 등록한 글입니다.", Toast.LENGTH_SHORT).show()
-                        isScrap = false
-                    }
-                    is Resource.Loading -> Unit
                 }
             }
         }

@@ -154,19 +154,19 @@ class PostViewModel(
         }
     }
 
-    val addScrapResult = MutableLiveData<Resource<AddScrapModel>>()
+    val addScrapResult = MutableSharedFlow<Resource<AddScrapModel>>()
     fun addScrap(addScrapData: AddScrapData) = viewModelScope.launch(Dispatchers.IO) {
-        addScrapResult.postValue(Resource.Loading())
+        addScrapResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                addScrapResult.postValue(Resource.Loading())
+                addScrapResult.emit(Resource.Loading())
                 val result = addScrapUseCase.execute(addScrapData)
-                addScrapResult.postValue(result)
+                addScrapResult.emit(result)
             }else {
-                addScrapResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+                addScrapResult.emit(Resource.Error("인터넷이 연결되지 않았습니다."))
             }
         }catch (e: Exception){
-            addScrapResult.postValue(Resource.Error(e.message.toString()))
+            addScrapResult.emit(Resource.Error(e.message.toString()))
         }
     }
 
@@ -267,20 +267,19 @@ class PostViewModel(
         }
     }
 
-    val readingClassJoinResult = MutableLiveData<Resource<ReadingClassJoinModel>>()
+    val readingClassJoinResult = MutableSharedFlow<Resource<ReadingClassJoinModel>>()
     fun readingClassJoin(readingClassJoinData: ReadingClassJoinData) = viewModelScope.launch(Dispatchers.IO) {
-        readingClassJoinResult.postValue(Resource.Loading())
+        readingClassJoinResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                readingClassJoinResult.postValue(Resource.Loading())
+                readingClassJoinResult.emit(Resource.Loading())
                 val result = readingClassJoinUseCase.execute(readingClassJoinData)
-                Log.d("TAG", "readingClassJoin: result $result")
-                readingClassJoinResult.postValue(result)
+                readingClassJoinResult.emit(result)
             }else {
-                readingClassJoinResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+                readingClassJoinResult.emit(Resource.Error("인터넷이 연결되지 않았습니다."))
             }
         }catch (e: Exception){
-            readingClassJoinResult.postValue(Resource.Error(e.message.toString()))
+            readingClassJoinResult.emit(Resource.Error(e.message.toString()))
         }
     }
 
