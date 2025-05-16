@@ -218,19 +218,19 @@ class PostViewModel(
         }
     }
 
-    val readingClassDetailResult = MutableLiveData<Resource<ReadingClassDetailModel>>()
+    val readingClassDetailResult = MutableSharedFlow<Resource<ReadingClassDetailModel>>()
     fun readingClassDetail(readingClassIdx: Int) = viewModelScope.launch(Dispatchers.IO) {
-        readingClassDetailResult.postValue(Resource.Loading())
+        readingClassDetailResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                readingClassDetailResult.postValue(Resource.Loading())
+                readingClassDetailResult.emit(Resource.Loading())
                 val result = readingClassDetailUseCase.execute(readingClassIdx)
-                readingClassDetailResult.postValue(result)
+                readingClassDetailResult.emit(result)
             }else {
-                readingClassDetailResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+                readingClassDetailResult.emit(Resource.Error("인터넷이 연결되지 않았습니다."))
             }
         }catch (e: Exception){
-            readingClassDetailResult.postValue(Resource.Error(e.message.toString()))
+            readingClassDetailResult.emit(Resource.Error(e.message.toString()))
         }
     }
 

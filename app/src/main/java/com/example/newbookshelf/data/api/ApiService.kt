@@ -377,10 +377,10 @@ interface ApiService {
     ): Response<ReadingClassJoinModel>
 
     //독서 모임 종료
-    @POST("club-posts/terminate")
-    suspend fun readingClassFinish(
-        @Path("club_post_idx") clubPostIdx: Int
-    ): Response<OnlyResultModel>
+//    @POST("club-posts/terminate")
+//    suspend fun readingClassFinish(
+//        @Path("club_post_idx") clubPostIdx: Int
+//    ): Response<OnlyResultModel>
 
     //내가 읽고 싶은 책을 보유 중인 유저 목록 조회
     @GET("users/list/wish-book")

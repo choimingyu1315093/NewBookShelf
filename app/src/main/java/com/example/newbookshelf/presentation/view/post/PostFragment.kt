@@ -1,6 +1,7 @@
 package com.example.newbookshelf.presentation.view.post
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -37,7 +38,11 @@ class PostFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        isGeneral = "general"
+        if(isGeneral == "general"){
+            generalSetting()
+        }else {
+            readingSetting()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,12 +57,12 @@ class PostFragment : Fragment() {
         bindViews()
         observeViewModel()
     }
+    
 
     private fun init() = with(binding){
         (activity as HomeActivity).binding.cl.visibility = View.GONE
         (activity as HomeActivity).binding.bottomNavigationView.visibility = View.VISIBLE
         postViewModel = (activity as HomeActivity).postViewModel
-        postViewModel.postList(10, 1)
         generalAdapter = (activity as HomeActivity).generalAdapter
         readingClassAdapter = (activity as HomeActivity).readingClassAdapter
         readingClassAdapter.postViewModel = postViewModel
@@ -70,19 +75,11 @@ class PostFragment : Fragment() {
 
     private fun bindViews() = with(binding){
         btnGeneral.setOnClickListener {
-            postViewModel.postList(10, 1)
-            isGeneral = "general"
-            btnGeneral.setBackgroundResource(R.drawable.btn_main_no_10)
-            btnReading.setBackgroundResource(R.drawable.btn_e9e9e9_no_10)
-            spFilter.visibility = View.GONE
+            generalSetting()
         }
 
         btnReading.setOnClickListener {
-            postViewModel.readingClassList("", "distance", 10, 1)
-            isGeneral = "reading"
-            btnGeneral.setBackgroundResource(R.drawable.btn_e9e9e9_no_10)
-            btnReading.setBackgroundResource(R.drawable.btn_main_no_10)
-            spFilter.visibility = View.VISIBLE
+            readingSetting()
         }
 
         spFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -172,5 +169,21 @@ class PostFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun generalSetting() = with(binding){
+        postViewModel.postList(10, 1)
+        isGeneral = "general"
+        btnGeneral.setBackgroundResource(R.drawable.btn_main_no_10)
+        btnReading.setBackgroundResource(R.drawable.btn_e9e9e9_no_10)
+        spFilter.visibility = View.GONE
+    }
+
+    private fun readingSetting() = with(binding){
+        postViewModel.readingClassList("", "distance", 10, 1)
+        isGeneral = "reading"
+        btnGeneral.setBackgroundResource(R.drawable.btn_e9e9e9_no_10)
+        btnReading.setBackgroundResource(R.drawable.btn_main_no_10)
+        spFilter.visibility = View.VISIBLE
     }
 }

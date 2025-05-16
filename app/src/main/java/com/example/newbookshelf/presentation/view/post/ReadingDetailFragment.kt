@@ -49,9 +49,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
 
     private val userIdx = BookShelfApp.prefs.getUserIdx("userIdx", 0)
     private var writerIdx = 0
-    private var isScrap = false
     private var readingClassIdx = 0
-    private var userIdxList = arrayListOf<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +76,6 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
         (activity as HomeActivity).binding.bottomNavigationView.visibility = View.GONE
         postViewModel = (activity as HomeActivity).postViewModel
         postViewModel.readingClassDetail(readingClassIdx)
-        postViewModel.readingClassMemberList(readingClassIdx, 30, 1)
     }
 
     private fun bindViews() = with(binding){
@@ -101,8 +98,6 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                     dialog.show(requireActivity().supportFragmentManager, "ReadingClassMemberDialog")
                 }
                 "독서 모임 종료" -> {
-                    //독서 모임 종료 api 에러 뜸
-                    Log.d(TAG, "bindViews: readingClassIdx $readingClassIdx, userIdxList $userIdxList")
                     val dialog = ReadingClassFinishDialog(this@ReadingDetailFragment)
                     dialog.show(requireActivity().supportFragmentManager, "ReadingClassFinishDialog")
                 }
@@ -111,56 +106,60 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
     }
 
     private fun observeViewModel() = with(binding){
-        postViewModel.readingClassDetailResult.observe(viewLifecycleOwner) { response ->
-            when(response){
-                is Resource.Success -> {
-                    if(response.data!!.result){
-                        val readingClass = response.data.data
-                        tvTitle.text = readingClass.post_title
-                        tvName.text = readingClass.user_name
-                        tvTime.text = readingClass.update_date.split("T")[0]
-                        tvContent.text = readingClass.post_content
-                        tvSchedule.text = "${Address.getAddressFromLatLng(requireContext(), readingClass.club_latitude.toDouble(), readingClass.club_longitude.toDouble())}\n${DateFormat.convertToCustomFormat(readingClass.club_meet_date)}"
-                        writerIdx = readingClass.user_idx
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                postViewModel.readingClassDetailResult.collect { result ->
+                    when(result){
+                        is Resource.Success -> {
+                            if(result.data!!.result){
+                                val readingClass = result.data.data
+                                tvTitle.text = readingClass.post_title
+                                tvName.text = readingClass.user_name
+                                tvTime.text = readingClass.update_date.split("T")[0]
+                                tvContent.text = readingClass.post_content
+                                tvSchedule.text = "${Address.getAddressFromLatLng(requireContext(), readingClass.club_latitude.toDouble(), readingClass.club_longitude.toDouble())}\n${DateFormat.convertToCustomFormat(readingClass.club_meet_date)}"
+                                writerIdx = readingClass.user_idx
 
-                        if(DateFormat.isDatePast(readingClass.club_meet_date)){
-                            tvStatus.text = "진행중"
-                            tvStatus.setBackgroundResource(R.drawable.btn_main_no_10)
-                        }else {
-                            tvStatus.text = "예정"
-                            tvStatus.setBackgroundResource(R.drawable.btn_main_no_10)
+                                if(DateFormat.isDatePast(readingClass.club_meet_date)){
+                                    tvStatus.text = "진행중"
+                                    tvStatus.setBackgroundResource(R.drawable.btn_main_no_10)
+                                }else {
+                                    tvStatus.text = "예정"
+                                    tvStatus.setBackgroundResource(R.drawable.btn_main_no_10)
+                                }
+
+                                if(readingClass.book_image == ""){
+                                    Glide.with(ivBook).load(R.drawable.no_image).into(ivBook)
+                                }else {
+                                    Glide.with(ivBook).load(readingClass.book_image).into(ivBook)
+                                }
+
+                                tvBookTitle.text = readingClass.book_name
+                                tvAuthor.text = readingClass.book_author
+                                tvPublisher.text = readingClass.book_publisher
+
+                                if(readingClass.book_translator == ""){
+                                    txtTranslator.visibility = View.GONE
+                                }else {
+                                    txtTranslator.visibility = View.VISIBLE
+                                    tvTranslator.text = readingClass.book_translator
+                                }
+
+                                if((readingClass.user_type == "leader" && !DateFormat.isDatePast(readingClass.club_meet_date)) || readingClass.user_type == "participant"){
+                                    btnJoin.text = "참가자 조회"
+                                }else if(readingClass.user_type == "leader" && DateFormat.isDatePast(readingClass.club_meet_date)){
+                                    btnJoin.text = "독서 모임 종료"
+                                }else {
+                                    btnJoin.text = "참가 신청"
+                                }
+                            }
+                            progressBar.visibility = View.GONE
                         }
-
-                        if(readingClass.book_image == ""){
-                            Glide.with(ivBook).load(R.drawable.no_image).into(ivBook)
-                        }else {
-                            Glide.with(ivBook).load(readingClass.book_image).into(ivBook)
-                        }
-
-                        tvBookTitle.text = readingClass.book_name
-                        tvAuthor.text = readingClass.book_author
-                        tvPublisher.text = readingClass.book_publisher
-
-                        if(readingClass.book_translator == ""){
-                            txtTranslator.visibility = View.GONE
-                        }else {
-                            txtTranslator.visibility = View.VISIBLE
-                            tvTranslator.text = readingClass.book_translator
-                        }
-
-                        if((readingClass.user_type == "leader" && !DateFormat.isDatePast(readingClass.club_meet_date)) || readingClass.user_type == "participant"){
-                            btnJoin.text = "참가자 조회"
-                        }else if(readingClass.user_type == "leader" && DateFormat.isDatePast(readingClass.club_meet_date)){
-                            btnJoin.text = "독서 모임 종료"
-                        }else {
-                            btnJoin.text = "참가 신청"
+                        is Resource.Error -> Unit
+                        is Resource.Loading -> {
+                            progressBar.visibility = View.VISIBLE
                         }
                     }
-                    progressBar.visibility = View.GONE
-                }
-                is Resource.Error -> Unit
-                is Resource.Loading -> {
-                    progressBar.visibility = View.VISIBLE
                 }
             }
         }
@@ -181,19 +180,6 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
             }
         }
 
-        postViewModel.readingClassDetailResult.observe(viewLifecycleOwner){ response ->
-            if(isScrap){
-                when(response){
-                    is Resource.Success -> {
-                        findNavController().popBackStack()
-                        isScrap = false
-                    }
-                    is Resource.Error -> Unit
-                    is Resource.Loading -> Unit
-                }
-            }
-        }
-
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 postViewModel.readingClassJoinResult.collect { result ->
@@ -206,18 +192,6 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                         is Resource.Loading -> Unit
                     }
                 }
-            }
-        }
-
-        postViewModel.readingClassMemberListResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    for(i in 0 until response.data!!.data.size){
-                        userIdxList.add(response.data.data[i].users.user_idx)
-                    }
-                }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
             }
         }
 
@@ -251,13 +225,11 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                 R.id.scrap -> {
                     val addScrapData = AddScrapData("CLUB", readingClassIdx)
                     postViewModel.addScrap(addScrapData)
-                    isScrap = true
                     true
                 }
                 R.id.delete -> {
                     val dialog = ReadingClassDeleteDialog(this)
                     dialog.show(requireActivity().supportFragmentManager, "ReadingClassDeleteDialog")
-                    isScrap = true
                     true
                 }
                 else -> false
@@ -274,13 +246,13 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
 
     //독서 모임 참가
     override fun join(b: Boolean) {
-        isScrap = true
         val readingClassJoinData = ReadingClassJoinData(readingClassIdx)
         postViewModel.readingClassJoin(readingClassJoinData)
     }
 
     //독서 모임 종료
     override fun finish(b: Boolean) {
-        TODO("Not yet implemented")
+//        postViewModel.readingclassfinish(readingClassIdx)
+//        postViewModel.readingClassDelete(readingClassIdx)
     }
 }

@@ -65,7 +65,6 @@ class SignupViewModel(
     }
 
     val idCheckResult = MutableLiveData<Resource<CheckModel>>()
-
     fun idCheck(id: String) = viewModelScope.launch(Dispatchers.IO) {
         idCheckResult.postValue(Resource.Loading())
         try {
@@ -80,7 +79,6 @@ class SignupViewModel(
     }
 
     val emailCheckResult = MutableLiveData<Resource<CheckModel>>()
-
     fun emailCheck(emailCheckData: EmailCheckData) = viewModelScope.launch(Dispatchers.IO) {
         emailCheckResult.postValue(Resource.Loading())
         try {
@@ -95,7 +93,6 @@ class SignupViewModel(
     }
 
     val nicknameCheckResult = MutableLiveData<Resource<CheckModel>>()
-
     fun nicknameCheck(nickname: String) = viewModelScope.launch(Dispatchers.IO) {
         nicknameCheckResult.postValue(Resource.Loading())
         try {
@@ -110,7 +107,6 @@ class SignupViewModel(
     }
 
     val buyTicketResult = MutableLiveData<Resource<TicketModel>>()
-
     fun buyTicket(accessToken: String, ticketData: TicketData) = viewModelScope.launch(Dispatchers.IO) {
         buyTicketResult.postValue(Resource.Loading())
         try {
