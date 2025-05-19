@@ -36,6 +36,7 @@
         android:id="@+id/txtInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="가등록비 50포인트가 차감되며, 모임 참가 시 반환됩니다."
         android:textColor="#797979"
         android:layout_marginTop="5dp"

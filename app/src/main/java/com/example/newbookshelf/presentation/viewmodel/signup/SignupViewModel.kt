@@ -24,6 +24,7 @@ import com.example.newbookshelf.domain.usecase.signup.NicknameCheckUseCase
 import com.example.newbookshelf.domain.usecase.signup.SignupUseCase
 import com.example.newbookshelf.domain.usecase.signup.SnsSignupUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class SignupViewModel(
@@ -33,7 +34,6 @@ class SignupViewModel(
     private val idCheckUseCase: IdCheckUseCase,
     private val emailCheckUseCase: EmailCheckUseCase,
     private val nicknameCheckUseCase: NicknameCheckUseCase,
-    private val buyTicketUseCase: BuyTicketUseCase
 ): AndroidViewModel(app) {
 
     val signupResult = MutableLiveData<Resource<SignupModel>>()
@@ -64,59 +64,45 @@ class SignupViewModel(
         }
     }
 
-    val idCheckResult = MutableLiveData<Resource<CheckModel>>()
+    val idCheckResult = MutableStateFlow<Resource<CheckModel>>(Resource.Loading())
     fun idCheck(id: String) = viewModelScope.launch(Dispatchers.IO) {
-        idCheckResult.postValue(Resource.Loading())
+        idCheckResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                signupResult.postValue(Resource.Loading())
+                idCheckResult.emit(Resource.Loading())
                 val result = idCheckUseCase.execute(id)
-                idCheckResult.postValue(result)
+                idCheckResult.emit(result)
             }
         }catch (e: Exception){
-            idCheckResult.postValue(Resource.Error(e.message.toString()))
+            idCheckResult.emit(Resource.Error(e.message.toString()))
         }
     }
 
-    val emailCheckResult = MutableLiveData<Resource<CheckModel>>()
+    val emailCheckResult = MutableStateFlow<Resource<CheckModel>>(Resource.Loading())
     fun emailCheck(emailCheckData: EmailCheckData) = viewModelScope.launch(Dispatchers.IO) {
-        emailCheckResult.postValue(Resource.Loading())
+        emailCheckResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                emailCheckResult.postValue(Resource.Loading())
+                emailCheckResult.emit(Resource.Loading())
                 val result = emailCheckUseCase.execute(emailCheckData)
-                emailCheckResult.postValue(result)
+                emailCheckResult.emit(result)
             }
         }catch (e: Exception){
-            emailCheckResult.postValue(Resource.Error(e.message.toString()))
+            emailCheckResult.emit(Resource.Error(e.message.toString()))
         }
     }
 
-    val nicknameCheckResult = MutableLiveData<Resource<CheckModel>>()
+    val nicknameCheckResult = MutableStateFlow<Resource<CheckModel>>(Resource.Loading())
     fun nicknameCheck(nickname: String) = viewModelScope.launch(Dispatchers.IO) {
-        nicknameCheckResult.postValue(Resource.Loading())
+        nicknameCheckResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                nicknameCheckResult.postValue(Resource.Loading())
+                nicknameCheckResult.emit(Resource.Loading())
                 val result = nicknameCheckUseCase.execute(nickname)
-                nicknameCheckResult.postValue(result)
+                nicknameCheckResult.emit(result)
             }
         }catch (e: Exception){
-            nicknameCheckResult.postValue(Resource.Error(e.message.toString()))
-        }
-    }
-
-    val buyTicketResult = MutableLiveData<Resource<TicketModel>>()
-    fun buyTicket(accessToken: String, ticketData: TicketData) = viewModelScope.launch(Dispatchers.IO) {
-        buyTicketResult.postValue(Resource.Loading())
-        try {
-            if(isNetworkAvailable(app)){
-                buyTicketResult.postValue(Resource.Loading())
-                val result = buyTicketUseCase.execute("Bearer $accessToken", ticketData)
-                buyTicketResult.postValue(result)
-            }
-        }catch (e: Exception){
-            buyTicketResult.postValue(Resource.Error(e.message.toString()))
+            nicknameCheckResult.emit(Resource.Error(e.message.toString()))
         }
     }
 

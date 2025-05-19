@@ -1,7 +1,6 @@
 package com.example.newbookshelf.presentation.view.signup
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,17 +10,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import android.widget.EditText
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
-import com.example.newbookshelf.data.model.setting.TicketData
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.example.newbookshelf.data.model.signup.SignupData
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentInputBinding
-import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class InputFragment : Fragment() {
     private lateinit var binding: FragmentInputBinding
@@ -77,98 +83,108 @@ class InputFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        etId.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val regex = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,15}$")
-                if(regex.matches(s.toString())){
-                    id = s.toString()
-                    signupViewModel.idCheck(id)
-                    txtIdWarning.visibility = View.GONE
-                }else {
-                    id = ""
-                    idCheck = false
-                    txtIdWarning.visibility = View.VISIBLE
-                    txtIdWarning.text = "❗아이디는 영문,숫자 포함하여 5~15자이어야 합니다."
-                }
-                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
-            }
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
-
-        etEmail.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val emailRegex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
-                if(emailRegex.matches(s.toString())){
-                    email = s.toString()
-                    val emailCheckData = EmailCheckData(email)
-                    signupViewModel.emailCheck(emailCheckData)
-                    txtEmailWarning.visibility = View.GONE
-                }else {
-                    email = ""
-                    emailCheck = false
-                    txtEmailWarning.visibility = View.VISIBLE
-                    txtEmailWarning.text = "❗이메일 형식에 맞지 않습니다."
-                }
-                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
-            }
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
-
-        etPassword.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val passwordPattern = Regex("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!]).{8,15}$")
-                if(passwordPattern.matches(s.toString())){
-                    passwordCheck = true
-                    password = s.toString()
-                    txtPasswordWarning.visibility = View.GONE
-
-                    if(etPasswordCheck.text.toString() != "" && etPasswordCheck.text.toString() != s.toString()){
-                        passwordCheck = false
-                        txtPasswordCheckWarning.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch {
+            etId.textChange()
+                .debounce(500) //0.5초 동안 입력이 없으면 동작한다.
+                .map { it.toString() } //CharSequence -> String으로 변환
+                .distinctUntilChanged() //같은 값이 연속으로 오면 무시
+                .collectLatest { input ->
+                    val regex = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,15}$")
+                    if(regex.matches(input)){
+                        id = input
+                        signupViewModel.idCheck(id)
+                        txtIdWarning.visibility = View.GONE
+                    }else {
+                        id = ""
+                        idCheck = false
+                        txtIdWarning.visibility = View.VISIBLE
+                        txtIdWarning.text = "❗아이디는 영문,숫자 포함하여 5~15자이어야 합니다."
                     }
-                }else {
-                    passwordCheck = false
-                    password = ""
-                    txtPasswordWarning.visibility = View.VISIBLE
+                    signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
                 }
-                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
-            }
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
+        }
 
-        etPasswordCheck.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val currentPassword = etPassword.text.toString()
-                if(currentPassword != s.toString()){
-                    passwordMatchCheck = false
-                    txtPasswordCheckWarning.visibility = View.VISIBLE
-                }else {
-                    passwordMatchCheck = true
-                    txtPasswordCheckWarning.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            etEmail.textChange()
+                .debounce(500)
+                .map { it.toString() }
+                .distinctUntilChanged()
+                .collectLatest { input ->
+                    val emailRegex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+                    if(emailRegex.matches(input)){
+                        email = input
+                        val emailCheckData = EmailCheckData(email)
+                        signupViewModel.emailCheck(emailCheckData)
+                        txtEmailWarning.visibility = View.GONE
+                    }else {
+                        email = ""
+                        emailCheck = false
+                        txtEmailWarning.visibility = View.VISIBLE
+                        txtEmailWarning.text = "❗이메일 형식에 맞지 않습니다."
+                    }
+                    signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
                 }
-                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
-            }
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
+        }
 
-        etNickname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(s.toString() != ""){
-                    nickname = s.toString()
-                    signupViewModel.nicknameCheck(nickname)
-                }else {
-                    nickname = ""
-                    nicknameCheck = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            etPassword.textChange()
+                .debounce(500)
+                .map { it.toString() }
+                .distinctUntilChanged()
+                .collectLatest { input ->
+                    val passwordPattern = Regex("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!]).{8,15}$")
+                    if(passwordPattern.matches(input)){
+                        passwordCheck = true
+                        password = input
+                        txtPasswordWarning.visibility = View.GONE
+
+                        if(etPasswordCheck.text.toString() != "" && etPasswordCheck.text.toString() != input){
+                            passwordCheck = false
+                            txtPasswordCheckWarning.visibility = View.VISIBLE
+                        }
+                    }else {
+                        passwordCheck = false
+                        password = ""
+                        txtPasswordWarning.visibility = View.VISIBLE
+                    }
+                    signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
                 }
-                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
-            }
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            etPasswordCheck.textChange()
+                .debounce(500)
+                .map { it.toString() }
+                .distinctUntilChanged()
+                .collectLatest { input ->
+                    val currentPassword = etPassword.text.toString()
+                    if(currentPassword != input){
+                        passwordMatchCheck = false
+                        txtPasswordCheckWarning.visibility = View.VISIBLE
+                    }else {
+                        passwordMatchCheck = true
+                        txtPasswordCheckWarning.visibility = View.GONE
+                    }
+                    signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            etNickname.textChange()
+                .debounce(500)
+                .map { it.toString() }
+                .distinctUntilChanged()
+                .collectLatest { input ->
+                    if(input != ""){
+                        nickname = input
+                        signupViewModel.nicknameCheck(nickname)
+                    }else {
+                        nickname = ""
+                        nicknameCheck = false
+                    }
+                    signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                }
+        }
 
         btnSignUp.setOnClickListener {
             val signupData = SignupData(fcmToken, "general", email, id, nickname, password)
@@ -177,57 +193,57 @@ class InputFragment : Fragment() {
     }
 
     private fun observeViewModel() = with(binding){
-        signupViewModel.idCheckResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    idCheck = true
-                    txtIdWarning.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            signupViewModel.idCheckResult.collect { response ->
+                when(response){
+                    is Resource.Success -> {
+                        idCheck = true
+                        txtIdWarning.visibility = View.GONE
+                    }
+                    is Resource.Error -> {
+                        idCheck = false
+                        txtIdWarning.visibility = View.VISIBLE
+                        txtIdWarning.text = "❗이미 사용 중인 아이디 입니다."
+                    }
+                    is Resource.Loading -> Unit
                 }
-                is Resource.Error -> {
-                    idCheck = false
-                    txtIdWarning.visibility = View.VISIBLE
-                    txtIdWarning.text = "❗이미 사용 중인 아이디 입니다."
-                }
-                is Resource.Loading -> {
-
-                }
+                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
             }
-            signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
         }
 
-        signupViewModel.emailCheckResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    emailCheck = true
-                    txtEmailWarning.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            signupViewModel.emailCheckResult.collect { response ->
+                when(response){
+                    is Resource.Success -> {
+                        emailCheck = true
+                        txtEmailWarning.visibility = View.GONE
+                    }
+                    is Resource.Error -> {
+                        emailCheck = false
+                        txtEmailWarning.visibility = View.VISIBLE
+                        txtEmailWarning.text = "❗️이미 사용 중인 이메일 입니다."
+                    }
+                    is Resource.Loading -> Unit
                 }
-                is Resource.Error -> {
-                    emailCheck = false
-                    txtEmailWarning.visibility = View.VISIBLE
-                    txtEmailWarning.text = "❗️이미 사용 중인 이메일 입니다."
-                }
-                is Resource.Loading -> {
-
-                }
+                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
             }
-            signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
         }
 
-        signupViewModel.nicknameCheckResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    nicknameCheck = true
-                    txtNicknameWarning.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            signupViewModel.nicknameCheckResult.collect { response ->
+                when(response){
+                    is Resource.Success -> {
+                        nicknameCheck = true
+                        txtNicknameWarning.visibility = View.GONE
+                    }
+                    is Resource.Error -> {
+                        nicknameCheck = false
+                        txtNicknameWarning.visibility = View.VISIBLE
+                    }
+                    is Resource.Loading -> Unit
                 }
-                is Resource.Error -> {
-                    nicknameCheck = false
-                    txtNicknameWarning.visibility = View.VISIBLE
-                }
-                is Resource.Loading -> {
-
-                }
+                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
             }
-            signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
         }
 
         signupViewModel.signupResult.observe(viewLifecycleOwner){ response ->
@@ -235,14 +251,22 @@ class InputFragment : Fragment() {
                 is Resource.Success -> {
                     findNavController().navigate(R.id.action_inputFragment_to_successFragment)
                 }
-                is Resource.Error -> {
-
-                }
-                is Resource.Loading -> {
-
-                }
+                is Resource.Error -> Unit
+                is Resource.Loading -> Unit
             }
         }
+    }
+
+    private fun EditText.textChange(): Flow<CharSequence?> = callbackFlow {
+        val watcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                trySend(s)
+            }
+            override fun afterTextChanged(s: Editable?) = Unit
+        }
+        addTextChangedListener(watcher)
+        awaitClose{ removeTextChangedListener(watcher)}
     }
 
     private fun signUpBtnSetting(idCheck: Boolean, nicknameCheck: Boolean, emailCheck: Boolean, passwordCheck: Boolean, passwordMatchCheck: Boolean) = with(binding){

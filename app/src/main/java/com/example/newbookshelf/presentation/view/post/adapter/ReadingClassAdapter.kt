@@ -55,6 +55,7 @@ class ReadingClassAdapter: RecyclerView.Adapter<ReadingClassAdapter.ViewHolder>(
         fun bind(readingClass: ReadingClassModelData) = with(binding){
             tvTitle.text = readingClass.book_name
             tvContent.text = readingClass.post_title
+            Log.d("TAG", "bind: ReadingClassAdapter ${readingClass.club_meet_date}")
             tvDate.text = DateFormat.convertToCustomFormat(readingClass.club_meet_date)
             tvPlace.text = Address.getAddressFromLatLng(itemView.context, readingClass.club_latitude.toDouble(), readingClass.club_longitude.toDouble())
 

@@ -17,13 +17,12 @@ class SignupViewModelFactory(
     private val snsSignupUseCase: SnsSignupUseCase,
     private val idCheckUseCase: IdCheckUseCase,
     private val emailCheckUseCase: EmailCheckUseCase,
-    private val nicknameCheckUseCase: NicknameCheckUseCase,
-    private val buyTicketUseCase: BuyTicketUseCase
+    private val nicknameCheckUseCase: NicknameCheckUseCase
 ): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(SignupViewModel::class.java)){
-            return SignupViewModel(app, signupUseCase, snsSignupUseCase, idCheckUseCase, emailCheckUseCase, nicknameCheckUseCase, buyTicketUseCase) as T
+            return SignupViewModel(app, signupUseCase, snsSignupUseCase, idCheckUseCase, emailCheckUseCase, nicknameCheckUseCase) as T
         }
         throw IllegalArgumentException("Unknown View Model Class")
     }

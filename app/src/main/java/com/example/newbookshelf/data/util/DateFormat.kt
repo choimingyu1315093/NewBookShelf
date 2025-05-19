@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -42,5 +43,13 @@ object DateFormat {
             e.printStackTrace()
             false
         }
+    }
+
+    fun isPast(targetTime: String): Boolean {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val targetDateTime = LocalDateTime.parse(targetTime, formatter)
+        val now = LocalDateTime.now()
+
+        return targetDateTime.isBefore(now)
     }
 }

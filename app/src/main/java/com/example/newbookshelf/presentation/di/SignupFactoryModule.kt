@@ -26,9 +26,8 @@ object SignupFactoryModule {
         snsSignupUseCase: SnsSignupUseCase,
         idCheckUseCase: IdCheckUseCase,
         emailCheckUseCase: EmailCheckUseCase,
-        nicknameCheckUseCase: NicknameCheckUseCase,
-        buyTicketUseCase: BuyTicketUseCase
+        nicknameCheckUseCase: NicknameCheckUseCase
     ): SignupViewModelFactory {
-        return SignupViewModelFactory(application, signupUseCase, snsSignupUseCase, idCheckUseCase, emailCheckUseCase, nicknameCheckUseCase, buyTicketUseCase)
+        return SignupViewModelFactory(application, signupUseCase, snsSignupUseCase, idCheckUseCase, emailCheckUseCase, nicknameCheckUseCase)
     }
 }

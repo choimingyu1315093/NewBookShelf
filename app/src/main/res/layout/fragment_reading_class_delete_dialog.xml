@@ -36,6 +36,7 @@
         android:id="@+id/txtInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="모든 신청자에게 알림이 발송되며, 모임 등록 시 지불한 가등록비는 반환되지 않습니다."
         android:textColor="#797979"
         android:layout_marginTop="5dp"
