@@ -95,6 +95,7 @@ class ProfileChangeFragment : Fragment(), NicknameChangeDialog.OnClickListener, 
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

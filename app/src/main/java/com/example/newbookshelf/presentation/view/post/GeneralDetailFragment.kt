@@ -134,6 +134,7 @@ class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListen
                 is Resource.Loading -> {
                     progressBar.visibility = View.VISIBLE
                 }
+                else -> Unit
             }
         }
 
@@ -146,6 +147,7 @@ class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListen
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -158,6 +160,7 @@ class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListen
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -172,6 +175,7 @@ class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListen
                             Toast.makeText(activity, "이미 스크랩에 등록한 글입니다.", Toast.LENGTH_SHORT).show()
                         }
                         is Resource.Loading -> Unit
+                        else -> Unit
                     }
                 }
             }
@@ -186,6 +190,7 @@ class GeneralDetailFragment : Fragment(), ReviewDeleteDialog.OnDeleteClickListen
                     }
                     is Resource.Error -> Unit
                     is Resource.Loading -> Unit
+                    else -> Unit
                 }
             }
         }

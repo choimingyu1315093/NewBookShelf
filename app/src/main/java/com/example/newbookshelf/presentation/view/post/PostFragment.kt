@@ -132,6 +132,7 @@ class PostFragment : Fragment() {
                     rvGeneral.visibility = View.GONE
                     progressBar.visibility = View.VISIBLE
                 }
+                else -> Unit
             }
         }
 
@@ -167,6 +168,7 @@ class PostFragment : Fragment() {
                     rvGeneral.visibility = View.GONE
                     progressBar.visibility = View.VISIBLE
                 }
+                else -> Unit
             }
         }
     }

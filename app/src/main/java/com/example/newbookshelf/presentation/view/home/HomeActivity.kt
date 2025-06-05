@@ -222,6 +222,7 @@ class HomeActivity : AppCompatActivity() {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -238,6 +239,7 @@ class HomeActivity : AppCompatActivity() {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

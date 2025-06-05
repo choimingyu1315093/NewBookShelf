@@ -109,6 +109,7 @@ class OneLineMessageChangeDialog(private val onClickListener: OnClickListener) :
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

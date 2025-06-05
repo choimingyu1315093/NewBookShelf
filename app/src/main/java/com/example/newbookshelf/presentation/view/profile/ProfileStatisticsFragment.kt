@@ -78,6 +78,7 @@ class ProfileStatisticsFragment : Fragment(), PhotoAdapter.OnClickItem {
                         }
                         is Resource.Error -> Unit
                         is Resource.Loading -> Unit
+                        else -> Unit
                     }
                 }
             }
@@ -93,6 +94,7 @@ class ProfileStatisticsFragment : Fragment(), PhotoAdapter.OnClickItem {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

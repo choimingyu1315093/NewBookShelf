@@ -66,6 +66,7 @@ class ProfileMemoFragment : Fragment() {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

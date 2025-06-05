@@ -160,6 +160,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                         is Resource.Loading -> {
                             progressBar.visibility = View.VISIBLE
                         }
+                        else -> Unit
                     }
                 }
             }
@@ -176,6 +177,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                             Toast.makeText(activity, "이미 스크랩에 등록한 글입니다.", Toast.LENGTH_SHORT).show()
                         }
                         is Resource.Loading -> Unit
+                        else -> Unit
                     }
                 }
             }
@@ -191,6 +193,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                         }
                         is Resource.Error -> Unit
                         is Resource.Loading -> Unit
+                        else -> Unit
                     }
                 }
             }
@@ -207,6 +210,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                             Toast.makeText(requireContext(), "기한이 지난 모임은 삭제가 불가합니다.", Toast.LENGTH_SHORT).show()
                         }
                         is Resource.Loading -> Unit
+                        else -> Unit
                     }
                 }
             }
@@ -224,6 +228,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                             Toast.makeText(requireContext(), "독서 모임이 진행된 후에 종료 가능합니다.", Toast.LENGTH_SHORT).show()
                         }
                         is Resource.Loading -> Unit
+                        else -> Unit
                     }
                 }
             }

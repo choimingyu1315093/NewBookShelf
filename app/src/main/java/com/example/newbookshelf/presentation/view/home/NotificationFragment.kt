@@ -91,6 +91,7 @@ class NotificationFragment : Fragment() {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -101,6 +102,7 @@ class NotificationFragment : Fragment() {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

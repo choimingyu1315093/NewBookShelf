@@ -131,6 +131,7 @@ class MemoDialog(
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -147,6 +148,7 @@ class MemoDialog(
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

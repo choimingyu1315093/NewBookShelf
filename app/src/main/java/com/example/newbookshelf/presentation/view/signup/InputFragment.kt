@@ -10,7 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
@@ -61,7 +64,6 @@ class InputFragment : Fragment() {
 
         init()
         bindViews()
-        observeViewModel()
     }
 
     private fun init() = with(binding){
@@ -82,9 +84,9 @@ class InputFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             etId.textChange()
-                .debounce(500) //0.5초 동안 입력이 없으면 동작한다.
-                .map { it.toString() } //CharSequence -> String으로 변환
-                .distinctUntilChanged() //같은 값이 연속으로 오면 무시
+                .debounce(500)
+                .map { it.toString() }
+                .distinctUntilChanged()
                 .collectLatest { input ->
                     val regex = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,15}$")
                     if(regex.matches(input)){
@@ -186,73 +188,6 @@ class InputFragment : Fragment() {
         btnSignUp.setOnClickListener {
             val signupData = SignupData(fcmToken, "general", email, id, nickname, password)
             signupViewModel.signup(signupData)
-        }
-    }
-
-    private fun observeViewModel() = with(binding){
-        viewLifecycleOwner.lifecycleScope.launch {
-            signupViewModel.idCheckResult.collect { response ->
-                when(response){
-                    is Resource.Success -> {
-                        idCheck = true
-                        txtIdWarning.visibility = View.GONE
-                    }
-                    is Resource.Error -> {
-                        idCheck = false
-                        txtIdWarning.visibility = View.VISIBLE
-                        txtIdWarning.text = "❗이미 사용 중인 아이디 입니다."
-                    }
-                    is Resource.Loading -> Unit
-                }
-                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            signupViewModel.emailCheckResult.collect { response ->
-                when(response){
-                    is Resource.Success -> {
-                        emailCheck = true
-                        txtEmailWarning.visibility = View.GONE
-                    }
-                    is Resource.Error -> {
-                        emailCheck = false
-                        txtEmailWarning.visibility = View.VISIBLE
-                        txtEmailWarning.text = "❗️이미 사용 중인 이메일 입니다."
-                    }
-                    is Resource.Loading -> Unit
-                }
-                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            signupViewModel.nicknameCheckResult.collect { response ->
-                when(response){
-                    is Resource.Success -> {
-                        nicknameCheck = true
-                        txtNicknameWarning.visibility = View.GONE
-                    }
-                    is Resource.Error -> {
-                        nicknameCheck = false
-                        txtNicknameWarning.visibility = View.VISIBLE
-                    }
-                    is Resource.Loading -> Unit
-                }
-                signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            signupViewModel.signupResult.collect { response ->
-                when(response){
-                    is Resource.Success -> {
-                        findNavController().navigate(R.id.action_inputFragment_to_successFragment)
-                    }
-                    is Resource.Error -> Unit
-                    is Resource.Loading -> Unit
-                }
-            }
         }
     }
 

@@ -120,6 +120,7 @@ class NicknameChangeDialog(private val onClickListener: OnClickListener) : Dialo
                     txtNicknameWarning.visibility = View.VISIBLE
                 }
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

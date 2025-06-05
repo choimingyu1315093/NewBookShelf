@@ -411,6 +411,7 @@ class DetailFragment : Fragment() {
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
 
             detailViewModel.addMyBookResult.observe(viewLifecycleOwner) { response ->
@@ -422,6 +423,7 @@ class DetailFragment : Fragment() {
                         }
                         is Resource.Error -> Unit
                         is Resource.Loading -> Unit
+                        else -> Unit
                     }
                 }
             }

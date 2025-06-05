@@ -66,6 +66,7 @@ class ProfileBookProcessFragment(private val type: String) : Fragment() {
                     binding.rvBook.visibility = View.GONE
                     binding.progressBar.visibility = View.VISIBLE
                 }
+                else -> Unit
             }
         }
     }

@@ -110,6 +110,7 @@ class ReviewDialog(
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -126,6 +127,7 @@ class ReviewDialog(
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

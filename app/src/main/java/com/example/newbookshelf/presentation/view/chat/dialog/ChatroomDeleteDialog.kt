@@ -82,6 +82,7 @@ class ChatroomDeleteDialog(private val chatroomIdx: Int, private val onChatroomO
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

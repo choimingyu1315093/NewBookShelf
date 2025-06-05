@@ -12,7 +12,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.BuildConfig
@@ -241,22 +243,38 @@ class LoginFragment : Fragment() {
 
     private fun observeViewModels() = with(binding){
         viewLifecycleOwner.lifecycleScope.launch {
-            loginViewModel.loginResult.collect { response ->
-                when(response){
-                    is Resource.Success -> {
-                        hideProgressBar()
-                        if(response.data!!.result){
-                            BookShelfApp.prefs.setAutoLogin("autoLogin", true)
-                            BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.access_token)
-                            loginViewModel.updateLocation(UpdateLocationData(loginViewModel.latitude.value!!, loginViewModel.longitude.value!!))
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    loginViewModel.loginResult.collect { state ->
+                        when(state){
+                            is Resource.Success -> {
+                                hideProgressBar()
+                                if(state.data!!.result){
+                                    BookShelfApp.prefs.setAutoLogin("autoLogin", true)
+                                    BookShelfApp.prefs.setAccessToken("accessToken", state.data.data.access_token)
+                                }
+                            }
+                            is Resource.Error -> {
+                                hideProgressBar()
+                            }
+                            is Resource.Loading -> {
+                                showProgressBar()
+                            }
+                            else -> Unit
                         }
                     }
-                    is Resource.Error -> {
-                        hideProgressBar()
-                        Toast.makeText(requireContext(), "입력하신 정보와 일치하는 회원이 없습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    is Resource.Loading -> {
-                        showProgressBar()
+                }
+
+                launch {
+                    loginViewModel.eventFlow.collect {event ->
+                        when (event) {
+                            is LoginViewModel.UiEvent.ShowToast -> {
+                                Toast.makeText(requireContext(), "입력하신 정보와 일치하는 회원이 없습니다.", Toast.LENGTH_SHORT).show()
+                            }
+                            is LoginViewModel.UiEvent.NavigateToSuccessScreen -> {
+                                loginViewModel.updateLocation(UpdateLocationData(loginViewModel.latitude.value!!, loginViewModel.longitude.value!!))
+                            }
+                        }
                     }
                 }
             }
@@ -264,23 +282,36 @@ class LoginFragment : Fragment() {
 
 
         viewLifecycleOwner.lifecycleScope.launch {
-            signupViewModel.signupResult.collect { response ->
-                when(response){
-                    is Resource.Success -> {
-                        hideProgressBar()
-                        if(response.data!!.result){
-                            BookShelfApp.prefs.setAutoLogin("autoLogin", true)
-                            BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.access_token)
-                            val intent = Intent(requireContext(), HomeActivity::class.java)
-                            startActivity(intent)
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    signupViewModel.signupResult.collect { state ->
+                        when(state){
+                            is Resource.Success -> {
+                                BookShelfApp.prefs.setAutoLogin("autoLogin", true)
+                                BookShelfApp.prefs.setAccessToken("accessToken", state.data!!.data.access_token)
+                            }
+                            is Resource.Error -> {
+                                hideProgressBar()
+                            }
+                            is Resource.Loading -> {
+                                showProgressBar()
+                            }
+                            else -> Unit
                         }
                     }
-                    is Resource.Error -> {
-                        hideProgressBar()
-                        Toast.makeText(requireContext(), "입력하신 정보와 일치하는 회원이 없습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    is Resource.Loading -> {
-                        showProgressBar()
+                }
+
+                launch {
+                    signupViewModel.eventFlow.collect { event ->
+                        when (event) {
+                            is SignupViewModel.UiEvent.ShowToast -> {
+                                Toast.makeText(requireContext(), "입력하신 정보와 일치하는 회원이 없습니다.", Toast.LENGTH_SHORT).show()
+                            }
+                            is SignupViewModel.UiEvent.NavigateToSuccessScreen -> {
+                                val intent = Intent(requireContext(), HomeActivity::class.java)
+                                startActivity(intent)
+                            }
+                        }
                     }
                 }
             }
@@ -295,6 +326,7 @@ class LoginFragment : Fragment() {
                     }
                     is Resource.Error -> Unit
                     is Resource.Loading -> Unit
+                    else -> Unit
                 }
             }
         }

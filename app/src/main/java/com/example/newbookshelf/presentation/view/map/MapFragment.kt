@@ -157,6 +157,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, NearBookDialog.OnDialogClose
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

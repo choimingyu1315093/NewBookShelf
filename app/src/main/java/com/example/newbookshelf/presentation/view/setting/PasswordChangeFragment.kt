@@ -119,6 +119,7 @@ class PasswordChangeFragment : Fragment() {
                         isClicked = false
                     }
                     is Resource.Loading -> Unit
+                    else -> Unit
                 }
             }
         }

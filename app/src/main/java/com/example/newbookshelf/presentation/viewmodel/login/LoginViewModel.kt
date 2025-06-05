@@ -19,8 +19,13 @@ import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
+import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -33,34 +38,64 @@ class LoginViewModel(
     val latitude = MutableLiveData<Double>()
     val longitude = MutableLiveData<Double>()
 
-    val loginResult = MutableSharedFlow<Resource<LoginModel>>()
+    private var _loginResult = MutableStateFlow<Resource<LoginModel>>(Resource.Idle())
+    val loginResult: StateFlow<Resource<LoginModel>>
+        get() = _loginResult
+
+    private var _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    sealed class UiEvent {
+        data class ShowToast(val message: String): UiEvent()
+        object NavigateToSuccessScreen: UiEvent()
+    }
 
     fun login(loginData: LoginData) = viewModelScope.launch(Dispatchers.IO) {
-        loginResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                loginResult.emit(Resource.Loading())
+                _loginResult.value = Resource.Loading()
                 val result = loginUseCase.execute(loginData)
-                loginResult.emit(result)
+                _loginResult.value = result
+
+                when(result){
+                    is Resource.Success -> {
+                        _eventFlow.emit(UiEvent.NavigateToSuccessScreen)
+                    }
+                    is Resource.Error -> {
+                        _eventFlow.emit(UiEvent.ShowToast(result.message ?: "알 수 없는 오류"))
+                    }
+                    else -> Unit
+                }
                 BookShelfApp.prefs.setLoginType("loginType", "general")
                 BookShelfApp.prefs.setLoginId("id", loginData.userId)
                 BookShelfApp.prefs.setLoginPw("password", loginData.userPassword)
             }
         }catch (e: Exception){
-            loginResult.emit(Resource.Error(e.message.toString()))
+            _loginResult.value = Resource.Error(e.message.toString())
+            _eventFlow.emit(UiEvent.ShowToast(e.message.toString()))
         }
     }
 
     fun snsLogin(snsLoginData: SnsLoginData) = viewModelScope.launch(Dispatchers.IO) {
-        loginResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                loginResult.emit(Resource.Loading())
+                _loginResult.value = Resource.Loading()
                 val result = snsLoginUseCase.execute(snsLoginData)
-                loginResult.emit(result)
+                _loginResult.value = result
+
+                when(result){
+                    is Resource.Success -> {
+                        _eventFlow.emit(UiEvent.NavigateToSuccessScreen)
+                    }
+                    is Resource.Error -> {
+                        _eventFlow.emit(UiEvent.ShowToast(result.message ?: "알 수 없는 오류"))
+                    }
+                    else -> Unit
+                }
             }
         }catch (e: Exception){
-            loginResult.emit(Resource.Error(e.message.toString()))
+            _loginResult.value = Resource.Error(e.message.toString())
+            _eventFlow.emit(UiEvent.ShowToast(e.message.toString()))
         }
     }
 

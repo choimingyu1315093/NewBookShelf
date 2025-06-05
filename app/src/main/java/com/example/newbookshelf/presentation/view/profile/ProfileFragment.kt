@@ -134,6 +134,7 @@ class ProfileFragment : Fragment() {
                         is Resource.Loading -> {
                             progressBar.visibility = View.VISIBLE
                         }
+                        else -> Unit
                     }
                 }
             }

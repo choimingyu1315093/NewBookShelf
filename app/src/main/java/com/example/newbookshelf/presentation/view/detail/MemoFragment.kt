@@ -104,6 +104,7 @@ class MemoFragment(private val isbn: String) : Fragment(), MemoDialog.OnDialogCl
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -118,6 +119,7 @@ class MemoFragment(private val isbn: String) : Fragment(), MemoDialog.OnDialogCl
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

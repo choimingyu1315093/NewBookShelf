@@ -104,6 +104,7 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -118,6 +119,7 @@ class ReviewFragment(private val isbn: String) : Fragment(), ReviewDialog.OnDial
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

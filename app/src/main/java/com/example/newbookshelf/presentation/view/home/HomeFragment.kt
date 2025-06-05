@@ -183,6 +183,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
                 is Resource.Loading -> {
                     showProgress()
                 }
+                else -> Unit
             }
         }
 
@@ -202,6 +203,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
                 is Resource.Loading -> {
                     showProgress()
                 }
+                else -> Unit
             }
         }
 
@@ -221,6 +223,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
                 is Resource.Loading -> {
                     showProgress()
                 }
+                else -> Unit
             }
         }
 
@@ -246,6 +249,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
                         }
                         is Resource.Error -> Unit
                         is Resource.Loading -> Unit
+                        else -> Unit
                     }
                 }
             }
@@ -287,6 +291,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
                     is Resource.Loading -> {
                         showProgress()
                     }
+                    else -> Unit
                 }
             }
         }else if(type == "new"){
@@ -308,6 +313,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
                     is Resource.Loading -> {
                         showProgress()
                     }
+                    else -> Unit
                 }
             }
         }else {
@@ -329,6 +335,7 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
                     is Resource.Loading -> {
                         showProgress()
                     }
+                    else -> Unit
                 }
             }
         }

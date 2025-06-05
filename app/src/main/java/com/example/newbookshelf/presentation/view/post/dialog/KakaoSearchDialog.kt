@@ -128,6 +128,7 @@ class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFr
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

@@ -158,6 +158,7 @@ class FindFragment : Fragment() {
                         Toast.makeText(requireContext(), "입력하신 정보를 다시 한번 확인해주세요.", Toast.LENGTH_SHORT).show()
                     }
                     is Resource.Loading -> Unit
+                    else -> Unit
                 }
             }
         }

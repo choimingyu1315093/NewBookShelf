@@ -88,6 +88,7 @@ class ReadingClassMemberDialog(private val readingClassIdx: Int) : DialogFragmen
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

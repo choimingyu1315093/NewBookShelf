@@ -207,6 +207,7 @@ class SearchBookFragment : Fragment() {
                 is Resource.Loading -> {
                     progressBar.visibility = View.VISIBLE
                 }
+                else -> Unit
             }
         }
 
@@ -234,6 +235,7 @@ class SearchBookFragment : Fragment() {
                 is Resource.Loading -> {
                     progressBar.visibility = View.VISIBLE
                 }
+                else -> Unit
             }
         }
 

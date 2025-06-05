@@ -148,6 +148,7 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
         
@@ -159,6 +160,7 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -174,6 +176,7 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

@@ -148,6 +148,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook, private val t
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
 
@@ -171,6 +172,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook, private val t
                 }
                 is Resource.Error -> Unit
                 is Resource.Loading -> Unit
+                else -> Unit
             }
         }
     }

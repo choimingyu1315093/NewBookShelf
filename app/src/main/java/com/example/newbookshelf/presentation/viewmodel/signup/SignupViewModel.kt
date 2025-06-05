@@ -77,7 +77,7 @@ class SignupViewModel(
         )
     }
 
-    var _signupResult = MutableStateFlow<Resource<SignupModel>>(Resource.Loading())
+    private var _signupResult = MutableStateFlow<Resource<SignupModel>>(Resource.Idle())
     val signupResult: StateFlow<Resource<SignupModel>>
         get() = _signupResult
 
@@ -92,15 +92,25 @@ class SignupViewModel(
     }
 
     fun signup(signupData: SignupData) = viewModelScope.launch(Dispatchers.IO) {
-        _signupResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                _signupResult.emit(Resource.Loading())
+                _signupResult.value = Resource.Loading()
                 val result = signupUseCase.execute(signupData)
-                _signupResult.emit(result)
+                _signupResult.value = result
+
+                when (result) {
+                    is Resource.Success -> {
+                        _eventFlow.emit(UiEvent.NavigateToSuccessScreen)
+                    }
+                    is Resource.Error -> {
+                        _eventFlow.emit(UiEvent.ShowToast(result.message ?: "알 수 없는 오류"))
+                    }
+                    else -> Unit
+                }
             }
         }catch (e: Exception){
-            _signupResult.emit(Resource.Error(e.message.toString()))
+            _signupResult.value = Resource.Error(e.message.toString())
+            _eventFlow.emit(UiEvent.ShowToast(e.message.toString()))
         }
     }
 
