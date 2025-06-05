@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.post.AddScrapData
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassFinishData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.util.Address
 import com.example.newbookshelf.data.util.DateFormat
@@ -115,12 +116,12 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                                 val readingClass = result.data.data
                                 tvTitle.text = readingClass.post_title
                                 tvName.text = readingClass.user_name
-                                tvTime.text = readingClass.update_date.split("T")[0]
+                                tvTime.text = readingClass.update_date.split(" ")[0]
                                 tvContent.text = readingClass.post_content
-                                tvSchedule.text = "${Address.getAddressFromLatLng(requireContext(), readingClass.club_latitude.toDouble(), readingClass.club_longitude.toDouble())}\n${DateFormat.convertToCustomFormat(readingClass.club_meet_date)}"
+                                tvSchedule.text = "${Address.getAddressFromLatLng(requireContext(), readingClass.club_latitude.toDouble(), readingClass.club_longitude.toDouble())}\n${DateFormat.formatDateTime(readingClass.club_meet_date)}"
                                 writerIdx = readingClass.user_idx
 
-                                if(DateFormat.isDatePast(readingClass.club_meet_date)){
+                                if(DateFormat.isPast(readingClass.club_meet_date)){
                                     tvStatus.text = "진행중"
                                     tvStatus.setBackgroundResource(R.drawable.btn_main_no_10)
                                 }else {
@@ -145,9 +146,9 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                                     tvTranslator.text = readingClass.book_translator
                                 }
 
-                                if((readingClass.user_type == "leader" && !DateFormat.isDatePast(readingClass.club_meet_date)) || readingClass.user_type == "participant"){
+                                if((readingClass.user_type == "leader" && !DateFormat.isPast(readingClass.club_meet_date)) || readingClass.user_type == "participant"){
                                     btnJoin.text = "참가자 조회"
-                                }else if(readingClass.user_type == "leader" && DateFormat.isDatePast(readingClass.club_meet_date)){
+                                }else if(readingClass.user_type == "leader" && DateFormat.isPast(readingClass.club_meet_date)){
                                     btnJoin.text = "독서 모임 종료"
                                 }else {
                                     btnJoin.text = "참가 신청"
@@ -210,6 +211,23 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                postViewModel.readingClassFinishResult.collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            Toast.makeText(requireContext(), "독서 모임이 종료되었습니다.", Toast.LENGTH_SHORT).show()
+                            findNavController().popBackStack()
+                        }
+                        is Resource.Error -> {
+                            Toast.makeText(requireContext(), "독서 모임이 진행된 후에 종료 가능합니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        is Resource.Loading -> Unit
+                    }
+                }
+            }
+        }
     }
 
     private fun showPopupMenu(anchor: View) {
@@ -252,7 +270,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
 
     //독서 모임 종료
     override fun finish(b: Boolean) {
-//        postViewModel.readingclassfinish(readingClassIdx)
-//        postViewModel.readingClassDelete(readingClassIdx)
+        val readingClassFinishData = ReadingClassFinishData(readingClassIdx, listOf())
+        postViewModel.readingClassFinish(readingClassFinishData)
     }
 }

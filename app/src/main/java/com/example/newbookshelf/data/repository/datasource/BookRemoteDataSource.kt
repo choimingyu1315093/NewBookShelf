@@ -43,6 +43,7 @@ import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassFinishData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassMembersModel
@@ -117,6 +118,7 @@ interface BookRemoteDataSource {
     suspend fun readingClassDelete(readingClassIdx: Int): Response<OnlyResultModel>
     suspend fun readingClassMemberList(readingClassIdx: Int, limit: Int, currentPage: Int): Response<ReadingClassMembersModel>
     suspend fun readingClassJoin(readingClassJoinData: ReadingClassJoinData): Response<ReadingClassJoinModel>
+    suspend fun readingClassFinish(readingClassFinishData: ReadingClassFinishData): Response<OnlyResultModel>
     fun wishBookHaveUser(): Flow<Response<WishBookHaveUserModel>>
     suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Response<ChatroomModel>
     suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Response<DeleteChatroomModel>

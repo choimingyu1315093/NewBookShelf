@@ -49,6 +49,7 @@ import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassFinishUserCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
@@ -421,6 +422,12 @@ object UseCaseModule {
     @Provides
     fun provideReadingClassJoinUseCase(bookRepository: BookRepository): ReadingClassJoinUseCase {
         return ReadingClassJoinUseCase(bookRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideReadingClassFinishUserCase(bookRepository: BookRepository): ReadingClassFinishUserCase {
+        return ReadingClassFinishUserCase(bookRepository)
     }
 
     @Singleton

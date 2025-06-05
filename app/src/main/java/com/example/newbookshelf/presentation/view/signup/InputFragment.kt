@@ -10,19 +10,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.example.newbookshelf.data.model.signup.SignupData
+import com.example.newbookshelf.data.util.EditTextCustom.textChange
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentInputBinding
 import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -246,27 +243,17 @@ class InputFragment : Fragment() {
             }
         }
 
-        signupViewModel.signupResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    findNavController().navigate(R.id.action_inputFragment_to_successFragment)
+        viewLifecycleOwner.lifecycleScope.launch {
+            signupViewModel.signupResult.collect { response ->
+                when(response){
+                    is Resource.Success -> {
+                        findNavController().navigate(R.id.action_inputFragment_to_successFragment)
+                    }
+                    is Resource.Error -> Unit
+                    is Resource.Loading -> Unit
                 }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
             }
         }
-    }
-
-    private fun EditText.textChange(): Flow<CharSequence?> = callbackFlow {
-        val watcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                trySend(s)
-            }
-            override fun afterTextChanged(s: Editable?) = Unit
-        }
-        addTextChangedListener(watcher)
-        awaitClose{ removeTextChangedListener(watcher)}
     }
 
     private fun signUpBtnSetting(idCheck: Boolean, nicknameCheck: Boolean, emailCheck: Boolean, passwordCheck: Boolean, passwordMatchCheck: Boolean) = with(binding){

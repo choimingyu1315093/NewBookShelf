@@ -17,32 +17,25 @@ import java.util.TimeZone
 
 const val TAG = "DateFormat"
 object DateFormat {
-    fun convertToCustomFormat(inputDate: String): String? {
-        return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.KOREA)
-            inputFormat.timeZone = TimeZone.getTimeZone("UTC")
-            val date = inputFormat.parse(inputDate)
+    fun formatDateTime(inputDate: String): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+        val dateTime = LocalDateTime.parse(inputDate, inputFormatter)
 
-            val outputFormat = SimpleDateFormat("MM/dd (E) HH:mm", Locale.KOREA)
-            outputFormat.timeZone = TimeZone.getTimeZone("UTC")
-            outputFormat.format(date)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+        val dayOfWeekKorean = when (dateTime.dayOfWeek.value) {
+            1 -> "월"
+            2 -> "화"
+            3 -> "수"
+            4 -> "목"
+            5 -> "금"
+            6 -> "토"
+            7 -> "일"
+            else -> ""
         }
-    }
 
-    fun isDatePast(inputTime: String): Boolean {
-        return try {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            val targetDate: Date = dateFormat.parse(inputTime) ?: return false
+        val outputFormatter = DateTimeFormatter.ofPattern("MM/dd", Locale.KOREA)
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.KOREA)
 
-            val currentDate = Date()
-            currentDate.after(targetDate)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
+        return "${dateTime.format(outputFormatter)} ($dayOfWeekKorean) ${dateTime.format(timeFormatter)}"
     }
 
     fun isPast(targetTime: String): Boolean {

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newbookshelf.data.model.post.general.PostModelData
-import com.example.newbookshelf.data.model.post.kakao.Document
 import com.example.newbookshelf.databinding.ItemGeneralBinding
 
 class GeneralAdapter: RecyclerView.Adapter<GeneralAdapter.ViewHolder>() {

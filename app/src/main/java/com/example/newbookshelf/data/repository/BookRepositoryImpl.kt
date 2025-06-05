@@ -44,6 +44,7 @@ import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassFinishData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassMembersModel
@@ -317,6 +318,10 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
 
     override suspend fun readingClassJoin(readingClassJoinData: ReadingClassJoinData): Resource<ReadingClassJoinModel> {
         return responseToResource(bookRemoteDataSource.readingClassJoin(readingClassJoinData))
+    }
+
+    override suspend fun readingClassFinish(readingClassFinishData: ReadingClassFinishData): Resource<OnlyResultModel> {
+        return responseToResource(bookRemoteDataSource.readingClassFinish(readingClassFinishData))
     }
 
     override fun wishBookHaveUser(): Flow<Resource<WishBookHaveUserModel>> {

@@ -38,25 +38,6 @@ object AppModule {
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .build()
-//                OkHttpClient.Builder()
-//                    .addInterceptor { chain ->
-//                        val request = chain.request()
-//
-//                        // 요청 헤더 확인
-//                        request.headers.forEach { header ->
-//                            Log.d("Request Header", "${header.first}: ${header.second}")
-//                        }
-//
-//                        val response = chain.proceed(request)
-//
-//                        // 응답 헤더 확인
-//                        response.headers.forEach { header ->
-//                            Log.d("Response Header", "${header.first}: ${header.second}")
-//                        }
-//
-//                        response
-//                    }
-//                    .build()
             )
             .addConverterFactory(GsonConverterFactory.create())
             .build()

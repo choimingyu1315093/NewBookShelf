@@ -20,6 +20,7 @@ import com.example.newbookshelf.domain.usecase.login.IdLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.SnsLoginUseCase
 import com.example.newbookshelf.domain.usecase.login.UpdateLocationUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -32,48 +33,48 @@ class LoginViewModel(
     val latitude = MutableLiveData<Double>()
     val longitude = MutableLiveData<Double>()
 
-    val loginResult = MutableLiveData<Resource<LoginModel>>()
+    val loginResult = MutableSharedFlow<Resource<LoginModel>>()
 
     fun login(loginData: LoginData) = viewModelScope.launch(Dispatchers.IO) {
-        loginResult.postValue(Resource.Loading())
+        loginResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                loginResult.postValue(Resource.Loading())
+                loginResult.emit(Resource.Loading())
                 val result = loginUseCase.execute(loginData)
-                loginResult.postValue(result)
+                loginResult.emit(result)
                 BookShelfApp.prefs.setLoginType("loginType", "general")
                 BookShelfApp.prefs.setLoginId("id", loginData.userId)
                 BookShelfApp.prefs.setLoginPw("password", loginData.userPassword)
             }
         }catch (e: Exception){
-            loginResult.postValue(Resource.Error(e.message.toString()))
+            loginResult.emit(Resource.Error(e.message.toString()))
         }
     }
 
     fun snsLogin(snsLoginData: SnsLoginData) = viewModelScope.launch(Dispatchers.IO) {
-        loginResult.postValue(Resource.Loading())
+        loginResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                loginResult.postValue(Resource.Loading())
+                loginResult.emit(Resource.Loading())
                 val result = snsLoginUseCase.execute(snsLoginData)
-                loginResult.postValue(result)
+                loginResult.emit(result)
             }
         }catch (e: Exception){
-            loginResult.postValue(Resource.Error(e.message.toString()))
+            loginResult.emit(Resource.Error(e.message.toString()))
         }
     }
 
-    val updateLocationResult = MutableLiveData<Resource<OnlyResultModel>>()
+    val updateLocationResult = MutableSharedFlow<Resource<OnlyResultModel>>()
     fun updateLocation(updateLocationData: UpdateLocationData) = viewModelScope.launch(Dispatchers.IO) {
-        updateLocationResult.postValue(Resource.Loading())
+        updateLocationResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                updateLocationResult.postValue(Resource.Loading())
+                updateLocationResult.emit(Resource.Loading())
                 val result = updateLocationUseCase.execute(updateLocationData)
-                updateLocationResult.postValue(result)
+                updateLocationResult.emit(result)
             }
         }catch (e: Exception){
-            updateLocationResult.postValue(Resource.Error(e.message.toString()))
+            updateLocationResult.emit(Resource.Error(e.message.toString()))
         }
     }
 

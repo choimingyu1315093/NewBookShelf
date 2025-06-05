@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -83,18 +85,21 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
         profileViewModel = (activity as HomeActivity).profileViewModel
         profileViewModel.myProfile()
 
+        //이번 주 베스트셀러
         weekBestsellerAdapter = (activity as HomeActivity).weekBestsellerAdapter
         weekBestsellerAdapter.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(book = it, searchBook = null)
             findNavController().navigate(action)
         }
 
+        //신간 도서 목록
         newBestsellerAdapter = (activity as HomeActivity).newBestsellerAdapter
         newBestsellerAdapter.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(book = it, searchBook = null)
             findNavController().navigate(action)
         }
 
+        //주목할 만한 신간 목록
         attentionBestsellerAdapter = (activity as HomeActivity).attentionBestseller
         attentionBestsellerAdapter.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(book = it, searchBook = null)
@@ -229,16 +234,20 @@ class HomeFragment : Fragment(), BestsellerFilterDialog.OnApplyListener {
             }
         }
 
-        profileViewModel.myProfileInfo.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    response.data?.let {
-                        BookShelfApp.prefs.setUserIdx("userIdx", it.data.user_idx)
-                        BookShelfApp.prefs.setNickname("nickname", it.data.user_name)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                profileViewModel.myProfileInfo.collect { response ->
+                    when(response){
+                        is Resource.Success -> {
+                            response.data?.let {
+                                BookShelfApp.prefs.setUserIdx("userIdx", it.data.user_idx)
+                                BookShelfApp.prefs.setNickname("nickname", it.data.user_name)
+                            }
+                        }
+                        is Resource.Error -> Unit
+                        is Resource.Loading -> Unit
                     }
                 }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
             }
         }
     }

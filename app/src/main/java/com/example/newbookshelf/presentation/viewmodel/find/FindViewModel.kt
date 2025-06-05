@@ -15,6 +15,7 @@ import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.find.FindIdUseCase
 import com.example.newbookshelf.domain.usecase.find.FindPwUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class FindViewModel(
@@ -26,31 +27,31 @@ class FindViewModel(
     val id = MutableLiveData<String>()
     val email = MutableLiveData<String>()
 
-    val findResult = MutableLiveData<Resource<FindModel>>()
+    val findResult = MutableSharedFlow<Resource<FindModel>>()
 
     fun findId(findIdData: FindIdData) = viewModelScope.launch(Dispatchers.IO) {
-        findResult.postValue(Resource.Loading())
+        findResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                findResult.postValue(Resource.Loading())
+                findResult.emit(Resource.Loading())
                 val result = findIdUseCase.execute(findIdData)
-                findResult.postValue(result)
+                findResult.emit(result)
             }
         }catch (e: Exception){
-            findResult.postValue(Resource.Error(e.message.toString()))
+            findResult.emit(Resource.Error(e.message.toString()))
         }
     }
 
     fun findPw(findPwData: FindPwData) = viewModelScope.launch(Dispatchers.IO) {
-        findResult.postValue(Resource.Loading())
+        findResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                findResult.postValue(Resource.Loading())
+                findResult.emit(Resource.Loading())
                 val result = findPwUseCase.execute(findPwData)
-                findResult.postValue(result)
+                findResult.emit(result)
             }
         }catch (e: Exception){
-            findResult.postValue(Resource.Error(e.message.toString()))
+            findResult.emit(Resource.Error(e.message.toString()))
         }
     }
 

@@ -11,6 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
@@ -21,6 +24,7 @@ import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileAdapter
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
@@ -77,56 +81,60 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeViewModel() = with(binding){
-        profileViewModel.myProfileInfo.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    progressBar.visibility = View.GONE
-                    response.data?.let {
-                        tvName.text = it.data.user_name
-                        BookShelfApp.prefs.setNickname("nickname", it.data.user_name)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                profileViewModel.myProfileInfo.collect { response ->
+                    when(response){
+                        is Resource.Success -> {
+                            progressBar.visibility = View.GONE
+                            response.data?.let {
+                                tvName.text = it.data.user_name
+                                BookShelfApp.prefs.setNickname("nickname", it.data.user_name)
 
-                        if(it.data.user_description == ""){
-                            tvOneLine.text = "한 줄 메시지를 입력해주세요."
-                        }else {
-                            tvOneLine.text = it.data.user_description
+                                if(it.data.user_description == ""){
+                                    tvOneLine.text = "한 줄 메시지를 입력해주세요."
+                                }else {
+                                    tvOneLine.text = it.data.user_description
+                                }
+
+                                setColoredText(tvFriend, it.data.relation_count)
+                                setColoredText(tvRequest, it.data.relation_request_count)
+
+                                topBook.clear()
+                                topBookImageList.clear()
+                                topBookImageList.add("")
+                                topBookIsbnList.clear()
+                                topBookIsbnList.add("")
+                                if(it.data.top1_book != null){
+                                    topBook.add(it.data.top1_book.book_image)
+                                    topBookImageList.add(it.data.top1_book.book_image)
+                                    topBookIsbnList.add(it.data.top1_book.book_isbn)
+                                }
+                                if(it.data.top2_book != null){
+                                    topBook.add(it.data.top2_book.book_image)
+                                    topBookImageList.add(it.data.top2_book.book_image)
+                                    topBookIsbnList.add(it.data.top2_book.book_isbn)
+                                }
+                                if(it.data.top3_book != null){
+                                    topBook.add(it.data.top3_book.book_image)
+                                    topBookImageList.add(it.data.top3_book.book_image)
+                                    topBookIsbnList.add(it.data.top3_book.book_isbn)
+                                }
+
+                                profileViewModel.userName.value = it.data.user_name
+                                profileViewModel.userDescription.value = it.data.user_description
+                                profileViewModel.userBestSeller.value = topBook
+                                profileViewModel.userBestSellerList.value = topBookImageList
+                                profileViewModel.userBestSellerIsbnList.value = topBookIsbnList
+
+                                viewPagerSetting()
+                            }
                         }
-
-                        setColoredText(tvFriend, it.data.relation_count)
-                        setColoredText(tvRequest, it.data.relation_request_count)
-
-                        topBook.clear()
-                        topBookImageList.clear()
-                        topBookImageList.add("")
-                        topBookIsbnList.clear()
-                        topBookIsbnList.add("")
-                        if(it.data.top1_book != null){
-                            topBook.add(it.data.top1_book.book_image)
-                            topBookImageList.add(it.data.top1_book.book_image)
-                            topBookIsbnList.add(it.data.top1_book.book_isbn)
+                        is Resource.Error -> Unit
+                        is Resource.Loading -> {
+                            progressBar.visibility = View.VISIBLE
                         }
-                        if(it.data.top2_book != null){
-                            topBook.add(it.data.top2_book.book_image)
-                            topBookImageList.add(it.data.top2_book.book_image)
-                            topBookIsbnList.add(it.data.top2_book.book_isbn)
-                        }
-                        if(it.data.top3_book != null){
-                            topBook.add(it.data.top3_book.book_image)
-                            topBookImageList.add(it.data.top3_book.book_image)
-                            topBookIsbnList.add(it.data.top3_book.book_isbn)
-                        }
-
-                        profileViewModel.userName.value = it.data.user_name
-                        profileViewModel.userDescription.value = it.data.user_description
-                        profileViewModel.userBestSeller.value = topBook
-                        profileViewModel.userBestSellerList.value = topBookImageList
-                        profileViewModel.userBestSellerIsbnList.value = topBookIsbnList
-
-                        viewPagerSetting()
                     }
-                }
-                is Resource.Error -> Unit
-                is Resource.Loading -> {
-                    progressBar.visibility = View.VISIBLE
                 }
             }
         }

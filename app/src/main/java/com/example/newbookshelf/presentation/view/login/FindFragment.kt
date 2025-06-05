@@ -12,15 +12,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.newbookshelf.R
 import com.example.newbookshelf.data.model.find.FindIdData
 import com.example.newbookshelf.data.model.find.FindPwData
+import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.example.newbookshelf.data.util.Resource
+import com.example.newbookshelf.data.util.textChange
 import com.example.newbookshelf.databinding.FragmentFindBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.viewmodel.find.FindViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class FindFragment : Fragment() {
     private lateinit var binding: FragmentFindBinding
@@ -86,27 +94,31 @@ class FindFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        etEmail.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                isEmail = s.toString() != ""
-                checkNextButtonEnable()
-            }
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
-
-        etChange.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(title == "아이디"){
-                    isNickname = s.toString() != ""
-                }else {
-                    isId = s.toString() != ""
+        viewLifecycleOwner.lifecycleScope.launch {
+            etEmail.textChange()
+                .debounce(500)
+                .map { it.toString() }
+                .distinctUntilChanged()
+                .collectLatest { input ->
+                    isEmail = input != ""
+                    checkNextButtonEnable()
                 }
-                checkNextButtonEnable()
-            }
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            etChange.textChange()
+                .debounce(500)
+                .map { it.toString() }
+                .distinctUntilChanged()
+                .collectLatest { input ->
+                    if(title == "아이디"){
+                        isNickname = input != ""
+                    }else {
+                        isId = input != ""
+                    }
+                    checkNextButtonEnable()
+                }
+        }
 
         btnFind.setOnClickListener {
             if(title == "아이디"){
@@ -120,32 +132,32 @@ class FindFragment : Fragment() {
     }
 
     private fun observeViewModels() = with(binding){
-        findViewModel.findResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    if(title == "아이디"){
-                        bundle = Bundle().apply {
-                            putString("title", "아이디")
-                        }
-                        findViewModel.id.postValue(response.data!!.data.data)
-                        findNavController().navigate(R.id.action_findFragment_to_findSuccessFragment, bundle!!)
-                    }else {
-                        bundle = Bundle().apply {
-                            putString("title", "비밀번호")
-                        }
-                        findViewModel.email.postValue(etEmail.text.toString().trim())
-                        if(isEmail && isId){
+        viewLifecycleOwner.lifecycleScope.launch {
+            findViewModel.findResult.collect { response ->
+                when(response){
+                    is Resource.Success -> {
+                        if(title == "아이디"){
+                            bundle = Bundle().apply {
+                                putString("title", "아이디")
+                            }
+                            findViewModel.id.postValue(response.data!!.data.data)
                             findNavController().navigate(R.id.action_findFragment_to_findSuccessFragment, bundle!!)
+                        }else {
+                            bundle = Bundle().apply {
+                                putString("title", "비밀번호")
+                            }
+                            findViewModel.email.postValue(etEmail.text.toString().trim())
+                            if(isEmail && isId){
+                                findNavController().navigate(R.id.action_findFragment_to_findSuccessFragment, bundle!!)
+                            }
                         }
+                        etEmail.setText("")
+                        etChange.setText("")
                     }
-                    etEmail.setText("")
-                    etChange.setText("")
-                }
-                is Resource.Error -> {
-                    Toast.makeText(requireContext(), "입력하신 정보를 다시 한번 확인해주세요.", Toast.LENGTH_SHORT).show()
-                }
-                is Resource.Loading -> {
-
+                    is Resource.Error -> {
+                        Toast.makeText(requireContext(), "입력하신 정보를 다시 한번 확인해주세요.", Toast.LENGTH_SHORT).show()
+                    }
+                    is Resource.Loading -> Unit
                 }
             }
         }

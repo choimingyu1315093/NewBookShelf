@@ -22,6 +22,7 @@ import com.example.newbookshelf.domain.usecase.profile.ProfileMemoUseCase
 import com.example.newbookshelf.domain.usecase.profile.ReadingStatisticsUseCase
 import com.example.newbookshelf.domain.usecase.profile.TopBookChangeUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
@@ -42,17 +43,17 @@ class ProfileViewModel(
     var userBestSellerList = MutableLiveData<ArrayList<String>>()
     var userBestSellerIsbnList = MutableLiveData<ArrayList<String>>()
 
-    val myProfileInfo = MutableLiveData<Resource<MyProfileModel>>()
+    val myProfileInfo = MutableSharedFlow<Resource<MyProfileModel>>()
     fun myProfile() = viewModelScope.launch(Dispatchers.IO) {
-        myProfileInfo.postValue(Resource.Loading())
+        myProfileInfo.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                myProfileInfo.postValue(Resource.Loading())
+                myProfileInfo.emit(Resource.Loading())
                 val result = myProfileUseCase.execute()
-                myProfileInfo.postValue(result)
+                myProfileInfo.emit(result)
             }
         }catch (e: Exception){
-            myProfileInfo.postValue(Resource.Error(e.message.toString()))
+            myProfileInfo.emit(Resource.Error(e.message.toString()))
         }
     }
 

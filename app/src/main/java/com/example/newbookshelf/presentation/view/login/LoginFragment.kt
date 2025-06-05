@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.BuildConfig
@@ -24,14 +24,9 @@ import com.example.newbookshelf.data.model.signup.SnsSignupData
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentLoginBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
-import com.example.newbookshelf.presentation.view.login.LoginActivity.Companion
 import com.example.newbookshelf.presentation.view.signup.SignUpActivity
-import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
 import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModel
-import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
 import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -42,8 +37,7 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
-import kotlin.math.log
-import kotlin.math.sign
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -148,14 +142,8 @@ class LoginFragment : Fragment() {
                             }
                             BookShelfApp.prefs.setLoginType("loginType", "naver")
                         }
-
-                        override fun onError(errorCode: Int, message: String) {
-                            //
-                        }
-
-                        override fun onFailure(httpStatus: Int, message: String) {
-                            //
-                        }
+                        override fun onError(errorCode: Int, message: String) = Unit
+                        override fun onFailure(httpStatus: Int, message: String) = Unit
                     })
                 }
 
@@ -252,55 +240,62 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeViewModels() = with(binding){
-        loginViewModel.loginResult.observe(viewLifecycleOwner) { response ->
-            when(response){
-                is Resource.Success -> {
-                    hideProgressBar()
-                    if(response.data!!.result){
-                        BookShelfApp.prefs.setAutoLogin("autoLogin", true)
-                        BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.access_token)
-                        loginViewModel.updateLocation(UpdateLocationData(loginViewModel.latitude.value!!, loginViewModel.longitude.value!!))
+        viewLifecycleOwner.lifecycleScope.launch {
+            loginViewModel.loginResult.collect { response ->
+                when(response){
+                    is Resource.Success -> {
+                        hideProgressBar()
+                        if(response.data!!.result){
+                            BookShelfApp.prefs.setAutoLogin("autoLogin", true)
+                            BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.access_token)
+                            loginViewModel.updateLocation(UpdateLocationData(loginViewModel.latitude.value!!, loginViewModel.longitude.value!!))
+                        }
                     }
-                }
-                is Resource.Error -> {
-                    hideProgressBar()
-                    Toast.makeText(requireContext(), "입력하신 정보와 일치하는 회원이 없습니다.", Toast.LENGTH_SHORT).show()
-                }
-                is Resource.Loading -> {
-                    showProgressBar()
+                    is Resource.Error -> {
+                        hideProgressBar()
+                        Toast.makeText(requireContext(), "입력하신 정보와 일치하는 회원이 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    is Resource.Loading -> {
+                        showProgressBar()
+                    }
                 }
             }
         }
 
-        signupViewModel.signupResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    hideProgressBar()
-                    if(response.data!!.result){
-                        BookShelfApp.prefs.setAutoLogin("autoLogin", true)
-                        BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.access_token)
-                        val intent = Intent(requireContext(), HomeActivity::class.java)
-                        startActivity(intent)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            signupViewModel.signupResult.collect { response ->
+                when(response){
+                    is Resource.Success -> {
+                        hideProgressBar()
+                        if(response.data!!.result){
+                            BookShelfApp.prefs.setAutoLogin("autoLogin", true)
+                            BookShelfApp.prefs.setAccessToken("accessToken", response.data.data.access_token)
+                            val intent = Intent(requireContext(), HomeActivity::class.java)
+                            startActivity(intent)
+                        }
                     }
-                }
-                is Resource.Error -> {
-                    hideProgressBar()
-                    Toast.makeText(requireContext(), "입력하신 정보와 일치하는 회원이 없습니다.", Toast.LENGTH_SHORT).show()
-                }
-                is Resource.Loading -> {
-                    showProgressBar()
+                    is Resource.Error -> {
+                        hideProgressBar()
+                        Toast.makeText(requireContext(), "입력하신 정보와 일치하는 회원이 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    is Resource.Loading -> {
+                        showProgressBar()
+                    }
                 }
             }
         }
-        
-        loginViewModel.updateLocationResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    val intent = Intent(requireContext(), HomeActivity::class.java)
-                    startActivity(intent)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            loginViewModel.updateLocationResult.collect { response ->
+                when(response){
+                    is Resource.Success -> {
+                        val intent = Intent(requireContext(), HomeActivity::class.java)
+                        startActivity(intent)
+                    }
+                    is Resource.Error -> Unit
+                    is Resource.Loading -> Unit
                 }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
             }
         }
     }

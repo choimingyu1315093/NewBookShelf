@@ -44,6 +44,7 @@ import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassFinishData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassMembersModel
@@ -276,6 +277,10 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
 
     override suspend fun readingClassJoin(readingClassJoinData: ReadingClassJoinData): Response<ReadingClassJoinModel> {
         return apiService.readingClassJoin(readingClassJoinData)
+    }
+
+    override suspend fun readingClassFinish(readingClassFinishData: ReadingClassFinishData): Response<OnlyResultModel> {
+        return apiService.readingClassFinish(readingClassFinishData)
     }
 
     override fun wishBookHaveUser(): Flow<Response<WishBookHaveUserModel>> {

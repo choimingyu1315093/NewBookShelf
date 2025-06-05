@@ -24,7 +24,11 @@ import com.example.newbookshelf.domain.usecase.signup.NicknameCheckUseCase
 import com.example.newbookshelf.domain.usecase.signup.SignupUseCase
 import com.example.newbookshelf.domain.usecase.signup.SnsSignupUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignupViewModel(
@@ -36,31 +40,80 @@ class SignupViewModel(
     private val nicknameCheckUseCase: NicknameCheckUseCase,
 ): AndroidViewModel(app) {
 
-    val signupResult = MutableLiveData<Resource<SignupModel>>()
+    data class AgreeState(
+        val isCb1Checked: Boolean = false,
+        val isCb2Checked: Boolean = false,
+        val isCb3Checked: Boolean = false,
+        val isCb4Checked: Boolean = false,
+    ) {
+        val isAllChecked: Boolean
+            get() = isCb1Checked && isCb2Checked && isCb3Checked && isCb4Checked
+
+        val isNextEnabled: Boolean
+            get() = isCb1Checked && isCb2Checked
+    }
+
+    private val _agreeState = MutableStateFlow(AgreeState())
+    val agreeState: StateFlow<AgreeState> = _agreeState
+
+    fun setCheckBox(index: Int, checked: Boolean) {
+        _agreeState.update { state ->
+            when (index) {
+                1 -> state.copy(isCb1Checked = checked)
+                2 -> state.copy(isCb2Checked = checked)
+                3 -> state.copy(isCb3Checked = checked)
+                4 -> state.copy(isCb4Checked = checked)
+                else -> state
+            }
+        }
+    }
+
+    fun setAllChecked(checked: Boolean) {
+        _agreeState.value = AgreeState(
+            isCb1Checked = checked,
+            isCb2Checked = checked,
+            isCb3Checked = checked,
+            isCb4Checked = checked,
+        )
+    }
+
+    var _signupResult = MutableStateFlow<Resource<SignupModel>>(Resource.Loading())
+    val signupResult: StateFlow<Resource<SignupModel>>
+        get() = _signupResult
+
+    // 일회성 이벤트를 위한 SharedFlow
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    // 이벤트 정의
+    sealed class UiEvent {
+        data class ShowToast(val message: String): UiEvent()
+        object NavigateToSuccessScreen: UiEvent()
+    }
 
     fun signup(signupData: SignupData) = viewModelScope.launch(Dispatchers.IO) {
-        signupResult.postValue(Resource.Loading())
+        _signupResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                signupResult.postValue(Resource.Loading())
+                _signupResult.emit(Resource.Loading())
                 val result = signupUseCase.execute(signupData)
-                signupResult.postValue(result)
+                _signupResult.emit(result)
             }
         }catch (e: Exception){
-            signupResult.postValue(Resource.Error(e.message.toString()))
+            _signupResult.emit(Resource.Error(e.message.toString()))
         }
     }
 
     fun snsSignup(snsSignupData: SnsSignupData) = viewModelScope.launch(Dispatchers.IO) {
-        signupResult.postValue(Resource.Loading())
+        _signupResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                signupResult.postValue(Resource.Loading())
+                _signupResult.emit(Resource.Loading())
                 val result = snsSignupUseCase.execute(snsSignupData)
-                signupResult.postValue(result)
+                _signupResult.emit(result)
             }
         }catch (e: Exception){
-            signupResult.postValue(Resource.Error(e.message.toString()))
+            _signupResult.emit(Resource.Error(e.message.toString()))
         }
     }
 

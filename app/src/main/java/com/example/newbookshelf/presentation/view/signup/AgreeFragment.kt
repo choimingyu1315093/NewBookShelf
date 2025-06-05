@@ -8,24 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.R
 import com.example.newbookshelf.databinding.FragmentAgreeBinding
 import com.example.newbookshelf.presentation.view.login.LoginActivity
 import com.example.newbookshelf.presentation.view.signup.dialog.WebViewDialog
+import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class AgreeFragment : Fragment() {
     private lateinit var binding: FragmentAgreeBinding
+    lateinit var signupViewModel: SignupViewModel
 
     companion object {
         const val TAG = "AgreePageFragment"
     }
-
-    private var isAllChecked: Boolean = false
-    private var isCb1Checked: Boolean = false
-    private var isCb2Checked: Boolean = false
-    private var isCb3Checked: Boolean = false
-    private var isCb4Checked: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,101 +39,65 @@ class AgreeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAgreeBinding.bind(view)
 
+        init()
         bindViews()
+        observeViewModel()
+    }
+
+    private fun init(){
+        signupViewModel = (activity as SignUpActivity).signupViewModel
     }
 
     private fun bindViews() = with(binding){
         cbAll.setOnCheckedChangeListener { _, isChecked ->
-            isAllChecked = isChecked
-            if (isAllChecked) {
-                setAllBoxes(true)
-            } else {
-                if (isCb1Checked && isCb2Checked && isCb3Checked && isCb4Checked) {
-                    setAllBoxes(false)
-                }
-            }
+            signupViewModel.setAllChecked(isChecked)
         }
 
         cb1.setOnCheckedChangeListener { _, isChecked ->
-            isCb1Checked = isChecked
-            checkBoxes()
+            signupViewModel.setCheckBox(1, isChecked)
         }
 
         cb2.setOnCheckedChangeListener { _, isChecked ->
-            isCb2Checked = isChecked
-            checkBoxes()
+            signupViewModel.setCheckBox(2, isChecked)
         }
 
         cb3.setOnCheckedChangeListener { _, isChecked ->
-            isCb3Checked = isChecked
-            checkBoxes()
+            signupViewModel.setCheckBox(3, isChecked)
         }
 
         cb4.setOnCheckedChangeListener { _, isChecked ->
-            isCb4Checked = isChecked
-            checkBoxes()
+            signupViewModel.setCheckBox(4, isChecked)
         }
 
-        ivCb1.setOnClickListener {
-            val link = "https://velog.io/@jongwoong0401/%EC%B1%85%EA%BD%82%EC%9D%B4-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80"
-            val dialog = WebViewDialog(link)
-            dialog.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
-            dialog.show(requireActivity().supportFragmentManager, "WebViewDialog")
-        }
-
-        ivCb2.setOnClickListener {
-            val link = "https://velog.io/@jongwoong0401/%EC%B1%85%EA%BD%82%EC%9D%B4-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8"
-            val dialog = WebViewDialog(link)
-            dialog.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
-            dialog.show(requireActivity().supportFragmentManager, "WebViewDialog")
-        }
-
-        ivCb3.setOnClickListener {
-            val link = "https://velog.io/@jongwoong0401/%EC%B1%85%EA%BD%82%EC%9D%B4-%EC%9C%84%EC%B9%98%EA%B8%B0%EB%B0%98%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80"
-            val dialog = WebViewDialog(link)
-            dialog.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
-            dialog.show(requireActivity().supportFragmentManager, "WebViewDialog")
-        }
-
-        ivCb4.setOnClickListener {
-            val link = "https://naver.com"
-            val dialog = WebViewDialog(link)
-            dialog.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
-            dialog.show(requireActivity().supportFragmentManager, "WebViewDialog")
-        }
+        ivCb1.setOnClickListener { openDialog("https://velog.io/@jongwoong0401/%EC%B1%85%EA%BD%82%EC%9D%B4-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80") }
+        ivCb2.setOnClickListener { openDialog("https://velog.io/@jongwoong0401/%EC%B1%85%EA%BD%82%EC%9D%B4-%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8") }
+        ivCb3.setOnClickListener { openDialog("https://velog.io/@jongwoong0401/%EC%B1%85%EA%BD%82%EC%9D%B4-%EC%9C%84%EC%B9%98%EA%B8%B0%EB%B0%98%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%9D%B4%EC%9A%A9%EC%95%BD%EA%B4%80") }
+        ivCb4.setOnClickListener { openDialog("https://naver.com") }
 
         btnNext.setOnClickListener {
             findNavController().navigate(R.id.action_agreeFragment_to_inputFragment)
         }
     }
 
-    private fun checkBoxes() = with(binding){
-        cbAll.isChecked = isCb1Checked && isCb2Checked && isCb3Checked && isCb4Checked
-        if(isCb1Checked && isCb2Checked){
-            btnNext.isEnabled = true
-            btnNext.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.btn_main_no_10))
-        }else {
-            btnNext.isEnabled = false
-            btnNext.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.btn_e9e9e9_10))
+    private fun observeViewModel() = with(binding){
+        lifecycleScope.launch {
+            signupViewModel.agreeState.collectLatest { state ->
+                cb1.isChecked = state.isCb1Checked
+                cb2.isChecked = state.isCb2Checked
+                cb3.isChecked = state.isCb3Checked
+                cb4.isChecked = state.isCb4Checked
+                cbAll.isChecked = state.isAllChecked
+
+                btnNext.isEnabled = state.isNextEnabled
+                val bgRes = if (state.isNextEnabled) R.drawable.btn_main_no_10 else R.drawable.btn_e9e9e9_10
+                btnNext.background = ContextCompat.getDrawable(requireContext(), bgRes)
+            }
         }
     }
 
-    private fun setAllBoxes(b: Boolean) = with(binding) {
-        cb1.isChecked = b
-        cb2.isChecked = b
-        cb3.isChecked = b
-        cb4.isChecked = b
-        cbAll.isChecked = b
-        checkNextButtonEnable()
-    }
-
-    private fun checkNextButtonEnable() = with(binding) {
-        if(cbAll.isChecked){
-            btnNext.isEnabled = true
-            btnNext.setBackgroundResource(R.drawable.btn_main_no_10)
-        }else {
-            btnNext.isEnabled = false
-            btnNext.setBackgroundResource(R.drawable.btn_e9e9e9_10)
-        }
+    private fun openDialog(link: String) {
+        val dialog = WebViewDialog(link)
+        dialog.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
+        dialog.show(requireActivity().supportFragmentManager, "WebViewDialog")
     }
 }

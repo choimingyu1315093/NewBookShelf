@@ -17,6 +17,7 @@ import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassFinishUserCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
@@ -51,8 +52,9 @@ object PostFactoryModule {
         readingClassDetailUseCase: ReadingClassDetailUseCase,
         readingClassDeleteUseCase: ReadingClassDeleteUseCase,
         readingClassMemberListUseCase: ReadingClassMemberListUseCase,
-        readingClassJoinUseCase: ReadingClassJoinUseCase
+        readingClassJoinUseCase: ReadingClassJoinUseCase,
+        readingClassFinishUseCase: ReadingClassFinishUserCase
     ): PostViewModelFactory {
-        return PostViewModelFactory(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, addReadingClassUseCase, googleMapSearchLatLngUseCase, googleMapSearchPlaceUseCase, readingClassUseCase, readingClassDetailUseCase, readingClassDeleteUseCase, readingClassMemberListUseCase, readingClassJoinUseCase)
+        return PostViewModelFactory(app, kakaoSearchPlaceUseCase, addPostUseCase, postListUseCase, postDetailUseCase, postCommentUseCase, postCommentDeleteUseCase, addScrapUseCase, postDeleteUseCase, addReadingClassUseCase, googleMapSearchLatLngUseCase, googleMapSearchPlaceUseCase, readingClassUseCase, readingClassDetailUseCase, readingClassDeleteUseCase, readingClassMemberListUseCase, readingClassJoinUseCase, readingClassFinishUseCase)
     }
 }

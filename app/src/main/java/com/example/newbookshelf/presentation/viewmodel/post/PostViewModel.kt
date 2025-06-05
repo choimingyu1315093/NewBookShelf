@@ -23,6 +23,7 @@ import com.example.newbookshelf.data.model.post.google.GeocodingModel
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
+import com.example.newbookshelf.data.model.post.readingclass.ReadingClassFinishData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinData
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassJoinModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassMembersModel
@@ -41,6 +42,7 @@ import com.example.newbookshelf.domain.usecase.post.PostDetailUseCase
 import com.example.newbookshelf.domain.usecase.post.PostListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDeleteUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassDetailUseCase
+import com.example.newbookshelf.domain.usecase.post.ReadingClassFinishUserCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
@@ -65,7 +67,8 @@ class PostViewModel(
     private val readingClassDetailUseCase: ReadingClassDetailUseCase,
     private val readingClassDeleteUseCase: ReadingClassDeleteUseCase,
     private val readingClassMemberListUseCase: ReadingClassMemberListUseCase,
-    private val readingClassJoinUseCase: ReadingClassJoinUseCase
+    private val readingClassJoinUseCase: ReadingClassJoinUseCase,
+    private val readingClassFinishUseCase: ReadingClassFinishUserCase
 ): AndroidViewModel(app) {
 
     fun searchPlace(accessToken: String, q: String) = liveData {
@@ -280,6 +283,22 @@ class PostViewModel(
             }
         }catch (e: Exception){
             readingClassJoinResult.emit(Resource.Error(e.message.toString()))
+        }
+    }
+
+    val readingClassFinishResult = MutableSharedFlow<Resource<OnlyResultModel>>()
+    fun readingClassFinish(readingClassFinishData: ReadingClassFinishData) = viewModelScope.launch(Dispatchers.IO) {
+        readingClassFinishResult.emit(Resource.Loading())
+        try {
+            if(isNetworkAvailable(app)){
+                readingClassFinishResult.emit(Resource.Loading())
+                val result = readingClassFinishUseCase.execute(readingClassFinishData)
+                readingClassFinishResult.emit(result)
+            }else {
+                readingClassFinishResult.emit(Resource.Error("인터넷이 연결되지 않았습니다."))
+            }
+        }catch (e: Exception){
+            readingClassFinishResult.emit(Resource.Error(e.message.toString()))
         }
     }
 

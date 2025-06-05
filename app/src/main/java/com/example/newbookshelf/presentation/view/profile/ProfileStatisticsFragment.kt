@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
@@ -14,6 +17,7 @@ import com.example.newbookshelf.databinding.FragmentProfileStatisticsBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.view.profile.adapter.PhotoAdapter
 import com.example.newbookshelf.presentation.viewmodel.profile.ProfileViewModel
+import kotlinx.coroutines.launch
 
 class ProfileStatisticsFragment : Fragment(), PhotoAdapter.OnClickItem {
     private lateinit var binding: FragmentProfileStatisticsBinding
@@ -51,27 +55,31 @@ class ProfileStatisticsFragment : Fragment(), PhotoAdapter.OnClickItem {
     }
 
     private fun observeViewModel() = with(binding){
-        profileViewModel.myProfileInfo.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    response.data?.let {
-                        if(bookImageArray.isNotEmpty()){
-                            tvName.visibility = View.VISIBLE
-                            rvTopBook.visibility = View.VISIBLE
-                            tvName.text = "${it.data.user_name} 님의 인생 책"
-                            photoAdapter = PhotoAdapter(bookImageArray, requireContext(), this@ProfileStatisticsFragment, 1)
-                            rvTopBook.apply {
-                                layoutManager = GridLayoutManager(requireContext(), 3)
-                                adapter = photoAdapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                profileViewModel.myProfileInfo.collect { response ->
+                    when(response){
+                        is Resource.Success -> {
+                            response.data?.let {
+                                if(bookImageArray.isNotEmpty()){
+                                    tvName.visibility = View.VISIBLE
+                                    rvTopBook.visibility = View.VISIBLE
+                                    tvName.text = "${it.data.user_name} 님의 인생 책"
+                                    photoAdapter = PhotoAdapter(bookImageArray, requireContext(), this@ProfileStatisticsFragment, 1)
+                                    rvTopBook.apply {
+                                        layoutManager = GridLayoutManager(requireContext(), 3)
+                                        adapter = photoAdapter
+                                    }
+                                }else {
+                                    tvName.visibility = View.GONE
+                                    rvTopBook.visibility = View.GONE
+                                }
                             }
-                        }else {
-                            tvName.visibility = View.GONE
-                            rvTopBook.visibility = View.GONE
                         }
+                        is Resource.Error -> Unit
+                        is Resource.Loading -> Unit
                     }
                 }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
             }
         }
 
