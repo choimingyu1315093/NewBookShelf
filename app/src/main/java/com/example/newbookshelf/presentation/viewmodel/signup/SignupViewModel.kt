@@ -5,19 +5,14 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.newbookshelf.data.model.setting.TicketData
-import com.example.newbookshelf.data.model.setting.TicketModel
 import com.example.newbookshelf.data.model.signup.CheckModel
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.example.newbookshelf.data.model.signup.SignupData
 import com.example.newbookshelf.data.model.signup.SignupModel
 import com.example.newbookshelf.data.model.signup.SnsSignupData
 import com.example.newbookshelf.data.util.Resource
-import com.example.newbookshelf.domain.usecase.setting.BuyTicketUseCase
 import com.example.newbookshelf.domain.usecase.signup.EmailCheckUseCase
 import com.example.newbookshelf.domain.usecase.signup.IdCheckUseCase
 import com.example.newbookshelf.domain.usecase.signup.NicknameCheckUseCase
@@ -81,11 +76,9 @@ class SignupViewModel(
     val signupResult: StateFlow<Resource<SignupModel>>
         get() = _signupResult
 
-    // 일회성 이벤트를 위한 SharedFlow
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    // 이벤트 정의
     sealed class UiEvent {
         data class ShowToast(val message: String): UiEvent()
         object NavigateToSuccessScreen: UiEvent()
@@ -115,57 +108,70 @@ class SignupViewModel(
     }
 
     fun snsSignup(snsSignupData: SnsSignupData) = viewModelScope.launch(Dispatchers.IO) {
-        _signupResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                _signupResult.emit(Resource.Loading())
+                _signupResult.value = Resource.Loading()
                 val result = snsSignupUseCase.execute(snsSignupData)
-                _signupResult.emit(result)
+                _signupResult.value = result
+
+                when (result) {
+                    is Resource.Success -> {
+                        _eventFlow.emit(UiEvent.NavigateToSuccessScreen)
+                    }
+                    is Resource.Error -> {
+                        _eventFlow.emit(UiEvent.ShowToast(result.message ?: "알 수 없는 오류"))
+                    }
+                    else -> Unit
+                }
             }
         }catch (e: Exception){
-            _signupResult.emit(Resource.Error(e.message.toString()))
+            _signupResult.value = Resource.Error(e.message.toString())
+            _eventFlow.emit(UiEvent.ShowToast(e.message.toString()))
         }
     }
 
-    val idCheckResult = MutableStateFlow<Resource<CheckModel>>(Resource.Loading())
+    private var _idCheckResult = MutableStateFlow<Resource<CheckModel>>(Resource.Idle())
+    val idCheckResult: StateFlow<Resource<CheckModel>>
+        get() = _idCheckResult
     fun idCheck(id: String) = viewModelScope.launch(Dispatchers.IO) {
-        idCheckResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                idCheckResult.emit(Resource.Loading())
+                _idCheckResult.value = Resource.Loading()
                 val result = idCheckUseCase.execute(id)
-                idCheckResult.emit(result)
+                _idCheckResult.value = result
             }
         }catch (e: Exception){
-            idCheckResult.emit(Resource.Error(e.message.toString()))
+            _idCheckResult.value = Resource.Error(e.message.toString())
         }
     }
 
-    val emailCheckResult = MutableStateFlow<Resource<CheckModel>>(Resource.Loading())
+    private var _emailCheckResult = MutableStateFlow<Resource<CheckModel>>(Resource.Idle())
+    val emailCheckResult: StateFlow<Resource<CheckModel>>
+        get() = _emailCheckResult
     fun emailCheck(emailCheckData: EmailCheckData) = viewModelScope.launch(Dispatchers.IO) {
-        emailCheckResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                emailCheckResult.emit(Resource.Loading())
+                _emailCheckResult.value = Resource.Loading()
                 val result = emailCheckUseCase.execute(emailCheckData)
-                emailCheckResult.emit(result)
+                _emailCheckResult.value = result
             }
         }catch (e: Exception){
-            emailCheckResult.emit(Resource.Error(e.message.toString()))
+            _emailCheckResult.value = Resource.Error(e.message.toString())
         }
     }
 
-    val nicknameCheckResult = MutableStateFlow<Resource<CheckModel>>(Resource.Loading())
+    private var _nicknameCheckResult = MutableStateFlow<Resource<CheckModel>>(Resource.Idle())
+    val nicknameCheckResult: StateFlow<Resource<CheckModel>>
+        get() = _nicknameCheckResult
     fun nicknameCheck(nickname: String) = viewModelScope.launch(Dispatchers.IO) {
-        nicknameCheckResult.emit(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                nicknameCheckResult.emit(Resource.Loading())
+                _nicknameCheckResult.value = Resource.Loading()
                 val result = nicknameCheckUseCase.execute(nickname)
-                nicknameCheckResult.emit(result)
+                _nicknameCheckResult.value = result
             }
         }catch (e: Exception){
-            nicknameCheckResult.emit(Resource.Error(e.message.toString()))
+            _nicknameCheckResult.value = Resource.Error(e.message.toString())
         }
     }
 

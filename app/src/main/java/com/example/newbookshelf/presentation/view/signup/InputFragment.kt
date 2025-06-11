@@ -2,15 +2,12 @@ package com.example.newbookshelf.presentation.view.signup
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -64,6 +61,7 @@ class InputFragment : Fragment() {
 
         init()
         bindViews()
+        observeViewModel()
     }
 
     private fun init() = with(binding){
@@ -100,6 +98,7 @@ class InputFragment : Fragment() {
                         txtIdWarning.text = "❗아이디는 영문,숫자 포함하여 5~15자이어야 합니다."
                     }
                     signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                    Log.d(TAG, "민규야 잘하고있어 1 $idCheck, $nicknameCheck, $emailCheck, $passwordCheck, $passwordMatchCheck")
                 }
         }
 
@@ -122,6 +121,7 @@ class InputFragment : Fragment() {
                         txtEmailWarning.text = "❗이메일 형식에 맞지 않습니다."
                     }
                     signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                    Log.d(TAG, "민규야 잘하고있어 2 $idCheck, $nicknameCheck, $emailCheck, $passwordCheck, $passwordMatchCheck")
                 }
         }
 
@@ -136,10 +136,14 @@ class InputFragment : Fragment() {
                         passwordCheck = true
                         password = input
                         txtPasswordWarning.visibility = View.GONE
-
                         if(etPasswordCheck.text.toString() != "" && etPasswordCheck.text.toString() != input){
                             passwordCheck = false
+                            passwordMatchCheck = false
                             txtPasswordCheckWarning.visibility = View.VISIBLE
+                        }else {
+                            passwordCheck = true
+                            passwordMatchCheck = true
+                            txtPasswordCheckWarning.visibility = View.GONE
                         }
                     }else {
                         passwordCheck = false
@@ -147,6 +151,7 @@ class InputFragment : Fragment() {
                         txtPasswordWarning.visibility = View.VISIBLE
                     }
                     signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                    Log.d(TAG, "민규야 잘하고있어 3 $idCheck, $nicknameCheck, $emailCheck, $passwordCheck, $passwordMatchCheck")
                 }
         }
 
@@ -158,13 +163,16 @@ class InputFragment : Fragment() {
                 .collectLatest { input ->
                     val currentPassword = etPassword.text.toString()
                     if(currentPassword != input){
+                        passwordCheck = false
                         passwordMatchCheck = false
                         txtPasswordCheckWarning.visibility = View.VISIBLE
                     }else {
+                        passwordCheck = true
                         passwordMatchCheck = true
                         txtPasswordCheckWarning.visibility = View.GONE
                     }
                     signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                    Log.d(TAG, "민규야 잘하고있어 4 $idCheck, $nicknameCheck, $emailCheck, $passwordCheck, $passwordMatchCheck")
                 }
         }
 
@@ -182,12 +190,98 @@ class InputFragment : Fragment() {
                         nicknameCheck = false
                     }
                     signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                    Log.d(TAG, "민규야 잘하고있어 5 $idCheck, $nicknameCheck, $emailCheck, $passwordCheck, $passwordMatchCheck")
                 }
         }
 
         btnSignUp.setOnClickListener {
             val signupData = SignupData(fcmToken, "general", email, id, nickname, password)
             signupViewModel.signup(signupData)
+        }
+    }
+
+    private fun observeViewModel() = with(binding){
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    signupViewModel.idCheckResult.collect { state ->
+                        when(state){
+                            is Resource.Success -> {
+                                idCheck = true
+                                txtIdWarning.visibility = View.GONE
+                            }
+                            is Resource.Error -> {
+                                idCheck = false
+                                txtIdWarning.visibility = View.VISIBLE
+                                txtIdWarning.text = "❗이미 사용 중인 아이디 입니다."
+                            }
+                            else -> Unit
+                        }
+                        signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                        Log.d(TAG, "민규야 잘하고있어 6 $idCheck, $nicknameCheck, $emailCheck, $passwordCheck, $passwordMatchCheck")
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    signupViewModel.emailCheckResult.collect { state ->
+                        when(state){
+                            is Resource.Success -> {
+                                emailCheck = true
+                                txtEmailWarning.visibility = View.GONE
+                            }
+                            is Resource.Error -> {
+                                emailCheck = false
+                                txtEmailWarning.visibility = View.VISIBLE
+                                txtEmailWarning.text = "❗️이미 사용 중인 이메일 입니다."
+                            }
+                            else -> Unit
+                        }
+                        signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                        Log.d(TAG, "민규야 잘하고있어 7 $idCheck, $nicknameCheck, $emailCheck, $passwordCheck, $passwordMatchCheck")
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    signupViewModel.nicknameCheckResult.collect { state ->
+                        when(state){
+                            is Resource.Success -> {
+                                nicknameCheck = true
+                                txtNicknameWarning.visibility = View.GONE
+                            }
+                            is Resource.Error -> {
+                                nicknameCheck = false
+                                txtNicknameWarning.visibility = View.VISIBLE
+                            }
+                            else -> Unit
+                        }
+                        signUpBtnSetting(idCheck, nicknameCheck, emailCheck, passwordCheck, passwordMatchCheck)
+                        Log.d(TAG, "민규야 잘하고있어 8 $idCheck, $nicknameCheck, $emailCheck, $passwordCheck, $passwordMatchCheck")
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    signupViewModel.eventFlow.collect { event ->
+                        when (event) {
+                            is SignupViewModel.UiEvent.ShowToast -> Unit
+                            is SignupViewModel.UiEvent.NavigateToSuccessScreen -> {
+                                findNavController().navigate(R.id.action_inputFragment_to_successFragment)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
