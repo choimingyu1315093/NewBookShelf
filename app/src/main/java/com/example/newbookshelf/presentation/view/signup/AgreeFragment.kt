@@ -80,7 +80,7 @@ class AgreeFragment : Fragment() {
     }
 
     private fun observeViewModel() = with(binding){
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             signupViewModel.agreeState.collectLatest { state ->
                 cb1.isChecked = state.isCb1Checked
                 cb2.isChecked = state.isCb2Checked

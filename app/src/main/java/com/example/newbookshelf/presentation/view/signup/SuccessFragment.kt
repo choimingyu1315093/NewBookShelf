@@ -62,15 +62,11 @@ class SuccessFragment : DialogFragment() {
         (activity as SignUpActivity).binding.tvTitle.text = "회원 가입 완료"
         (activity as SignUpActivity).binding.ivBack.visibility = View.GONE
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
-        lifecycleScope.launch {
-            finish()
+        viewLifecycleOwner.lifecycleScope.launch {
+            Toast.makeText(requireContext(), "가입해주셔서 감사합니다.\n이벤트로 교환권을 지급해 드립니다.", Toast.LENGTH_SHORT).show()
+            delay(4300)
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(intent)
         }
-    }
-
-    private suspend fun finish(){
-        Toast.makeText(requireContext(), "가입해주셔서 감사합니다.\n이벤트로 교환권을 지급해 드립니다.", Toast.LENGTH_SHORT).show()
-        delay(4300)
-        val intent = Intent(requireContext(), LoginActivity::class.java)
-        startActivity(intent)
     }
 }

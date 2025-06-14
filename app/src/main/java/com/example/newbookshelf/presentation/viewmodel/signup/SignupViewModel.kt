@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.data.model.signup.CheckModel
 import com.example.newbookshelf.data.model.signup.EmailCheckData
 import com.example.newbookshelf.data.model.signup.SignupData
@@ -34,7 +35,6 @@ class SignupViewModel(
     private val emailCheckUseCase: EmailCheckUseCase,
     private val nicknameCheckUseCase: NicknameCheckUseCase,
 ): AndroidViewModel(app) {
-
     data class AgreeState(
         val isCb1Checked: Boolean = false,
         val isCb2Checked: Boolean = false,
@@ -48,8 +48,9 @@ class SignupViewModel(
             get() = isCb1Checked && isCb2Checked
     }
 
-    private val _agreeState = MutableStateFlow(AgreeState())
-    val agreeState: StateFlow<AgreeState> = _agreeState
+    private var _agreeState = MutableStateFlow(AgreeState())
+    val agreeState: StateFlow<AgreeState>
+        get() = _agreeState
 
     fun setCheckBox(index: Int, checked: Boolean) {
         _agreeState.update { state ->
@@ -72,6 +73,54 @@ class SignupViewModel(
         )
     }
 
+    data class SignUpCheck(
+        val idCheck: Boolean = false,
+        val emailCheck: Boolean = false,
+        val passwordCheck: Boolean = false,
+        val passwordMatchCheck: Boolean = false,
+        val nicknameCheck: Boolean = false
+    )
+
+    private var _signUpCheck = MutableStateFlow(SignUpCheck())
+    val signupCheck: StateFlow<SignUpCheck>
+        get() = _signUpCheck
+
+    fun setSignUpCheck(category: String, checked: Boolean){
+        _signUpCheck.update { state ->
+            when(category){
+                "idCheck" -> state.copy(idCheck = checked)
+                "emailCheck" -> state.copy(emailCheck = checked)
+                "passwordCheck" -> state.copy(passwordCheck = checked)
+                "passwordMatchCheck" -> state.copy(passwordMatchCheck = checked)
+                "nicknameCheck" -> state.copy(nicknameCheck = checked)
+                else -> state
+            }
+        }
+    }
+
+    data class InputState(
+        val id: String = "",
+        val email: String = "",
+        val password: String = "",
+        val nickname: String = "",
+        val fcmToken: String = BookShelfApp.prefs.getFcmToken("fcmToken", "")
+    )
+
+    private val _inputState = MutableStateFlow(InputState())
+    val inputState: StateFlow<InputState> = _inputState
+
+    fun updateInput(field: String, value: String){
+        _inputState.update { state ->
+            when(field){
+                "id" -> state.copy(id = value)
+                "email" -> state.copy(email = value)
+                "password" -> state.copy(password = value)
+                "nickname" -> state.copy(nickname = value)
+                else -> state
+            }
+        }
+    }
+
     private var _signupResult = MutableStateFlow<Resource<SignupModel>>(Resource.Idle())
     val signupResult: StateFlow<Resource<SignupModel>>
         get() = _signupResult
@@ -84,10 +133,19 @@ class SignupViewModel(
         object NavigateToSuccessScreen: UiEvent()
     }
 
-    fun signup(signupData: SignupData) = viewModelScope.launch(Dispatchers.IO) {
+    fun signup() = viewModelScope.launch(Dispatchers.IO) {
         try {
             if(isNetworkAvailable(app)){
                 _signupResult.value = Resource.Loading()
+                val input = _inputState.value
+                val signupData = SignupData(
+                    input.fcmToken,
+                    "general",
+                    input.email,
+                    input.id,
+                    input.nickname,
+                    input.password
+                )
                 val result = signupUseCase.execute(signupData)
                 _signupResult.value = result
 
