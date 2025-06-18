@@ -87,25 +87,22 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
             val cal = Calendar.getInstance()
             val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                 etDate.setText("${year}-${month+1}-${dayOfMonth}")
+                val cal = Calendar.getInstance()
+                val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                    val amPm = if (hourOfDay < 12) "오전" else "오후"
+                    val hourFormatted = if (hourOfDay % 12 == 0) 12 else hourOfDay % 12
+                    etTime.setText(String.format("%s %02d:%02d", amPm, hourFormatted, minute))
+                }
+
+                TimePickerDialog(requireContext(),
+                    timeSetListener,
+                    cal.get(Calendar.HOUR_OF_DAY),
+                    cal.get(Calendar.MINUTE),
+                    false
+                ).show()
             }
             DatePickerDialog(requireContext(), dateSetListener, cal.get(Calendar.YEAR),cal.get(
                 Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)).show()
-        }
-
-        etTime.setOnClickListener {
-            val cal = Calendar.getInstance()
-            val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                val amPm = if (hourOfDay < 12) "오전" else "오후"
-                val hourFormatted = if (hourOfDay % 12 == 0) 12 else hourOfDay % 12
-                etTime.setText(String.format("%s %02d:%02d", amPm, hourFormatted, minute))
-            }
-
-            TimePickerDialog(requireContext(),
-                timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
-                false
-            ).show()
         }
 
         btnBook.setOnClickListener {
@@ -197,7 +194,24 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
     override fun addReadingClass(b: Boolean): Unit = with(binding){
         val title = "${etTitle.text.toString()}"
         val content = "${etContent.text.toString()}"
-        val date = "${etDate.text.toString()} ${etTime.text.toString().split(" ")[1]}"
+        val amOrPm = etTime.text.toString().split(" ")[0]
+        val timePart = etTime.text.toString().split(" ")[1]  // "03:05:12" 형태
+        val timeParts = timePart.split(":")
+
+        var hour = timeParts[0].toInt()
+        val minute = timeParts[1]
+        val second = if (timeParts.size > 2) timeParts[2] else "00"
+
+        if (amOrPm == "오후" && hour != 12) {
+            hour += 12
+        } else if (amOrPm == "오전" && hour == 12) {
+            hour = 0
+        }
+
+        val hourStr = String.format("%02d", hour)
+        val convertedTime = "$hourStr:$minute:$second"
+
+        val date = "${etDate.text.toString()} $convertedTime"
         val addReadingClassDate = AddReadingClassData(bookIsbn, latitude, longitude, date, content, title)
         postViewModel.addReadingClass(addReadingClassDate)
     }

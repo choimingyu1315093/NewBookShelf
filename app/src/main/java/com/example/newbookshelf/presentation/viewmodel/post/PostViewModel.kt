@@ -10,7 +10,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.data.model.common.OnlyResultModel
+import com.example.newbookshelf.data.model.login.LoginData
+import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.post.AddScrapData
 import com.example.newbookshelf.data.model.post.AddScrapModel
 import com.example.newbookshelf.data.model.post.general.AddPostData
@@ -20,6 +23,7 @@ import com.example.newbookshelf.data.model.post.general.PostCommentModel
 import com.example.newbookshelf.data.model.post.general.PostDetailModel
 import com.example.newbookshelf.data.model.post.general.PostModel
 import com.example.newbookshelf.data.model.post.google.GeocodingModel
+import com.example.newbookshelf.data.model.post.kakao.KakaoMapModel
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassData
 import com.example.newbookshelf.data.model.post.readingclass.AddReadingClassModel
 import com.example.newbookshelf.data.model.post.readingclass.ReadingClassDetailModel
@@ -46,8 +50,13 @@ import com.example.newbookshelf.domain.usecase.post.ReadingClassFinishUserCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
+import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModel.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class PostViewModel(
@@ -71,9 +80,20 @@ class PostViewModel(
     private val readingClassFinishUseCase: ReadingClassFinishUserCase
 ): AndroidViewModel(app) {
 
-    fun searchPlace(accessToken: String, q: String) = liveData {
-        kakaoSearchPlaceUseCase.execute("KakaoAK ${accessToken}", q).collect {
-            emit(it)
+    private var _searchPlacesResult = MutableSharedFlow<Resource<KakaoMapModel>>()
+    val searchPlacesResult = _searchPlacesResult.asSharedFlow()
+
+    fun searchPlaces(kakaoKey: String, place: String) = viewModelScope.launch(Dispatchers.IO) {
+        if(isNetworkAvailable(app)){
+            val result = kakaoSearchPlaceUseCase.execute("KakaoAK $kakaoKey", place)
+
+            when(result){
+                is Resource.Success -> {
+                    _searchPlacesResult.emit(result)
+                }
+                is Resource.Error -> Unit
+                else -> Unit
+            }
         }
     }
 

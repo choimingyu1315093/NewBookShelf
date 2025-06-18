@@ -13,6 +13,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newbookshelf.BuildConfig
 import com.example.newbookshelf.R
@@ -26,6 +29,9 @@ import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFragment() {
     private lateinit var binding: FragmentKakaoSearchDialogBinding
@@ -41,7 +47,6 @@ class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFr
 
     private lateinit var kakaoKey: String
     private lateinit var kakaoAdapter: KakaoAdapter
-    private var isClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,14 +74,15 @@ class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFr
 
         init()
         bindViews()
+        observeViewModel()
     }
 
     private fun init() = with(binding){
         kakaoKey = BuildConfig.KAKAO_REST_API_KEY
         postViewModel = (activity as HomeActivity).postViewModel
         kakaoAdapter = (activity as HomeActivity).kakaoAdapter
+        kakaoAdapter.differ.submitList(emptyList())
         kakaoAdapter.setOnClickListener {
-            isClicked = true
             onSelectedPlace.onSelectedPlace(it.place_name, etSearch.text.toString().trim())
             dismiss()
         }
@@ -88,22 +94,24 @@ class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFr
 
     private fun bindViews() = with(binding){
         etSearch.setOnEditorActionListener { v, actionId, event ->
-            if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                searchKeyword(etSearch.text.toString().trim())
-                val manager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                manager.hideSoftInputFromWindow(etSearch.windowToken, 0)
-                view?.clearFocus()
-                return@setOnEditorActionListener true
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val query = etSearch.text.toString().trim()
+                if (query.isNotEmpty()) {
+                    searchKeyword(query)
+                }
+                hideKeyboard()
+                true
+            } else {
+                false
             }
-
-            return@setOnEditorActionListener false
         }
 
         ivSearch.setOnClickListener {
-            searchKeyword(etSearch.text.toString().trim())
-            val manager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            manager.hideSoftInputFromWindow(etSearch.windowToken, 0)
-            view?.clearFocus()
+            val query = etSearch.text.toString().trim()
+            if (query.isNotEmpty()) {
+                searchKeyword(query)
+            }
+            hideKeyboard()
         }
 
         btnCancel.setOnClickListener {
@@ -111,25 +119,38 @@ class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFr
         }
     }
 
-    private fun searchKeyword(place: String) = with(binding){
-        postViewModel.searchPlace(kakaoKey, place).observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    response.data?.let {
-                        if(it.documents.isNotEmpty()){
-                            txtEmpty.visibility = View.GONE
-                            rvPlace.visibility = View.VISIBLE
-                            kakaoAdapter.differ.submitList(it.documents)
-                        }else {
-                            txtEmpty.visibility = View.VISIBLE
-                            rvPlace.visibility = View.GONE
+    private fun observeViewModel() = with(binding){
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                postViewModel.searchPlacesResult.collect { state ->
+                    when(state){
+                        is Resource.Success -> {
+                            state.data?.let {
+                                if(it.documents.isNotEmpty()){
+                                    txtEmpty.visibility = View.GONE
+                                    rvPlace.visibility = View.VISIBLE
+                                    kakaoAdapter.differ.submitList(it.documents)
+                                }else {
+                                    txtEmpty.visibility = View.VISIBLE
+                                    rvPlace.visibility = View.GONE
+                                }
+                            }
                         }
+                        is Resource.Error -> Unit
+                        else -> Unit
                     }
                 }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
-                else -> Unit
             }
         }
+    }
+
+    private fun searchKeyword(place: String) = with(binding){
+        postViewModel.searchPlaces(kakaoKey, place)
+    }
+
+    private fun hideKeyboard() {
+        val manager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        manager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+        view?.clearFocus()
     }
 }

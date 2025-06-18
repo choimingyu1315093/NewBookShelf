@@ -61,6 +61,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
         return inflater.inflate(R.layout.fragment_reading_detail, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentReadingDetailBinding.bind(view)
@@ -106,6 +107,7 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() = with(binding){
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){

@@ -13,10 +13,8 @@ import retrofit2.Response
 
 class KakaoDataSourceImpl(@KakaoRetrofit private val apiService: KakaoApiService): KakaoDataSource {
 
-    override fun searchPlace(accessToken: String, q: String): Flow<Response<KakaoMapModel>> {
-        return flow {
-            emit(apiService.searchPlace(accessToken, q = q))
-        }
+    override suspend fun searchPlace(accessToken: String, q: String): Response<KakaoMapModel> {
+        return apiService.searchPlace(accessToken, q)
     }
 }
 

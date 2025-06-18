@@ -52,6 +52,7 @@ class ReadingClassAdapter: RecyclerView.Adapter<ReadingClassAdapter.ViewHolder>(
 
     inner class ViewHolder(private val binding: ItemReadingBinding): RecyclerView.ViewHolder(binding.root){
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(readingClass: ReadingClassModelData) = with(binding){
             tvTitle.text = readingClass.book_name
             tvContent.text = readingClass.post_title

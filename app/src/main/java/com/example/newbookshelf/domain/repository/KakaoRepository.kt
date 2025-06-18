@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface KakaoRepository {
 
-    fun searchPlace(accessToken: String, q: String): Flow<Resource<KakaoMapModel>>
+    suspend fun searchPlace(accessToken: String, q: String): Resource<KakaoMapModel>
 }

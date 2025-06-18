@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class KakaoSearchPlaceUseCase(private val kakaoRepository: KakaoRepository) {
 
-    fun execute(accessToken: String, q: String): Flow<Resource<KakaoMapModel>> {
+    suspend fun execute(accessToken: String, q: String): Resource<KakaoMapModel> {
         return kakaoRepository.searchPlace(accessToken, q)
     }
 }

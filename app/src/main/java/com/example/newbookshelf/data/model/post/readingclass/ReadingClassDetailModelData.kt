@@ -19,5 +19,6 @@ data class ReadingClassDetailModelData(
     val update_date: String,
     val user_idx: Int,
     val user_name: String,
-    val user_type: String
+    val user_type: String,
+    val is_end: Int
 )

@@ -6,5 +6,5 @@ import retrofit2.Response
 
 interface KakaoDataSource {
 
-    fun searchPlace(accessToken: String, q: String): Flow<Response<KakaoMapModel>>
+    suspend fun searchPlace(accessToken: String, q: String): Response<KakaoMapModel>
 }

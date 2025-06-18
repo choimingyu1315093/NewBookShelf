@@ -17,6 +17,7 @@ import java.util.TimeZone
 
 const val TAG = "DateFormat"
 object DateFormat {
+    @RequiresApi(Build.VERSION_CODES.O)
     fun formatDateTime(inputDate: String): String {
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
         val dateTime = LocalDateTime.parse(inputDate, inputFormatter)
@@ -38,11 +39,21 @@ object DateFormat {
         return "${dateTime.format(outputFormatter)} ($dayOfWeekKorean) ${dateTime.format(timeFormatter)}"
     }
 
-    fun isPast(targetTime: String): Boolean {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val targetDateTime = LocalDateTime.parse(targetTime, formatter)
-        val now = LocalDateTime.now()
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isPast(dateTimeString: String): Boolean {
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            val seoulZone = ZoneId.of("Asia/Seoul")
 
-        return targetDateTime.isBefore(now)
+            val inputDateTime = LocalDateTime.parse(dateTimeString, formatter)
+            val inputZonedDateTime = inputDateTime.atZone(seoulZone)
+
+            val currentZonedDateTime = ZonedDateTime.now(seoulZone)
+
+            inputZonedDateTime.isBefore(currentZonedDateTime)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 }
