@@ -18,6 +18,7 @@ import com.example.newbookshelf.data.model.home.searchbook.SearchBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookData
 import com.example.newbookshelf.data.model.home.searchbook.SearchMoreBookModel
 import com.example.newbookshelf.data.model.home.searchbook.SearchedBook
+import com.example.newbookshelf.data.model.post.kakao.KakaoMapModel
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.home.AlarmAllDeleteUseCase
 import com.example.newbookshelf.domain.usecase.home.AlarmCountUseCase
@@ -35,6 +36,10 @@ import com.example.newbookshelf.domain.usecase.home.SearchedBookInsertUseCase
 import com.example.newbookshelf.domain.usecase.home.SearchedBookUseCase
 import com.example.newbookshelf.domain.usecase.home.WeekBestsellerUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -211,19 +216,29 @@ class HomeViewModel(
         }
     }
 
-    val postSearchBook = MutableLiveData<Resource<SearchBookModel>>()
+    private var _postSearchBook = MutableSharedFlow<Resource<SearchBookModel>>()
+    val postSearchBook = _postSearchBook.asSharedFlow()
+
     fun getPostSearchBook(bookName: String) = viewModelScope.launch(Dispatchers.IO) {
-        postSearchBook.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                postSearchBook.postValue(Resource.Loading())
                 val result = searchBookUseCase.execute(bookName)
-                postSearchBook.postValue(result)
+
+                when(result){
+                    is Resource.Success -> {
+                        _postSearchBook.emit(result)
+                    }
+                    is Resource.Error -> {
+                        _postSearchBook.emit(Resource.Error(result.message.toString()))
+                    }
+                    is Resource.Loading -> Unit
+                    else -> Unit
+                }
             }else {
-                postSearchBook.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+                _postSearchBook.emit(Resource.Error("인터넷이 연결되지 않았습니다."))
             }
         }catch (e: Exception){
-            postSearchBook.postValue(Resource.Error(e.message.toString()))
+            _postSearchBook.emit(Resource.Error(e.message.toString()))
         }
     }
 

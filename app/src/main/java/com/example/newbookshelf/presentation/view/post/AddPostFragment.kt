@@ -10,6 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.newbookshelf.BuildConfig
@@ -25,6 +28,7 @@ import com.example.newbookshelf.presentation.view.post.dialog.KakaoSearchDialog
 import com.example.newbookshelf.presentation.view.post.dialog.ReadingClassAddDialog
 import com.example.newbookshelf.presentation.view.post.dialog.SearchBookDialog
 import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
+import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.util.Calendar
 
@@ -148,16 +152,22 @@ class AddPostFragment : Fragment(), KakaoSearchDialog.OnSelectedPlace, SearchBoo
                 else -> Unit
             }
         }
-        
-        postViewModel.googleMapLatLngResult.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    latitude = response.data!!.results[0].geometry.location.lat
-                    longitude = response.data.results[0].geometry.location.lng
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                postViewModel.googleMapLatLngResult.collect { state ->
+                    when(state){
+                        is Resource.Success -> {
+                            if(state.data!!.status != "ZERO_RESULTS"){
+                                latitude = state.data.results[0].geometry.location.lat
+                                longitude = state.data.results[0].geometry.location.lng
+                            }
+                        }
+                        is Resource.Loading -> Unit
+                        is Resource.Error -> Unit
+                        else -> Unit
+                    }
                 }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
-                else -> Unit
             }
         }
 

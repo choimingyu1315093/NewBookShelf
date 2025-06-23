@@ -91,6 +91,7 @@ class PostViewModel(
                 is Resource.Success -> {
                     _searchPlacesResult.emit(result)
                 }
+                is Resource.Loading -> Unit
                 is Resource.Error -> Unit
                 else -> Unit
             }
@@ -322,20 +323,27 @@ class PostViewModel(
         }
     }
 
-    val googleMapLatLngResult = MutableLiveData<Resource<GeocodingModel>>()
+    private var _googleMapLatLngResult = MutableSharedFlow<Resource<GeocodingModel>>()
+    val googleMapLatLngResult = _googleMapLatLngResult.asSharedFlow()
+
     fun getCoordinatesForAddress(address: String, apiKey: String) = viewModelScope.launch(Dispatchers.IO) {
-        googleMapLatLngResult.postValue(Resource.Loading())
         try {
             if(isNetworkAvailable(app)){
-                googleMapLatLngResult.postValue(Resource.Loading())
                 val result = googleMapSearchLatLngUseCase.execute(address, apiKey)
-                Log.d("TAG", "getCoordinatesForAddress: address $address, result ${result.data}")
-                googleMapLatLngResult.postValue(result)
+
+                when(result){
+                    is Resource.Success -> {
+                        _googleMapLatLngResult.emit(result)
+                    }
+                    is Resource.Error -> Unit
+                    is Resource.Loading -> Unit
+                    else -> Unit
+                }
             }else {
-                googleMapLatLngResult.postValue(Resource.Error("인터넷이 연결되지 않았습니다."))
+                _googleMapLatLngResult.emit(Resource.Error("인터넷이 연결되지 않았습니다."))
             }
         }catch (e: Exception){
-            googleMapLatLngResult.postValue(Resource.Error(e.message.toString()))
+            _googleMapLatLngResult.emit(Resource.Error(e.message.toString()))
         }
     }
 

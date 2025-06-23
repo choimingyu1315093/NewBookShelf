@@ -13,6 +13,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.R
@@ -24,6 +27,7 @@ import com.example.newbookshelf.presentation.view.home.adapter.SearchBookAdapter
 import com.example.newbookshelf.presentation.view.post.adapter.PostSearchBookAdapter
 import com.example.newbookshelf.presentation.view.profile.adapter.ProfileSearchBookAdapter
 import com.example.newbookshelf.presentation.viewmodel.home.HomeViewModel
+import kotlinx.coroutines.launch
 
 class SearchBookDialog(private val onSelectedBook: OnSelectedBook, private val type: String) : DialogFragment() {
     private lateinit var binding: FragmentSearchBookDialogBinding
@@ -74,6 +78,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook, private val t
         profileSearchBookAdapter = (activity as HomeActivity).profileSearchBookAdapter
         postSearchBookAdapter = (activity as HomeActivity).postSearchBookAdapter
         if(type == "profile"){
+            profileSearchBookAdapter.differ.submitList(emptyList())
             profileSearchBookAdapter.setOnItemClickListener {
                 dismiss()
                 onSelectedBook.onSelectedBook(it)
@@ -83,6 +88,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook, private val t
                 adapter = profileSearchBookAdapter
             }
         }else {
+            postSearchBookAdapter.differ.submitList(emptyList())
             postSearchBookAdapter.setOnItemClickListener {
                 dismiss()
                 onSelectedBook.onSelectedBook(it)
@@ -98,9 +104,7 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook, private val t
         etSearch.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
                 searchKeyword(etSearch.text.toString().trim())
-                val manager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                manager.hideSoftInputFromWindow(etSearch.windowToken, 0)
-                view?.clearFocus()
+                hideKeyboard()
                 return@setOnEditorActionListener true
             }
 
@@ -109,21 +113,11 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook, private val t
 
         ivSearch.setOnClickListener {
             searchKeyword(etSearch.text.toString().trim())
-            val manager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            manager.hideSoftInputFromWindow(etSearch.windowToken, 0)
-            view?.clearFocus()
+            hideKeyboard()
         }
 
         btnCancel.setOnClickListener {
             dismiss()
-        }
-    }
-
-    private fun searchKeyword(book: String) = with(binding){
-        if(type == "profile"){
-            homeViewModel.getProfileSearchBook(book)
-        }else {
-            homeViewModel.getPostSearchBook(book)
         }
     }
 
@@ -152,28 +146,46 @@ class SearchBookDialog(private val onSelectedBook: OnSelectedBook, private val t
             }
         }
 
-        homeViewModel.postSearchBook.observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    response.data?.let {
-                        if(!it.data.general_result.isNullOrEmpty()){
-                            txtEmpty.visibility = View.GONE
-                            rvBook.visibility = View.VISIBLE
-                            postSearchBookAdapter.differ.submitList(it.data.general_result)
-                        }else if(!it.data.popular_result.isNullOrEmpty()){
-                            txtEmpty.visibility = View.GONE
-                            rvBook.visibility = View.VISIBLE
-                            postSearchBookAdapter.differ.submitList(it.data.popular_result)
-                        }else {
-                            txtEmpty.visibility = View.VISIBLE
-                            rvBook.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                homeViewModel.postSearchBook.collect { state ->
+                    when(state){
+                        is Resource.Success -> {
+                            state.data?.let {
+                                if(!it.data.general_result.isNullOrEmpty()){
+                                    txtEmpty.visibility = View.GONE
+                                    rvBook.visibility = View.VISIBLE
+                                    postSearchBookAdapter.differ.submitList(it.data.general_result)
+                                }else if(!it.data.popular_result.isNullOrEmpty()){
+                                    txtEmpty.visibility = View.GONE
+                                    rvBook.visibility = View.VISIBLE
+                                    postSearchBookAdapter.differ.submitList(it.data.popular_result)
+                                }else {
+                                    txtEmpty.visibility = View.VISIBLE
+                                    rvBook.visibility = View.GONE
+                                }
+                            }
                         }
+                        is Resource.Loading -> Unit
+                        is Resource.Error -> Unit
+                        else -> Unit
                     }
                 }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
-                else -> Unit
             }
         }
+    }
+
+    private fun searchKeyword(book: String) = with(binding){
+        if(type == "profile"){
+            homeViewModel.getProfileSearchBook(book)
+        }else {
+            homeViewModel.getPostSearchBook(book)
+        }
+    }
+
+    private fun hideKeyboard() {
+        val manager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        manager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+        view?.clearFocus()
     }
 }

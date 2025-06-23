@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,15 +21,8 @@ import com.example.newbookshelf.R
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.databinding.FragmentKakaoSearchDialogBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
-import com.example.newbookshelf.presentation.view.post.AddPostFragment
-import com.example.newbookshelf.presentation.view.post.AddPostFragment.Companion
 import com.example.newbookshelf.presentation.view.post.adapter.KakaoAdapter
 import com.example.newbookshelf.presentation.viewmodel.post.PostViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFragment() {
@@ -136,6 +128,7 @@ class KakaoSearchDialog(private val onSelectedPlace: OnSelectedPlace) : DialogFr
                                 }
                             }
                         }
+                        is Resource.Loading -> Unit
                         is Resource.Error -> Unit
                         else -> Unit
                     }

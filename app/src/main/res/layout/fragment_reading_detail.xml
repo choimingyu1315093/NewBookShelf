@@ -88,16 +88,17 @@
                 android:textColor="#797979"
                 android:textSize="14sp"
                 android:fontFamily="@font/lato_regular"/>
+
             <TextView
                 android:id="@+id/tvTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/lato_regular"
                 android:gravity="end"
-                tools:text="23.12.14"
                 android:textColor="#797979"
                 android:textSize="14sp"
-                android:fontFamily="@font/lato_regular"/>
+                tools:text="23.12.14" />
         </LinearLayout>
 
         <TextView
