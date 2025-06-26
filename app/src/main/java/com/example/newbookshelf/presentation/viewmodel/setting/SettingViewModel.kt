@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.newbookshelf.data.model.common.OnlyResultModel
 import com.example.newbookshelf.data.model.setting.PasswordChangeData
 import com.example.newbookshelf.data.model.setting.UpdateUserSettingData
+import com.example.newbookshelf.data.model.setting.UserSettingModel
 import com.example.newbookshelf.data.util.Resource
 import com.example.newbookshelf.domain.usecase.setting.PasswordChangeUseCase
 import com.example.newbookshelf.domain.usecase.setting.TicketLogUseCase
@@ -20,6 +21,8 @@ import com.example.newbookshelf.domain.usecase.setting.UpdateUserSettingUseCase
 import com.example.newbookshelf.domain.usecase.setting.UserDeleteUseCase
 import com.example.newbookshelf.domain.usecase.setting.UserSettingUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SettingViewModel(
@@ -31,9 +34,19 @@ class SettingViewModel(
     private val userDeleteUseCase: UserDeleteUseCase
 ): AndroidViewModel(app) {
 
-    fun userSetting() = liveData {
-        userSettingUseCase.execute().collect {
-            emit(it)
+    private var _userSettingResult = MutableStateFlow<Resource<UserSettingModel>>(Resource.Idle())
+    val userSettingResult: StateFlow<Resource<UserSettingModel>>
+        get() = _userSettingResult
+
+    fun userSetting() = viewModelScope.launch(Dispatchers.IO){
+        try {
+            if(isNetworkAvailable(app)){
+                _userSettingResult.emit(Resource.Loading())
+                val result = userSettingUseCase.execute()
+                _userSettingResult.emit(result)
+            }
+        }catch (e: Exception){
+            _userSettingResult.emit(Resource.Error(e.message.toString()))
         }
     }
 

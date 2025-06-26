@@ -303,10 +303,8 @@ class BookRemoteDataSourceImpl(@DefaultRetrofit private val apiService: ApiServi
         }
     }
 
-    override fun userSetting(): Flow<Response<UserSettingModel>> {
-        return flow {
-            emit(apiService.userSetting())
-        }
+    override suspend fun userSetting(): Response<UserSettingModel> {
+        return apiService.userSetting()
     }
 
     override suspend fun updateUserSetting(updateUserSettingData: UpdateUserSettingData): Response<OnlyResultModel> {

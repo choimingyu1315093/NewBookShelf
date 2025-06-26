@@ -129,7 +129,7 @@ interface BookRepository {
     suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Resource<ChatroomModel>
     suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Resource<DeleteChatroomModel>
     fun myBookList(readType: String): Flow<Resource<MyBookModel>>
-    fun userSetting(): Flow<Resource<UserSettingModel>>
+    suspend fun userSetting(): Resource<UserSettingModel>
     suspend fun updateUserSetting(updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel>
     fun ticketLog(): Flow<Resource<TicketLogModel>>
     suspend fun passwordChange(passwordChangeData: PasswordChangeData): Resource<OnlyResultModel>

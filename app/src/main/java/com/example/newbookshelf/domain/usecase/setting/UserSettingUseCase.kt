@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class UserSettingUseCase(private val bookRepository: BookRepository) {
 
-    fun execute(): Flow<Resource<UserSettingModel>> {
+    suspend fun execute(): Resource<UserSettingModel> {
         return bookRepository.userSetting()
     }
 }

@@ -148,12 +148,16 @@ class ReadingDetailFragment : Fragment(), ReadingClassDeleteDialog.OnDeleteClick
                                     tvTranslator.text = readingClass.book_translator
                                 }
 
-                                if((readingClass.user_type == "leader" && !DateFormat.isPast(readingClass.club_meet_date)) || readingClass.user_type == "participant"){
-                                    btnJoin.text = "참가자 조회"
-                                }else if(readingClass.user_type == "leader" && DateFormat.isPast(readingClass.club_meet_date)){
-                                    btnJoin.text = "독서 모임 종료"
+                                if(readingClass.club_state == "ENDED"){
+                                    btnJoin.visibility = View.GONE
                                 }else {
-                                    btnJoin.text = "참가 신청"
+                                    if((readingClass.user_type == "leader" && !DateFormat.isPast(readingClass.club_meet_date)) || readingClass.user_type == "participant"){
+                                        btnJoin.text = "참가자 조회"
+                                    }else if(readingClass.user_type == "leader" && DateFormat.isPast(readingClass.club_meet_date)){
+                                        btnJoin.text = "독서 모임 종료"
+                                    }else {
+                                        btnJoin.text = "참가 신청"
+                                    }
                                 }
                             }
                             progressBar.visibility = View.GONE

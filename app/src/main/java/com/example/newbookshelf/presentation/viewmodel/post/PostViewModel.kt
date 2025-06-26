@@ -8,12 +8,8 @@ import android.os.Build
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.example.newbookshelf.BookShelfApp
 import com.example.newbookshelf.data.model.common.OnlyResultModel
-import com.example.newbookshelf.data.model.login.LoginData
-import com.example.newbookshelf.data.model.login.LoginModel
 import com.example.newbookshelf.data.model.post.AddScrapData
 import com.example.newbookshelf.data.model.post.AddScrapModel
 import com.example.newbookshelf.data.model.post.general.AddPostData
@@ -50,12 +46,8 @@ import com.example.newbookshelf.domain.usecase.post.ReadingClassFinishUserCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassJoinUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassMemberListUseCase
 import com.example.newbookshelf.domain.usecase.post.ReadingClassUseCase
-import com.example.newbookshelf.presentation.viewmodel.login.LoginViewModel.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 

@@ -352,15 +352,10 @@ class BookRepositoryImpl(private val bookRemoteDataSource: BookRemoteDataSource,
         }
     }
 
-    override fun userSetting(): Flow<Resource<UserSettingModel>> {
-        return bookRemoteDataSource.userSetting().map { response ->
-            if(response.isSuccessful){
-                Resource.Success(response.body()!!)
-            }else {
-                Resource.Error(response.message())
-            }
-        }
+    override suspend fun userSetting(): Resource<UserSettingModel> {
+        return responseToResource(bookRemoteDataSource.userSetting())
     }
+
 
     override suspend fun updateUserSetting(updateUserSettingData: UpdateUserSettingData): Resource<OnlyResultModel> {
         return responseToResource(bookRemoteDataSource.updateUserSetting(updateUserSettingData))

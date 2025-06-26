@@ -7,7 +7,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.newbookshelf.BookShelfApp
@@ -18,6 +22,8 @@ import com.example.newbookshelf.databinding.FragmentSettingBinding
 import com.example.newbookshelf.presentation.view.home.HomeActivity
 import com.example.newbookshelf.presentation.view.login.LoginActivity
 import com.example.newbookshelf.presentation.viewmodel.setting.SettingViewModel
+import com.example.newbookshelf.presentation.viewmodel.signup.SignupViewModel
+import kotlinx.coroutines.launch
 
 class SettingFragment : Fragment() {
     private lateinit var binding: FragmentSettingBinding
@@ -54,6 +60,7 @@ class SettingFragment : Fragment() {
     private fun init() = with(binding){
         accessToken = BookShelfApp.prefs.getAccessToken("accessToken", "")
         settingViewModel = (activity as HomeActivity).settingViewModel
+        settingViewModel.userSetting()
     }
 
     private fun bindViews() = with(binding){
@@ -96,25 +103,28 @@ class SettingFragment : Fragment() {
     }
 
     private fun observeViewModel() = with(binding){
-        settingViewModel.userSetting().observe(viewLifecycleOwner){ response ->
-            when(response){
-                is Resource.Success -> {
-                    response.data?.let {
-                        Log.d(TAG, "observeViewModel: asdfadsf ${it.data.ticket_count}")
-                        ticket = it.data.ticket_count
-                        tvWelcome.text = "${it.data.user_name} 님, 환영합니다."
-                        btnMoney.text = "${it.data.ticket_count}장"
-                        swChat.isChecked = it.data.setting_chat_alarm == 1
-                        swMarketing.isChecked = it.data.setting_marketing_alarm == 1
-                        swNear.isChecked = it.data.setting_wish_book_alarm == 1
-                        swChatRequest.isChecked = it.data.setting_chat_receive == 1
-                        swReadingClass.isChecked = it.data.setting_recommend_club == 1
-                        progressBar.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                settingViewModel.userSettingResult.collect { state ->
+                    when(state){
+                        is Resource.Success -> {
+                            hideProgressBar()
+                            state.data?.let {
+                                ticket = it.data.ticket_count
+                                tvWelcome.text = "${it.data.user_name} 님, 환영합니다."
+                                btnMoney.text = "${ticket}장"
+                                swChat.isChecked = it.data.setting_chat_alarm == 1
+                                swMarketing.isChecked = it.data.setting_marketing_alarm == 1
+                                swNear.isChecked = it.data.setting_wish_book_alarm == 1
+                                swChatRequest.isChecked = it.data.setting_chat_receive == 1
+                                swReadingClass.isChecked = it.data.setting_recommend_club == 1
+                            }
+                        }
+                        is Resource.Error -> hideProgressBar()
+                        is Resource.Loading -> showProgressBar()
+                        else -> Unit
                     }
                 }
-                is Resource.Error -> Unit
-                is Resource.Loading -> Unit
-                else -> Unit
             }
         }
     }
@@ -124,5 +134,13 @@ class SettingFragment : Fragment() {
             val updateUserSettingData = UpdateUserSettingData(settingKey, isChecked)
             settingViewModel.updateUserSetting(updateUserSettingData)
         }
+    }
+
+    private fun showProgressBar() = with(binding){
+        progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() = with(binding){
+        progressBar.visibility = View.GONE
     }
 }

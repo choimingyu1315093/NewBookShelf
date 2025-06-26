@@ -123,7 +123,7 @@ interface BookRemoteDataSource {
     suspend fun createChatroom(accessToken: String, createChatroomData: CreateChatroomData): Response<ChatroomModel>
     suspend fun deleteChatroom(accessToken: String, chatroomIdx: Int): Response<DeleteChatroomModel>
     fun myBookList(readType: String): Flow<Response<MyBookModel>>
-    fun userSetting(): Flow<Response<UserSettingModel>>
+    suspend fun userSetting(): Response<UserSettingModel>
     suspend fun updateUserSetting(updateUserSettingData: UpdateUserSettingData): Response<OnlyResultModel>
     fun ticketLog(): Flow<Response<TicketLogModel>>
     suspend fun passwordChange(passwordChangeData: PasswordChangeData): Response<OnlyResultModel>

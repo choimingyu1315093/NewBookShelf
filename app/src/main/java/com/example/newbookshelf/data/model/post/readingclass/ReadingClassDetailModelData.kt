@@ -9,6 +9,7 @@ data class ReadingClassDetailModelData(
     val book_translator: String,
     val club_latitude: String,
     val club_longitude: String,
+    val club_state: String,
     val club_meet_date: String,
     val club_post_idx: Int,
     val club_result_image: String,
